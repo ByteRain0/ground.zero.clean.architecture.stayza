@@ -1,9 +1,10 @@
+using Stayza.Core.Entity;
+using Stayza.Domain.BookCopyAggregate;
+
 namespace Stayza.Domain.UserAggregate;
 
-public class User
+public class User : Entity
 {
-    public Guid Id { get; private set; }
-
     public EmailAddress EmailAddress { get; private set; }
 
     public string FirstName { get; set; }
@@ -14,53 +15,26 @@ public class User
     
     public bool IsActive { get; set; }
 
-    private const int MaxActiveLoans = 5;
-    
-    private readonly List<Guid> _activeLoanIds = new();
-    
+    public List<Loan> ExistingLoans { get; private set; } = new();
+
     public User(
         string firstName,
         string lastName,
         EmailAddress emailAddress,
-        Guid? id)
+        Guid id) : base(id)
     {
         FirstName = firstName;
         LastName = lastName;
         EmailAddress = emailAddress;
         UserType = UserType.General;
-        Id = id ?? Guid.NewGuid();
-    }
-    
-    public bool CanBorrow()
-    {
-        return IsActive && _activeLoanIds.Count < MaxActiveLoans;
     }
 
     /// <summary>
-    /// Think if there needs to be an event in here for the loan aggregate.
+    /// Introduce a hard limit.
+    /// If after reservation is made over limit cancell reservation.
     /// </summary>
-    /// <param name="loanId"></param>
-    /// <exception cref="InvalidOperationException"></exception>
-    public void AddLoan(Guid loanId)
-    {
-        if (!CanBorrow())
-            throw new InvalidOperationException("User cannot borrow more books.");
+    /// <param name="service"></param>
+    /// <returns></returns>
+    public bool CanBorrow(BorrowService service) => service.CanUserBorrow(this);
 
-        _activeLoanIds.Add(loanId);
-    }
-    
-    /// <summary>
-    /// Trigger here a domain event and pick up it in the loan aggregate.
-    /// </summary>
-    /// <param name="loanId"></param>
-    public void ReturnLoan(Guid loanId)
-    {
-        _activeLoanIds.Remove(loanId);
-    }
-
-    public void Deactivate() => IsActive = false;
-
-    public void Reactivate() => IsActive = true;
-    
-    
 }
