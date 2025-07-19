@@ -1,0 +1,5 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <ProjectReference Include="..\Stayza.Core\Stayza.Core.csproj" />
+  </ItemGroup>
+</Project>

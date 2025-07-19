@@ -1,0 +1,6 @@
+﻿services:
+  stayza:
+    image: stayza
+    build:
+      context: .
+      dockerfile: src/Stayza/Dockerfile

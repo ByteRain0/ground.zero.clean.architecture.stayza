@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{D90BBA51-88AD-4B79-9CE3-64F01C1DECC2}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{752D6934-C1C9-4970-ACE8-D02698643FE5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Application", "src\Stayza.Application\Stayza.Application.csproj", "{EC35144E-60B4-4981-9227-9EBCAFED883E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Core", "src\Stayza.Core\Stayza.Core.csproj", "{8D290650-4FCD-49A9-80BE-152B6DFA2E39}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Domain", "src\Stayza.Domain\Stayza.Domain.csproj", "{5DA09F53-1C33-407B-B523-DDCD5D64339B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Infrastructure", "src\Stayza.Infrastructure\Stayza.Infrastructure.csproj", "{B6176B12-A8A6-45DD-B7B8-189CB0D93B31}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Web", "src\Stayza.Web\Stayza.Web.csproj", "{A8DD4B5E-4C56-4B27-A6E8-8F799BCDBA52}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "utils", "utils", "{F65BBF37-5489-44F7-A832-CBED1536969C}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Packages.props = Directory.Packages.props
+		Directory.Build.props = Directory.Build.props
+		docker-compose-docs.yaml = docker-compose-docs.yaml
+		docker-compose.yaml = docker-compose.yaml
+		global.json = global.json
+		README.md = README.md
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EC35144E-60B4-4981-9227-9EBCAFED883E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC35144E-60B4-4981-9227-9EBCAFED883E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC35144E-60B4-4981-9227-9EBCAFED883E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC35144E-60B4-4981-9227-9EBCAFED883E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D290650-4FCD-49A9-80BE-152B6DFA2E39}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D290650-4FCD-49A9-80BE-152B6DFA2E39}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D290650-4FCD-49A9-80BE-152B6DFA2E39}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D290650-4FCD-49A9-80BE-152B6DFA2E39}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5DA09F53-1C33-407B-B523-DDCD5D64339B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5DA09F53-1C33-407B-B523-DDCD5D64339B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5DA09F53-1C33-407B-B523-DDCD5D64339B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5DA09F53-1C33-407B-B523-DDCD5D64339B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B6176B12-A8A6-45DD-B7B8-189CB0D93B31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B6176B12-A8A6-45DD-B7B8-189CB0D93B31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B6176B12-A8A6-45DD-B7B8-189CB0D93B31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B6176B12-A8A6-45DD-B7B8-189CB0D93B31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A8DD4B5E-4C56-4B27-A6E8-8F799BCDBA52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A8DD4B5E-4C56-4B27-A6E8-8F799BCDBA52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A8DD4B5E-4C56-4B27-A6E8-8F799BCDBA52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A8DD4B5E-4C56-4B27-A6E8-8F799BCDBA52}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{EC35144E-60B4-4981-9227-9EBCAFED883E} = {D90BBA51-88AD-4B79-9CE3-64F01C1DECC2}
+		{8D290650-4FCD-49A9-80BE-152B6DFA2E39} = {D90BBA51-88AD-4B79-9CE3-64F01C1DECC2}
+		{5DA09F53-1C33-407B-B523-DDCD5D64339B} = {D90BBA51-88AD-4B79-9CE3-64F01C1DECC2}
+		{B6176B12-A8A6-45DD-B7B8-189CB0D93B31} = {D90BBA51-88AD-4B79-9CE3-64F01C1DECC2}
+		{A8DD4B5E-4C56-4B27-A6E8-8F799BCDBA52} = {D90BBA51-88AD-4B79-9CE3-64F01C1DECC2}
+	EndGlobalSection
+EndGlobal
