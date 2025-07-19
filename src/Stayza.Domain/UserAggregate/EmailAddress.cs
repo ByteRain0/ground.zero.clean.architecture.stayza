@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace Stayza.Domain.Models;
+namespace Stayza.Domain.UserAggregate;
 
 public record EmailAddress
 {

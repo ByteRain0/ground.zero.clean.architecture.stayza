@@ -1,4 +1,6 @@
-namespace Stayza.Domain.Models;
+using Stayza.Domain.BookCopyAggregate;
+
+namespace Stayza.Domain.BookAggregate;
 
 public class Book
 {

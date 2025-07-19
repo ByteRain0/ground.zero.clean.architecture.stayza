@@ -1,4 +1,4 @@
-namespace Stayza.Domain.Models;
+namespace Stayza.Domain.UserAggregate;
 
 public class User
 {

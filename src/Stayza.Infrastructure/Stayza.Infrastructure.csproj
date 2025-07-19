@@ -17,4 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Stayza.Application\Stayza.Application.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Persistence\Configurations\" />
+  </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-namespace Stayza.Domain.Exceptions;
+namespace Stayza.Domain.BookCopyAggregate.Exceptions;
 
 public class ReservationAlreadyExistsException : Exception
 {

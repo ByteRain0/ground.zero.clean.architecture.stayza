@@ -1,9 +1,8 @@
-using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Stayza.Core.AsyncProcessing;
 using Stayza.Core.Entity;
 
-namespace Stayza.Infrastructure.Utils;
+namespace Stayza.Infrastructure.Persistence.EventPublisher;
 
 public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 {
@@ -27,7 +26,7 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
         return result;
     }
 
-    private async Task PublishDomainEventsAsync(DbContext context)
+    private async Task PublishDomainEventsAsync(Microsoft.EntityFrameworkCore.DbContext context)
     {
         var domainEvents = context
             .ChangeTracker
