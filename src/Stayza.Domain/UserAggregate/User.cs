@@ -36,5 +36,4 @@ public class User : Entity
     /// <param name="service"></param>
     /// <returns></returns>
     public bool CanBorrow(BorrowService service) => service.CanUserBorrow(this);
-
 }

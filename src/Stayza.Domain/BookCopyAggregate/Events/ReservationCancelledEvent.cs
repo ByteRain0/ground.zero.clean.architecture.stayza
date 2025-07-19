@@ -1,6 +1,6 @@
 using Stayza.Core.Entity;
 
-namespace Stayza.Domain.BookCopyAggregate.Exceptions;
+namespace Stayza.Domain.BookCopyAggregate.Events;
 
 public record ReservationCancelledEvent(
     Guid ReservationId,

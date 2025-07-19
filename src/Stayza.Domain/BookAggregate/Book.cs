@@ -1,15 +1,14 @@
+using Stayza.Core.Entity;
 using Stayza.Domain.BookCopyAggregate;
 
 namespace Stayza.Domain.BookAggregate;
 
-public class Book
+public class Book : AggregateRoot
 {
-    public Guid Id { get; private set; }
-    
     public string Title { get; private set; }
-    
+
     public string Author { get; private set; }
-    
+
     public string ISBN { get; private set; }
 
     private readonly List<BookCopy> _copies = new();
@@ -18,16 +17,15 @@ public class Book
         string title,
         string author,
         string isbn,
-        Guid? id)
+        Guid id) : base(id)
     {
         Title = title;
         Author = author;
         ISBN = isbn;
-        Id = id ?? Guid.NewGuid();
     }
-    
+
     public IReadOnlyCollection<BookCopy> Copies => _copies.AsReadOnly();
-    
+
     public void AddCopy(Guid copyId)
     {
         if (_copies.Any(c => c.Id == copyId))
@@ -35,11 +33,11 @@ public class Book
 
         _copies.Add(new BookCopy(copyId, Id));
     }
-    
+
     public void RemoveCopy(Guid copyId)
     {
         var copy = _copies.SingleOrDefault(c => c.Id == copyId);
-        
+
         if (copy == null)
             throw new InvalidOperationException("Copy not found.");
 

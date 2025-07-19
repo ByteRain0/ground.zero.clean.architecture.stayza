@@ -145,5 +145,10 @@ public class BookCopy : AggregateRoot
             throw new InvalidOperationException("Cannot cancel reservation for invalid user");
         
         reservation.Status = ReservationStatus.Cancelled;
+        
+        AddDomainEvent(new ReservationCancelledEvent(
+            ReservationId: reservation.Id,
+            UserId: reservation.UserId,
+            BookCopyId: Id));
     }
 }
