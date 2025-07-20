@@ -34,7 +34,7 @@ public class BookCopy : AggregateRoot
         BookId = bookId;
     }
 
-    public void Reserve(
+    public Reservation Reserve(
         Guid userId,
         DateTimeOffset utcNow)
     {
@@ -44,14 +44,18 @@ public class BookCopy : AggregateRoot
         if (_reservations.Any(r => r.UserId == userId && r.Status == ReservationStatus.Active))
             throw new ReservationAlreadyExistsException(userId);
 
-        _reservations.Add(new Reservation(
+        var reservation = new Reservation(
             userId: userId,
             reservedAt: utcNow,
             bookCopyId: Id,
-            id: Guid.NewGuid()));
+            id: Guid.NewGuid());
+        
+        _reservations.Add(reservation);
+
+        return reservation;
     }
 
-    public void StartLoan(
+    public Loan StartLoan(
         Guid userId,
         DateTimeOffset utcNow)
     {
@@ -79,9 +83,11 @@ public class BookCopy : AggregateRoot
             LoanId: _currentLoan.Id,
             LoanDate: _currentLoan.TimeRange.Start,
             DueDate: _currentLoan.TimeRange.End));
+
+        return _currentLoan;
     }
 
-    public void Return(
+    public Loan Return(
         Guid userId,
         DateTimeOffset utcNow)
     {
@@ -97,9 +103,11 @@ public class BookCopy : AggregateRoot
             BookCopyId: Id,
             LoanId: _currentLoan.Id,
             ReturnDate: utcNow));
+
+        return _currentLoan;
     }
 
-    public void ExpireReservation(
+    public Reservation ExpireReservation(
         Guid reservationId,
         DateTimeOffset utcNow)
     {
@@ -117,9 +125,11 @@ public class BookCopy : AggregateRoot
             ReservationId: reservation.Id,
             UserId: reservation.UserId,
             BookCopyId: Id));
+
+        return reservation;
     }
 
-    public void FulFillReservation(
+    public Reservation FulfillReservation(
         Guid reservationId,
         DateTimeOffset utcNow)
     {
@@ -140,13 +150,17 @@ public class BookCopy : AggregateRoot
             UserId: reservation.UserId,
             BookCopyId: Id,
             AvailableUntil: reservation.ExpiresAt));
+
+        return reservation;
     }
 
-    public void CancelReservation(
-        Reservation reservation,
+    public Reservation CancelReservation(
+        Guid reservationId,
         string reason)
     {
-        if (!_reservations.Contains(reservation))
+        var reservation = ActiveReservations.SingleOrDefault(x => x.Id == reservationId);
+
+        if (reservation is null)
             throw new ReservationNotFound();
         
         if (reservation.Status == ReservationStatus.Cancelled)
@@ -159,5 +173,7 @@ public class BookCopy : AggregateRoot
             UserId: reservation.UserId,
             BookCopyId: Id,
             Reason: reason));
+
+        return reservation;
     }
 }
