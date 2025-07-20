@@ -10,7 +10,7 @@ public abstract class ValueObject
         {
             return false;
         }
-         
+
         return ((ValueObject)obj)
             .GetEqualityComponents()
             .SequenceEqual(GetEqualityComponents());

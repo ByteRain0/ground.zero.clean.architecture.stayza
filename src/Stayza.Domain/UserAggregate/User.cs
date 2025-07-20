@@ -13,7 +13,7 @@ public class User : AggregateRoot
 
     public UserType UserType { get; set; }
 
-    public bool IsActive { get; set; } 
+    public bool IsActive { get; set; }
         = true;
 
     public List<Loan> ExistingLoans { get; private set; } = new();

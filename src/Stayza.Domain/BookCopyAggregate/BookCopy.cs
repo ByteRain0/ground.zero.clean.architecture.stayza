@@ -8,7 +8,7 @@ public class BookCopy : AggregateRoot
 {
     public Guid BookId { get; set; }
 
-    public bool IsRetired { get; set; } 
+    public bool IsRetired { get; set; }
         = false;
 
     private Loan? _currentLoan;
@@ -49,7 +49,7 @@ public class BookCopy : AggregateRoot
             reservedAt: utcNow,
             bookCopyId: Id,
             id: Guid.NewGuid());
-        
+
         _reservations.Add(reservation);
 
         return reservation;
@@ -162,7 +162,7 @@ public class BookCopy : AggregateRoot
 
         if (reservation is null)
             throw new ReservationNotFound();
-        
+
         if (reservation.Status == ReservationStatus.Cancelled)
             throw new ReservationAlreadyCancelledException();
 

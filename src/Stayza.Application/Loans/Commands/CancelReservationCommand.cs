@@ -3,8 +3,8 @@ using FluentValidation;
 namespace Stayza.Application.Loans.Commands;
 
 public record CancelReservationCommand(
-    Guid BookCopyId, 
-    Guid ReservationId, 
+    Guid BookCopyId,
+    Guid ReservationId,
     string Reason);
 
 

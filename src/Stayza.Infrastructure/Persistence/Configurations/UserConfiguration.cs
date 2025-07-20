@@ -22,11 +22,11 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.LastName)
             .IsRequired()
             .HasMaxLength(50);
-        
+
         builder.HasMany<Loan>()
             .WithOne()
             .HasForeignKey(x => x.UserId);
-        
+
         builder.Ignore(x => x.DomainEvents);
     }
 }

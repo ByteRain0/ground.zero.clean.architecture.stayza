@@ -3,13 +3,13 @@ namespace Stayza.Domain.BookCopyAggregate;
 public class Loan
 {
     public Guid Id { get; private set; }
-    
+
     public Guid BookCopyId { get; private set; }
-    
+
     public Guid UserId { get; private set; }
 
     public TimeRange TimeRange { get; set; }
-    
+
     public DateTimeOffset? ReturnDate { get; private set; }
 
     public bool IsReturned => ReturnDate.HasValue;

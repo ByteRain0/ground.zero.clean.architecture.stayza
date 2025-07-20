@@ -22,11 +22,11 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.Property(x => x.ISBN)
             .IsRequired()
             .HasMaxLength(10);
-        
+
         builder.HasMany<BookCopy>()
             .WithOne()
             .HasForeignKey(x => x.BookId);
-        
+
         builder.Ignore(x => x.DomainEvents);
     }
 }

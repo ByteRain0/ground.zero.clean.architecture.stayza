@@ -5,18 +5,18 @@ namespace Stayza.Domain.BookCopyAggregate;
 public class Reservation : Entity
 {
     public Guid UserId { get; private set; }
-    
+
     public Guid BookCopyId { get; private set; }
-    
+
     public DateTimeOffset ReservedAt { get; private set; }
-    
+
     /// <summary>
     /// Example if you don't like using ValueObjects :P
     /// </summary>
     public DateTimeOffset ExpiresAt { get; set; }
 
     public ReservationStatus Status { get; set; }
-    
+
     public Reservation(
         Guid userId,
         DateTimeOffset reservedAt,

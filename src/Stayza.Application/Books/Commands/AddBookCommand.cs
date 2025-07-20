@@ -4,8 +4,8 @@ using FluentValidation;
 namespace Stayza.Application.Books.Commands;
 
 public record AddBookCommand(
-    string Title, 
-    string Author, 
+    string Title,
+    string Author,
     string ISBN);
 
 

@@ -12,7 +12,7 @@ public class Book : AggregateRoot
     public string ISBN { get; private set; }
 
     private readonly List<BookCopy> _copies = new();
-    
+
     public Book(
         string title,
         string author,
@@ -32,7 +32,7 @@ public class Book : AggregateRoot
             throw new InvalidOperationException("Copy already exists.");
 
         var bookCopy = new BookCopy(bookCopyId, Id);
-        
+
         _copies.Add(bookCopy);
 
         return bookCopy;

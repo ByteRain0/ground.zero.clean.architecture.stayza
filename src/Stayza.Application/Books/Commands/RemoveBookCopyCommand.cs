@@ -10,7 +10,7 @@ public class RemoveBookCopyCommandValidator : AbstractValidator<RemoveBookCopyCo
     {
         RuleFor(x => x.BookId)
             .NotEmpty();
-        
+
         RuleFor(x => x.BookCopyId)
             .NotEmpty();
     }

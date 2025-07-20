@@ -39,9 +39,9 @@ public class BooksService
 
             bookCopy.IsRetired = true;
         }
-        
+
         await _repository.Update(book);
-        
+
         return book;
     }
 
@@ -50,7 +50,7 @@ public class BooksService
         var book = await _repository.GetById(command.BookId, CancellationToken.None);
         book.RemoveCopy(command.BookCopyId);
         await _repository.Update(book);
-        
+
         return book;
     }
 

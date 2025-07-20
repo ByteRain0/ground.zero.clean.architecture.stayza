@@ -40,7 +40,7 @@ public class BooksEndpoints : IEndpointsDefinition
             .Produces(404)
             .Produces<BookCopy>()
             .WithName("AddBookCopy");
-        
+
         group.MapDelete("api/v1/books/{bookId:guid}/{bookCopyId:guid}", RemoveBookCopy)
             .Produces(404)
             .Produces<Book>()
@@ -54,7 +54,7 @@ public class BooksEndpoints : IEndpointsDefinition
         HttpContext httpContext)
     {
         var book = await service.AddBook(command);
-        var path = linkGenerator.GetUriByName(httpContext, endpointName: "GetBookById", new {id = book.Id});
+        var path = linkGenerator.GetUriByName(httpContext, endpointName: "GetBookById", new { id = book.Id });
         return Results.Created(path, book);
     }
 
@@ -73,7 +73,7 @@ public class BooksEndpoints : IEndpointsDefinition
     private static async Task<IResult> RetireBook(Guid id, BooksService service)
         => Results.Ok(await service.Retire(new RetireBookCommand(BookId: id)));
 
-    private static async Task<IResult> AddBookCopy(Guid id, BooksService service) 
+    private static async Task<IResult> AddBookCopy(Guid id, BooksService service)
         => Results.Ok(await service.AddBookCopy(new AddBookCopyCommand(BookId: id)));
 
     private static async Task<IResult> RemoveBookCopy(

@@ -3,7 +3,7 @@ using FluentValidation;
 namespace Stayza.Application.Loans.Commands;
 
 public record ReturnBookCopyCommand(
-    Guid BookCopyId, 
+    Guid BookCopyId,
     Guid UserId);
 
 

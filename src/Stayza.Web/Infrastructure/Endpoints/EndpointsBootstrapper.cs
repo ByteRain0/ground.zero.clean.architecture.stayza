@@ -25,16 +25,16 @@ public static class EndpointsBootstrapper
 
     private static IEnumerable<TypeInfo> GetEndpointDefinitionsFromAssembly(Assembly assembly)
     {
-        var endpointDefinitions = 
+        var endpointDefinitions =
             assembly
                 .DefinedTypes
                 .Where(x => x is
-                            {
-                                IsAbstract: false, 
-                                IsInterface: false
-                            } 
+                {
+                    IsAbstract: false,
+                    IsInterface: false
+                }
                             && typeof(IEndpointsDefinition).IsAssignableFrom(x));
-        
+
         return endpointDefinitions;
     }
 }

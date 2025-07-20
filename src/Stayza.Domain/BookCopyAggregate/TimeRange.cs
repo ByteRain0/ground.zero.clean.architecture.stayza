@@ -7,7 +7,7 @@ public class TimeRange : ValueObject
     public DateTimeOffset Start { get; set; }
 
     public DateTimeOffset End { get; set; }
-    
+
     public TimeRange(DateTimeOffset start, DateTimeOffset end)
     {
         if (start > end)
