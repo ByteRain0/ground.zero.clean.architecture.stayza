@@ -15,4 +15,15 @@
       <ProjectReference Include="..\Stayza.Infrastructure\Stayza.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Infrastructure\ExceptionHandlers\" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+      <PackageReference Include="O9d.AspNet.FluentValidation" />
+      <PackageReference Include="Swashbuckle.AspNetCore" />
+      <PackageReference Include="Swashbuckle.AspNetCore.Filters" />
+    </ItemGroup>
+
 </Project>

@@ -26,17 +26,21 @@ public class Book : AggregateRoot
 
     public IReadOnlyCollection<BookCopy> Copies => _copies.AsReadOnly();
 
-    public void AddCopy(Guid copyId)
+    public BookCopy AddCopy(Guid bookCopyId)
     {
-        if (_copies.Any(c => c.Id == copyId))
+        if (_copies.Any(c => c.Id == bookCopyId))
             throw new InvalidOperationException("Copy already exists.");
 
-        _copies.Add(new BookCopy(copyId, Id));
+        var bookCopy = new BookCopy(bookCopyId, Id);
+        
+        _copies.Add(bookCopy);
+
+        return bookCopy;
     }
 
-    public void RemoveCopy(Guid copyId)
+    public void RemoveCopy(Guid bookCopyId)
     {
-        var copy = _copies.SingleOrDefault(c => c.Id == copyId);
+        var copy = _copies.SingleOrDefault(c => c.Id == bookCopyId);
 
         if (copy == null)
             throw new InvalidOperationException("Copy not found.");

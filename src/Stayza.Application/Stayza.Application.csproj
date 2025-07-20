@@ -2,4 +2,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Stayza.Domain\Stayza.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" />
+  </ItemGroup>
 </Project>

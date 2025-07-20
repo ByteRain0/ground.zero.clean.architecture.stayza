@@ -8,7 +8,7 @@ public class BookCopy : AggregateRoot
 {
     public Guid BookId { get; set; }
 
-    public bool IsMarkedForDeletion { get; set; } 
+    public bool IsMarkedForRemoval { get; set; } 
         = false;
 
     private Loan? _currentLoan;
@@ -38,7 +38,7 @@ public class BookCopy : AggregateRoot
         Guid userId,
         DateTimeOffset utcNow)
     {
-        if (!IsAvailable && !IsMarkedForDeletion)
+        if (!IsAvailable && !IsMarkedForRemoval)
             throw new BookNotAvailableForReservation();
 
         if (_reservations.Any(r => r.UserId == userId && r.Status == ReservationStatus.Active))
@@ -143,20 +143,14 @@ public class BookCopy : AggregateRoot
     }
 
     public void CancelReservation(
-        Guid reservationId,
-        Guid userId,
+        Reservation reservation,
         string reason)
     {
-        var reservation = _reservations.SingleOrDefault(x => x.Id == reservationId);
-
-        if (reservation is null)
+        if (!_reservations.Contains(reservation))
             throw new ReservationNotFound();
-
+        
         if (reservation.Status == ReservationStatus.Cancelled)
             throw new ReservationAlreadyCancelledException();
-
-        if (reservation.UserId != userId)
-            throw new InvalidOperationException("Cannot cancel reservation for invalid user");
 
         reservation.Status = ReservationStatus.Cancelled;
 
