@@ -8,13 +8,24 @@ public class BookCopy : AggregateRoot
 {
     public Guid BookId { get; set; }
 
-    private readonly List<Reservation> _reservations = new();
+    public bool IsMarkedForDeletion { get; set; } = false;
 
     private Loan? _currentLoan;
 
     public bool IsAvailable => _currentLoan == null || _currentLoan.IsReturned;
 
     public bool IsLoaned => _currentLoan != null && !_currentLoan.IsReturned;
+
+    /// <summary>
+    /// TODO: At some point the amount of reservations will increase so we need a way to remove/archive old reservations.
+    /// - Verificare ca o carte nu poate fi rezervată de două ori de același utilizator pe același BookCopy
+    /// - Posibilă validare să nu poți rezerva o carte de mai multe ori consecutiv dacă ai deja o rezervare neexpirată
+    /// - Poți limita numărul maxim de rezervări active per BookCopy
+    /// </summary>
+    private readonly List<Reservation> _reservations = new();
+
+    public IReadOnlyCollection<Reservation> ActiveReservations =>
+        _reservations.Where(r => r.Status == ReservationStatus.Active).ToList();
 
     public BookCopy(Guid id, Guid bookId)
         : base(id)
@@ -26,7 +37,7 @@ public class BookCopy : AggregateRoot
         Guid userId,
         DateTimeOffset utcNow)
     {
-        if (!IsAvailable)
+        if (!IsAvailable && !IsMarkedForDeletion)
             throw new BookNotAvailableForReservation();
 
         if (_reservations.Any(r => r.UserId == userId && r.Status == ReservationStatus.Active))
@@ -56,16 +67,17 @@ public class BookCopy : AggregateRoot
         _currentLoan = new Loan(
             copyId: Id,
             userId: userId,
-            loanDate: utcNow,
-            dueDate: utcNow.AddDays(14),
+            timeRange: new TimeRange(
+                start: utcNow,
+                end: utcNow.AddDays(14)),
             id: Guid.NewGuid());
 
         AddDomainEvent(new BookLoanedEvent(
             BookCopyId: Id,
             UserId: userId,
             LoanId: _currentLoan.Id,
-            LoanDate: _currentLoan.LoanDate,
-            DueDate: _currentLoan.DueDate));
+            LoanDate: _currentLoan.TimeRange.Start,
+            DueDate: _currentLoan.TimeRange.End));
     }
 
     public void Return(
@@ -95,8 +107,8 @@ public class BookCopy : AggregateRoot
         if (reservation is null)
             throw new ReservationNotFound();
 
-        if (utcNow > reservation.ExpiresAt)
-            throw new InvalidOperationException("Cannot expire valid reservation");
+        if (utcNow < reservation.ExpiresAt)
+            throw new InvalidOperationException("Cannot expire still-valid reservation");
 
         reservation.Status = ReservationStatus.Expired;
 
@@ -131,7 +143,8 @@ public class BookCopy : AggregateRoot
 
     public void CancelReservation(
         Guid reservationId,
-        Guid userId)
+        Guid userId,
+        string reason)
     {
         var reservation = _reservations.SingleOrDefault(x => x.Id == reservationId);
 
@@ -143,12 +156,13 @@ public class BookCopy : AggregateRoot
 
         if (reservation.UserId != userId)
             throw new InvalidOperationException("Cannot cancel reservation for invalid user");
-        
+
         reservation.Status = ReservationStatus.Cancelled;
-        
+
         AddDomainEvent(new ReservationCancelledEvent(
             ReservationId: reservation.Id,
             UserId: reservation.UserId,
-            BookCopyId: Id));
+            BookCopyId: Id,
+            Reason: reason));
     }
 }

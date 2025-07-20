@@ -5,5 +5,6 @@ namespace Stayza.Domain.BookCopyAggregate.Events;
 public record ReservationCancelledEvent(
     Guid ReservationId,
     Guid UserId,
-    Guid BookCopyId)
+    Guid BookCopyId,
+    string Reason)
     : IDomainEvent;

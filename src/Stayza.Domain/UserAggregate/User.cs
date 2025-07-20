@@ -5,7 +5,7 @@ namespace Stayza.Domain.UserAggregate;
 
 public class User : Entity
 {
-    public EmailAddress EmailAddress { get; private set; }
+    public string EmailAddress { get; private set; }
 
     public string FirstName { get; set; }
 
@@ -20,7 +20,7 @@ public class User : Entity
     public User(
         string firstName,
         string lastName,
-        EmailAddress emailAddress,
+        string emailAddress,
         Guid id) : base(id)
     {
         FirstName = firstName;

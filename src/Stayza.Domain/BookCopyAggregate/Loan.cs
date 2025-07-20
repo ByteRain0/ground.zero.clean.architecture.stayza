@@ -7,10 +7,8 @@ public class Loan
     public Guid CopyId { get; private set; }
     
     public Guid UserId { get; private set; }
-    
-    public DateTimeOffset LoanDate { get; private set; }
-    
-    public DateTimeOffset DueDate { get; private set; }
+
+    public TimeRange TimeRange { get; set; }
     
     public DateTimeOffset? ReturnDate { get; private set; }
 
@@ -19,14 +17,12 @@ public class Loan
     public Loan(
         Guid copyId,
         Guid userId,
-        DateTimeOffset loanDate,
-        DateTimeOffset dueDate,
+        TimeRange timeRange,
         Guid? id)
     {
         CopyId = copyId;
         UserId = userId;
-        LoanDate = loanDate;
-        DueDate = dueDate;
+        TimeRange = timeRange;
         ReturnDate = null;
         Id = id ?? Guid.NewGuid();
     }
