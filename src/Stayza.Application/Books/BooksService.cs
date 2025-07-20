@@ -13,26 +13,18 @@ public class BooksService
         _repository = repository;
     }
 
-    public Task<Book> AddBook(AddBookCommand command)
-    {
-        return _repository.Add(new Book(
+    public Task<Book> AddBook(AddBookCommand command) =>
+        _repository.Add(new Book(
             title: command.Title,
             author: command.Author,
             isbn: command.ISBN,
             id: Guid.NewGuid()));
-    }
 
-    public Task<Book> GetBookById(Guid id, CancellationToken cancellationToken)
-    {
-        return _repository.GetById(id, cancellationToken);
-    }
-    
-    public Task<Book> GetBookByIsbn(string isbn, CancellationToken cancellationToken)
-    {
-        return _repository.GetByIsbn(isbn, cancellationToken);
-    }
+    public Task<Book> GetBookById(Guid id, CancellationToken cancellationToken) => _repository.GetById(id, cancellationToken);
 
-    public async Task<Book> MarkForRemoval(MarkBookForRemoval command)
+    public Task<Book> GetBookByIsbn(string isbn, CancellationToken cancellationToken) => _repository.GetByIsbn(isbn, cancellationToken);
+
+    public async Task<Book> Retire(RetireBookCommand command)
     {
         var book = await _repository.GetById(command.BookId, CancellationToken.None);
 
@@ -42,10 +34,10 @@ public class BooksService
             {
                 bookCopy.CancelReservation(
                     reservation: activeReservation,
-                    reason: "Book marked for deletion");
+                    reason: "Book retired.");
             }
 
-            bookCopy.IsMarkedForRemoval = true;
+            bookCopy.IsRetired = true;
         }
         
         await _repository.Update(book);

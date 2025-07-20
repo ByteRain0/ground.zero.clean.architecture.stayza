@@ -8,7 +8,7 @@ public class BookCopy : AggregateRoot
 {
     public Guid BookId { get; set; }
 
-    public bool IsMarkedForRemoval { get; set; } 
+    public bool IsRetired { get; set; } 
         = false;
 
     private Loan? _currentLoan;
@@ -38,7 +38,7 @@ public class BookCopy : AggregateRoot
         Guid userId,
         DateTimeOffset utcNow)
     {
-        if (!IsAvailable && !IsMarkedForRemoval)
+        if (!IsAvailable && !IsRetired)
             throw new BookNotAvailableForReservation();
 
         if (_reservations.Any(r => r.UserId == userId && r.Status == ReservationStatus.Active))
