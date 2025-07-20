@@ -8,7 +8,8 @@ public class BookCopy : AggregateRoot
 {
     public Guid BookId { get; set; }
 
-    public bool IsMarkedForDeletion { get; set; } = false;
+    public bool IsMarkedForDeletion { get; set; } 
+        = false;
 
     private Loan? _currentLoan;
 
@@ -65,7 +66,7 @@ public class BookCopy : AggregateRoot
             throw new ReservationNotFound();
 
         _currentLoan = new Loan(
-            copyId: Id,
+            bookCopyId: Id,
             userId: userId,
             timeRange: new TimeRange(
                 start: utcNow,

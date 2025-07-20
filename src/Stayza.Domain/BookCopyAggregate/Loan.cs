@@ -4,7 +4,7 @@ public class Loan
 {
     public Guid Id { get; private set; }
     
-    public Guid CopyId { get; private set; }
+    public Guid BookCopyId { get; private set; }
     
     public Guid UserId { get; private set; }
 
@@ -15,12 +15,12 @@ public class Loan
     public bool IsReturned => ReturnDate.HasValue;
 
     public Loan(
-        Guid copyId,
+        Guid bookCopyId,
         Guid userId,
         TimeRange timeRange,
         Guid? id)
     {
-        CopyId = copyId;
+        BookCopyId = bookCopyId;
         UserId = userId;
         TimeRange = timeRange;
         ReturnDate = null;

@@ -1,12 +1,11 @@
 namespace Stayza.Domain.UserAggregate;
 
-public class BorrowService
+/// <summary>
+/// A DS is a service that contains only business logic.
+/// Prefer keeping domain logic in the domain models where possible.
+/// </summary>
+public class EntitlementService
 {
-    /// <summary>
-    /// In the future you might want to access some external service to get the 5/10 count;
-    /// </summary>
-    /// <param name="user"></param>
-    /// <returns></returns>
     public bool CanUserBorrow(User user)
     {
         var maxActiveLoans = user.UserType switch

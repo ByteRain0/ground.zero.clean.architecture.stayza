@@ -10,6 +10,9 @@ public class Reservation : Entity
     
     public DateTimeOffset ReservedAt { get; private set; }
     
+    /// <summary>
+    /// Example if you don't like using ValueObjects :P
+    /// </summary>
     public DateTimeOffset ExpiresAt { get; set; }
 
     public ReservationStatus Status { get; set; }

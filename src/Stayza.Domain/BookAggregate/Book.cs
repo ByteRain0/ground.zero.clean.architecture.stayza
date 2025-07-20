@@ -12,7 +12,7 @@ public class Book : AggregateRoot
     public string ISBN { get; private set; }
 
     private readonly List<BookCopy> _copies = new();
-
+    
     public Book(
         string title,
         string author,

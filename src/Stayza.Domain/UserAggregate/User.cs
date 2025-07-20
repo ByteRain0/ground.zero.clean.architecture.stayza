@@ -3,7 +3,7 @@ using Stayza.Domain.BookCopyAggregate;
 
 namespace Stayza.Domain.UserAggregate;
 
-public class User : Entity
+public class User : AggregateRoot
 {
     public string EmailAddress { get; private set; }
 
@@ -12,8 +12,9 @@ public class User : Entity
     public string LastName { get; set; }
 
     public UserType UserType { get; set; }
-    
-    public bool IsActive { get; set; }
+
+    public bool IsActive { get; set; } 
+        = true;
 
     public List<Loan> ExistingLoans { get; private set; } = new();
 
@@ -35,5 +36,5 @@ public class User : Entity
     /// </summary>
     /// <param name="service"></param>
     /// <returns></returns>
-    public bool CanBorrow(BorrowService service) => service.CanUserBorrow(this);
+    public bool CanBorrow(EntitlementService service) => service.CanUserBorrow(this);
 }
