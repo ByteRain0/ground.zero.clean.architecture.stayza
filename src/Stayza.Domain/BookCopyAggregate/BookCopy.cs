@@ -62,13 +62,15 @@ public class BookCopy : AggregateRoot
         if (IsLoaned)
             throw new BookCopyAlreadyLoanedException(userId);
 
-        var hasReservation = _reservations.Any(r =>
+        var reservation = _reservations.SingleOrDefault(r =>
             r.UserId == userId &&
             r.Status == ReservationStatus.Active);
 
-        if (!hasReservation)
+        if (reservation is null)
             throw new ReservationNotFound();
 
+        _reservations.Remove(reservation);
+        
         _currentLoan = new Loan(
             bookCopyId: Id,
             userId: userId,

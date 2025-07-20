@@ -30,10 +30,10 @@ public class BooksService
 
         foreach (var bookCopy in book.Copies)
         {
-            foreach (var activeReservation in bookCopy.ActiveReservations)
+            foreach (var activeReservation in bookCopy.ActiveReservations.Select(x => x.Id))
             {
                 bookCopy.CancelReservation(
-                    reservation: activeReservation,
+                    reservationId: activeReservation,
                     reason: "Book retired.");
             }
 

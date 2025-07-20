@@ -1,4 +1,5 @@
 using Microsoft.OpenApi.Models;
+using Stayza.Web.Infrastructure.Endpoints;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,6 +13,9 @@ builder.Services.AddSwaggerGen(config =>
 builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
 var app = builder.Build();
+
+// Register all endpoints defined in the Web Project
+app.UseEndpoints<Program>();
 
 app.UseSwagger();
 

@@ -11,37 +11,37 @@ public class BooksEndpoints : IEndpointsDefinition
 {
     public static void ConfigureEndpoints(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/v1/books")
+        var group = app.MapGroup("api/v1/books/")
             .WithTags("Books")
             .WithValidationFilter();
 
-        group.MapPost("api/v1/books", AddBook)
+        group.MapPost("", AddBook)
             .Accepts<AddBookCommand>(Constants.ContentTypes.ApplicationJson)
             .Produces(201)
             .ProducesValidationProblem()
             .WithName("AddBook");
 
-        group.MapGet("api/v1/books/{id:guid}", GetBookById)
+        group.MapGet("{id:guid}", GetBookById)
             .Produces(404)
             .Produces<Book>()
             .WithName("GetBookById");
 
-        group.MapGet("api/v1/books/{isbn}", GetBookByIsbn)
+        group.MapGet("{isbn}", GetBookByIsbn)
             .Produces(404)
             .Produces<Book>()
             .WithName("GetBookByIsbn");
 
-        group.MapPost("api/v1/books/{id:guid}/retire", RetireBook)
+        group.MapPost("{id:guid}/retire", RetireBook)
             .Produces(404)
             .Produces<Book>()
             .WithName("RetireBook");
 
-        group.MapPost("api/v1/books/{id:guid}", AddBookCopy)
+        group.MapPost("{id:guid}", AddBookCopy)
             .Produces(404)
             .Produces<BookCopy>()
             .WithName("AddBookCopy");
 
-        group.MapDelete("api/v1/books/{bookId:guid}/{bookCopyId:guid}", RemoveBookCopy)
+        group.MapDelete("{bookId:guid}/{bookCopyId:guid}", RemoveBookCopy)
             .Produces(404)
             .Produces<Book>()
             .WithName("RemoveBookCopy");
@@ -54,7 +54,10 @@ public class BooksEndpoints : IEndpointsDefinition
         HttpContext httpContext)
     {
         var book = await service.AddBook(command);
-        var path = linkGenerator.GetUriByName(httpContext, endpointName: "GetBookById", new { id = book.Id });
+        var path = linkGenerator.GetUriByName(
+            httpContext, 
+            endpointName: "GetBookById", 
+            new { id = book.Id });
         return Results.Created(path, book);
     }
 
@@ -70,10 +73,14 @@ public class BooksEndpoints : IEndpointsDefinition
         CancellationToken cancellationToken) =>
         Results.Ok(await service.GetBookByIsbn(isbn, cancellationToken));
 
-    private static async Task<IResult> RetireBook(Guid id, BooksService service)
+    private static async Task<IResult> RetireBook(
+        Guid id, 
+        BooksService service)
         => Results.Ok(await service.Retire(new RetireBookCommand(BookId: id)));
 
-    private static async Task<IResult> AddBookCopy(Guid id, BooksService service)
+    private static async Task<IResult> AddBookCopy(
+        Guid id, 
+        BooksService service)
         => Results.Ok(await service.AddBookCopy(new AddBookCopyCommand(BookId: id)));
 
     private static async Task<IResult> RemoveBookCopy(
