@@ -4,6 +4,7 @@
     <PackageReference Include="Hangfire.AspNetCore"/>
     <PackageReference Include="Hangfire.PostgreSql"/>
     <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions"/>
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
     <PackageReference Include="Npgsql.OpenTelemetry"/>
     <PackageReference Include="OpenTelemetry"/>
     <PackageReference Include="OpenTelemetry.Exporter.Console"/>

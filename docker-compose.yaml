@@ -1,6 +1,37 @@
 ﻿services:
-  stayza:
-    image: stayza
-    build:
-      context: .
-      dockerfile: src/Stayza/Dockerfile
+#  stayza:
+#    image: stayza
+#    build:
+#      context: .
+#      dockerfile: src/Stayza/Dockerfile
+  
+  postgres:
+    container_name: database
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+   
+  rabbitmq:
+    container_name: rabbitmq
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672" # RabbitMQ default port
+      - "15672:15672" # Management plugin port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  redis:
+    container_name: redis
+    image: "redis:latest"
+    ports:
+      - "6379:6379" # Redis default port
+      
+volumes:
+  postgres_data:

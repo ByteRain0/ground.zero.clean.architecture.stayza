@@ -19,6 +19,11 @@ builder.Services.AddSwaggerExamplesFromAssemblyOf<Program>();
 
 var app = builder.Build();
 
+if (app.Environment.IsDevelopment())
+{
+    app.ApplyDbMigrations();
+}
+
 // Register all endpoints defined in the Web Project
 app.UseEndpoints<Program>();
 
