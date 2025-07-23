@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Stayza.Application.Loans;
 using Stayza.Application.Loans.Commands;
+using Stayza.Application.Loans.Queries;
 using Stayza.Core.Context;
+using Stayza.Core.PagingAndSorting;
+using Stayza.Domain.BookCopyAggregate;
 using Stayza.Web.Infrastructure.Endpoints;
+using static Stayza.Web.Infrastructure.Endpoints.Constants.ContentTypes;
 
 namespace Stayza.Web.Endpoints.Loans;
 
@@ -10,34 +14,43 @@ public class LoansEndpoints : IEndpointsDefinition
 {
     public static void ConfigureEndpoints(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/v1/book-copies/")
+        var bookCopiesGroup = app.MapGroup("api/v1/book-copies/")
             .WithTags("copies")
             .WithValidationFilter();
-        
-        // There can be 2 patterns here:
-        // complex : api/v1/books/{bookId:guid}/{bookCopyId:guid}/reservations
-        // simplified: api/v1/book-copies/{id:guid}/reservations
 
-        group.MapPost("{id:guid}/reservations", ReserveBookCopy)
+        var loansGroup = app.MapGroup("api/v1/loans")
+            .WithTags("loans")
+            .WithValidationFilter();
+        
+        bookCopiesGroup.MapPost("{id:guid}/reservations", ReserveBookCopy)
             .Produces(404)
-            .Produces(201)
+            .Produces<Reservation>(201, ApplicationJson)
             .WithName("ReserveBookCopy");
 
-        group.MapDelete("{id:guid}/reservations/{reservationId:guid}", CancelBookReservation)
+        bookCopiesGroup.MapPut("{id:guid}/reservations/{reservationId:guid}/cancel", CancelBookReservation)
             .Produces(404)
-            .Produces(200)
+            .Produces<Reservation>(200, ApplicationJson)
             .WithName("CancelBookReservation");
 
-        group.MapPost("{id:guid}/loans", StartLoan)
+        bookCopiesGroup.MapPost("{id:guid}/loans", LoanBookCopy)
             .Produces(404)
-            .Produces(201)
-            .WithName("StartLoan");
-        
-        group.MapPost("{id:guid}/loans/{loanId:guid}", ReturnBookCopy)
+            .Produces<Loan>(201, ApplicationJson)
+            .WithName("LoanBookCopy");
+
+        bookCopiesGroup.MapPut("{id:guid}/loans/return", ReturnBookCopy)
             .Produces(404)
-            .Produces(200)
+            .Produces<Loan>(200, ApplicationJson)
             .WithName("ReturnBookCopy");
-            
+
+        loansGroup.MapGet("{id:guid}", GetLoanById)
+            .Produces(404)
+            .Produces<Loan>(200, ApplicationJson)
+            .WithName("GetLoanById");
+
+        loansGroup.MapGet("", GetLoansByUserId)
+            .Produces(404)
+            .Produces<PagedList<Loan>>(200, ApplicationJson)
+            .WithName("LoansByUserId");
     }
 
     private static async Task<IResult> ReserveBookCopy(
@@ -50,12 +63,12 @@ public class LoansEndpoints : IEndpointsDefinition
     {
         var reservation = await service.ReserveBookCopy(
             new ReserveBookCopyCommand(
-                BookCopyId: id, 
+                BookCopyId: id,
                 UserId: userContext.CurrentUserId()));
         var path = linkGenerator.GetUriByName(
-            httpContext, 
-            endpointName: "GetBookCopyReservationById", 
-            new { id = reservation.Id });
+            httpContext,
+            endpointName: "GetBookCopyReservationById",
+            new {id = reservation.Id});
         return Results.Created(path, reservation);
     }
 
@@ -65,21 +78,22 @@ public class LoansEndpoints : IEndpointsDefinition
         [FromBody] string reason,
         LoansService service) =>
         Results.Ok(await service.CancelReservation(new CancelReservationCommand(
-            BookCopyId: id, 
+            BookCopyId: id,
             ReservationId: reservationId,
             Reason: reason)));
 
-    private static async Task<IResult> StartLoan(
+    private static async Task<IResult> LoanBookCopy(
         Guid id,
         LoansService service,
         LinkGenerator linkGenerator,
         IUserContext userContext,
+        // The http context can be inferred from the UserContext if all you ever write are web api's.
         HttpContext httpContext)
     {
         var loan = await service.StartLoan(new StartLoanCommand(
-            BookCopyId: id, 
+            BookCopyId: id,
             UserId: userContext.CurrentUserId()));
-        var path = linkGenerator.GetUriByName(httpContext, endpointName: "GetLoanById", new { id = loan.Id });
+        var path = linkGenerator.GetUriByName(httpContext, endpointName: "GetLoanById", new {id = loan.Id});
         return Results.Created(path, loan);
     }
 
@@ -91,4 +105,28 @@ public class LoansEndpoints : IEndpointsDefinition
             new ReturnBookCopyCommand(
                 BookCopyId: id,
                 UserId: userContext.CurrentUserId())));
+
+    private static async Task<IResult> GetLoanById(
+        Guid id,
+        CancellationToken cancellationToken,
+        LoansService service) =>
+        Results.Ok(await service.GetLoanById(id, cancellationToken));
+
+    private static async Task<IResult> GetLoansByUserId(
+        [FromServices] IUserContext userContext,
+        [FromServices] LoansService service,
+        CancellationToken cancellationToken,
+        [FromRoute] int? page,
+        [FromRoute] int? pageSize,
+        [FromRoute] string? sortColumn = nameof(Loan.ReturnDate),
+        [FromRoute] SortOrder? sortOrder = SortOrder.Descending
+        ) =>
+        Results.Ok(await service.GetLoans(new GetLoansQuery
+        {
+            Page = page ?? 1,
+            PageSize = pageSize ?? 50,
+            SortColumn = sortColumn ?? nameof(Loan.ReturnDate),
+            SortOrder = sortOrder ?? SortOrder.Descending,
+            UserId = userContext.CurrentUserId()
+        }, cancellationToken));
 }

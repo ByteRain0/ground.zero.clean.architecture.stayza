@@ -4,6 +4,7 @@ using Stayza.Application.Books.Commands;
 using Stayza.Domain.BookAggregate;
 using Stayza.Domain.BookCopyAggregate;
 using Stayza.Web.Infrastructure.Endpoints;
+using static Stayza.Web.Infrastructure.Endpoints.Constants.ContentTypes;
 
 namespace Stayza.Web.Endpoints.Books;
 
@@ -16,19 +17,19 @@ public class BooksEndpoints : IEndpointsDefinition
             .WithValidationFilter();
 
         group.MapPost("", AddBook)
-            .Accepts<AddBookCommand>(Constants.ContentTypes.ApplicationJson)
-            .Produces(201)
+            .Accepts<AddBookCommand>(ApplicationJson)
+            .Produces<Book>(201, ApplicationJson)
             .ProducesValidationProblem()
             .WithName("AddBook");
 
         group.MapGet("{id:guid}", GetBookById)
             .Produces(404)
-            .Produces<Book>()
+            .Produces<Book>(200, ApplicationJson)
             .WithName("GetBookById");
 
         group.MapGet("{isbn}", GetBookByIsbn)
             .Produces(404)
-            .Produces<Book>()
+            .Produces<Book>(200, ApplicationJson)
             .WithName("GetBookByIsbn");
 
         group.MapPost("{id:guid}/retire", RetireBook)

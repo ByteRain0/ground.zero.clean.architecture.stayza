@@ -1,4 +1,5 @@
 using Stayza.Core.Entity;
+using Stayza.Core.Exceptions;
 using Stayza.Domain.BookCopyAggregate.Events;
 using Stayza.Domain.BookCopyAggregate.Exceptions;
 
@@ -67,7 +68,9 @@ public class BookCopy : AggregateRoot
             r.Status == ReservationStatus.Active);
 
         if (reservation is null)
-            throw new ReservationNotFound();
+            throw new EntityNotFoundException(
+                entityType: nameof(BookCopy),
+                searchKey: $"userId: {userId}");
 
         _reservations.Remove(reservation);
         
@@ -116,7 +119,9 @@ public class BookCopy : AggregateRoot
         var reservation = _reservations.SingleOrDefault(x => x.Id == reservationId);
 
         if (reservation is null)
-            throw new ReservationNotFound();
+            throw new EntityNotFoundException(
+                entityType: nameof(Reservation),
+                searchKey: reservationId.ToString());
 
         if (utcNow < reservation.ExpiresAt)
             throw new InvalidOperationException("Cannot expire still-valid reservation");
@@ -138,7 +143,9 @@ public class BookCopy : AggregateRoot
         var reservation = _reservations.SingleOrDefault(x => x.Id == reservationId);
 
         if (reservation is null)
-            throw new ReservationNotFound();
+            throw new EntityNotFoundException(
+                entityType: nameof(Reservation),
+                searchKey: reservationId.ToString());
 
         if (reservation.Status == ReservationStatus.Cancelled)
             throw new ReservationAlreadyCancelledException();
@@ -163,7 +170,9 @@ public class BookCopy : AggregateRoot
         var reservation = ActiveReservations.SingleOrDefault(x => x.Id == reservationId);
 
         if (reservation is null)
-            throw new ReservationNotFound();
+            throw new EntityNotFoundException(
+                entityType: nameof(Reservation),
+                searchKey: reservationId.ToString());
 
         if (reservation.Status == ReservationStatus.Cancelled)
             throw new ReservationAlreadyCancelledException();

@@ -1,4 +1,6 @@
 using Stayza.Application.Loans.Commands;
+using Stayza.Application.Loans.Queries;
+using Stayza.Core.PagingAndSorting;
 using Stayza.Domain.BookCopyAggregate;
 
 namespace Stayza.Application.Loans;
@@ -74,4 +76,18 @@ public class LoansService
 
         return loan;
     }
+
+    public Task<Loan> GetLoanById(Guid id, CancellationToken cancellationToken) 
+        => _repository.GetLoanById(id, cancellationToken);
+
+    public Task<PagedList<Loan>> GetLoans(
+        GetLoansQuery query,
+        CancellationToken cancellationToken) =>
+        _repository.GetLoans(
+            page: query.Page, 
+            pageSize: query.PageSize, 
+            sortOrder: query.SortOrder,
+            sortColumn: query.SortColumn, 
+            userId: query.UserId,
+            cancellationToken: cancellationToken);
 }

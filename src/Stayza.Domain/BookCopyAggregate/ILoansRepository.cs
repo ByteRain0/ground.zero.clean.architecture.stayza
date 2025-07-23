@@ -1,3 +1,5 @@
+using Stayza.Core.PagingAndSorting;
+
 namespace Stayza.Domain.BookCopyAggregate;
 
 public interface ILoansRepository
@@ -12,11 +14,11 @@ public interface ILoansRepository
     /// <param name="endTimeOffset"></param>
     /// <param name="cancellationToken"></param>
     /// <returns></returns>
-    Task<Loan> GetLoansThatAreOverdueAfter(
+    Task<List<Loan>> GetLoansThatAreOverdueAfter(
         DateTimeOffset endTimeOffset,
         CancellationToken cancellationToken);
 
-    Task<Reservation> GetReservationThatShouldExpireAfter(
+    Task<List<Reservation>> GetReservationThatShouldExpireAfter(
         DateTimeOffset endTimeOffset,
         CancellationToken cancellationToken);
 
@@ -25,4 +27,14 @@ public interface ILoansRepository
     /// </summary>
     /// <returns></returns>
     Task RemoveExpiredOrCancelledReservations();
+
+    Task<Loan> GetLoanById(Guid id, CancellationToken cancellationToken);
+
+    Task<PagedList<Loan>> GetLoans(
+        int page,
+        int pageSize,
+        string? sortColumn,
+        SortOrder? sortOrder,
+        Guid? userId,
+        CancellationToken cancellationToken);
 }
