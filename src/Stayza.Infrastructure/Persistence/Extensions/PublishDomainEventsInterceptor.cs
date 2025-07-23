@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Stayza.Core.AsyncProcessing;
 using Stayza.Core.Entity;
 
-namespace Stayza.Infrastructure.Persistence.EventPublisher;
+namespace Stayza.Infrastructure.Persistence.Extensions;
 
 public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 {

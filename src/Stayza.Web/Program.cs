@@ -1,8 +1,13 @@
 using Microsoft.OpenApi.Models;
+using Stayza.Application;
+using Stayza.Infrastructure;
 using Stayza.Web.Infrastructure.Endpoints;
 using Swashbuckle.AspNetCore.Filters;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.AddApplication();
+builder.AddInfrastructure();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(config =>
