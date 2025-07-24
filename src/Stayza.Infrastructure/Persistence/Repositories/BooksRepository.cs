@@ -25,7 +25,7 @@ public class BooksRepository : IBooksRepository
     {
         _applicationDbContext.Books.Update(book);
         await _applicationDbContext.SaveChangesAsync();
-
+        
         return book;
     }
 
@@ -33,7 +33,9 @@ public class BooksRepository : IBooksRepository
         Guid id,
         CancellationToken cancellationToken)
     {
-        var book = await _applicationDbContext.Books.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        var book = await _applicationDbContext.Books
+            .Include(x => x.Copies)
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         if (book is null)
         {
@@ -49,7 +51,9 @@ public class BooksRepository : IBooksRepository
         string isbn,
         CancellationToken cancellationToken)
     {
-        var book = await _applicationDbContext.Books.FirstOrDefaultAsync(x => x.ISBN == isbn, cancellationToken);
+        var book = await _applicationDbContext.Books
+            .Include(x => x.Copies)
+            .FirstOrDefaultAsync(x => x.ISBN == isbn, cancellationToken);
 
         if (book is null)
         {

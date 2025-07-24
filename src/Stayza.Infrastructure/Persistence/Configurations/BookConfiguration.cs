@@ -11,6 +11,9 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
     {
         builder.HasKey(x => x.Id);
 
+        builder.Property(x => x.Id)
+            .ValueGeneratedNever();
+
         builder.Property(x => x.Title)
             // If you want to make sure title comparison is case in-sensitive use this approach:
             // https://www.npgsql.org/efcore/misc/collations-and-case-sensitivity.html?tabs=fluent-api

@@ -12,7 +12,7 @@ using Stayza.Infrastructure.Persistence;
 namespace Stayza.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250724172229_Initial")]
+    [Migration("20250724181920_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -28,7 +28,6 @@ namespace Stayza.Infrastructure.Migrations
             modelBuilder.Entity("Stayza.Domain.BookAggregate.Book", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("Author")
@@ -91,7 +90,6 @@ namespace Stayza.Infrastructure.Migrations
             modelBuilder.Entity("Stayza.Domain.BookCopyAggregate.BookCopy", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("BookId")
@@ -142,7 +140,6 @@ namespace Stayza.Infrastructure.Migrations
             modelBuilder.Entity("Stayza.Domain.BookCopyAggregate.Loan", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("BookCopyId")
@@ -164,7 +161,6 @@ namespace Stayza.Infrastructure.Migrations
             modelBuilder.Entity("Stayza.Domain.BookCopyAggregate.Reservation", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("BookCopyId")
@@ -194,7 +190,6 @@ namespace Stayza.Infrastructure.Migrations
             modelBuilder.Entity("Stayza.Domain.UserAggregate.User", b =>
                 {
                     b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<string>("EmailAddress")

@@ -37,7 +37,7 @@ public class BooksEndpoints : IEndpointsDefinition
             .Produces<Book>()
             .WithName("RetireBook");
 
-        group.MapPost("{id:guid}", AddBookCopy)
+        group.MapPost("{id:guid}/copies", AddBookCopy)
             .Produces(404)
             .Produces<BookCopy>()
             .WithName("AddBookCopy");

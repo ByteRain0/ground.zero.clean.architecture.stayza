@@ -14,7 +14,7 @@ public class BookCopy : AggregateRoot
 
     private Loan? _currentLoan;
 
-    public bool IsAvailable => _currentLoan == null || _currentLoan.IsReturned;
+    public bool IsAvailable => (_currentLoan == null || _currentLoan.IsReturned) && !IsRetired;
 
     public bool IsLoaned => _currentLoan != null && !_currentLoan.IsReturned;
 
