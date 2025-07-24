@@ -16,8 +16,11 @@ public class User : AggregateRoot
     public bool IsActive { get; set; }
         = true;
 
-    public List<Loan> ExistingLoans { get; private set; } = new();
-
+    public HashSet<Reservation> Reservations { get; private set; } = new();
+    
+    public HashSet<Loan> ExistingLoans { get; private set; } = new();
+    
+    
     [Obsolete("Used only by ef core")]
     public User()
     {

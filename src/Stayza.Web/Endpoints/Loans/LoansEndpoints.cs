@@ -21,33 +21,33 @@ public class LoansEndpoints : IEndpointsDefinition
         var loansGroup = app.MapGroup("api/v1/loans")
             .WithTags("loans")
             .WithValidationFilter();
-        
+
         bookCopiesGroup.MapPost("{id:guid}/reservations", ReserveBookCopy)
             .Produces(404)
             .Produces<Reservation>(201, ApplicationJson)
             .WithName("ReserveBookCopy");
-
+        
         bookCopiesGroup.MapPut("{id:guid}/reservations/{reservationId:guid}/cancel", CancelBookReservation)
             .Produces(404)
             .Produces<Reservation>(200, ApplicationJson)
             .WithName("CancelBookReservation");
-
+        
         bookCopiesGroup.MapPost("{id:guid}/loans", LoanBookCopy)
             .Produces(404)
             .Produces<Loan>(201, ApplicationJson)
             .WithName("LoanBookCopy");
-
+        
         bookCopiesGroup.MapPut("{id:guid}/loans/return", ReturnBookCopy)
             .Produces(404)
             .Produces<Loan>(200, ApplicationJson)
             .WithName("ReturnBookCopy");
-
+        
         loansGroup.MapGet("{id:guid}", GetLoanById)
             .Produces(404)
             .Produces<Loan>(200, ApplicationJson)
             .WithName("GetLoanById");
-
-        loansGroup.MapGet("", GetLoansByUserId)
+        
+        loansGroup.MapGet("/personal", GetLoansByUserId)
             .Produces(404)
             .Produces<PagedList<Loan>>(200, ApplicationJson)
             .WithName("LoansByUserId");
@@ -113,14 +113,14 @@ public class LoansEndpoints : IEndpointsDefinition
         Results.Ok(await service.GetLoanById(id, cancellationToken));
 
     private static async Task<IResult> GetLoansByUserId(
-        [FromServices] IUserContext userContext,
-        [FromServices] LoansService service,
+        int? page,
+        int? pageSize,
+        string? sortColumn,
+        SortOrder? sortOrder,
         CancellationToken cancellationToken,
-        [FromRoute] int? page,
-        [FromRoute] int? pageSize,
-        [FromRoute] string? sortColumn = nameof(Loan.ReturnDate),
-        [FromRoute] SortOrder? sortOrder = SortOrder.Descending
-        ) =>
+        [FromServices] IUserContext userContext,
+        [FromServices] LoansService service
+    ) =>
         Results.Ok(await service.GetLoans(new GetLoansQuery
         {
             Page = page ?? 1,

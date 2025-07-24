@@ -13,7 +13,7 @@ public class BooksEndpoints : IEndpointsDefinition
     public static void ConfigureEndpoints(IEndpointRouteBuilder app)
     {
         var group = app.MapGroup("api/v1/books/")
-            .WithTags("Books")
+            .WithTags("books")
             .WithValidationFilter();
 
         group.MapPost("", AddBook)

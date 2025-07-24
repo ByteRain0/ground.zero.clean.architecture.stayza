@@ -12,7 +12,7 @@ using Stayza.Infrastructure.Persistence;
 namespace Stayza.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250724170334_Initial")]
+    [Migration("20250724172229_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -97,17 +97,12 @@ namespace Stayza.Infrastructure.Migrations
                     b.Property<Guid>("BookId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("BookId1")
-                        .HasColumnType("uuid");
-
                     b.Property<bool>("IsRetired")
                         .HasColumnType("boolean");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BookId");
-
-                    b.HasIndex("BookId1");
 
                     b.ToTable("BookCopies");
 
@@ -159,16 +154,9 @@ namespace Stayza.Infrastructure.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<Guid?>("UserId1")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
-                    b.HasIndex("BookCopyId");
-
                     b.HasIndex("UserId");
-
-                    b.HasIndex("UserId1");
 
                     b.ToTable("Loans");
                 });
@@ -180,9 +168,6 @@ namespace Stayza.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("BookCopyId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("BookCopyId1")
                         .HasColumnType("uuid");
 
                     b.Property<DateTimeOffset>("ExpiresAt")
@@ -201,7 +186,7 @@ namespace Stayza.Infrastructure.Migrations
 
                     b.HasIndex("BookCopyId");
 
-                    b.HasIndex("BookCopyId1");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Reservations");
                 });
@@ -240,33 +225,19 @@ namespace Stayza.Infrastructure.Migrations
             modelBuilder.Entity("Stayza.Domain.BookCopyAggregate.BookCopy", b =>
                 {
                     b.HasOne("Stayza.Domain.BookAggregate.Book", null)
-                        .WithMany()
+                        .WithMany("Copies")
                         .HasForeignKey("BookId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Stayza.Domain.BookAggregate.Book", null)
-                        .WithMany("Copies")
-                        .HasForeignKey("BookId1");
                 });
 
             modelBuilder.Entity("Stayza.Domain.BookCopyAggregate.Loan", b =>
                 {
-                    b.HasOne("Stayza.Domain.BookCopyAggregate.BookCopy", null)
-                        .WithMany()
-                        .HasForeignKey("BookCopyId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Stayza.Domain.UserAggregate.User", null)
-                        .WithMany()
+                        .WithMany("ExistingLoans")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("Stayza.Domain.UserAggregate.User", null)
-                        .WithMany("ExistingLoans")
-                        .HasForeignKey("UserId1");
 
                     b.OwnsOne("Stayza.Domain.BookCopyAggregate.TimeRange", "TimeRange", b1 =>
                         {
@@ -294,14 +265,16 @@ namespace Stayza.Infrastructure.Migrations
             modelBuilder.Entity("Stayza.Domain.BookCopyAggregate.Reservation", b =>
                 {
                     b.HasOne("Stayza.Domain.BookCopyAggregate.BookCopy", null)
-                        .WithMany()
+                        .WithMany("ActiveReservations")
                         .HasForeignKey("BookCopyId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Stayza.Domain.BookCopyAggregate.BookCopy", null)
-                        .WithMany("ActiveReservations")
-                        .HasForeignKey("BookCopyId1");
+                    b.HasOne("Stayza.Domain.UserAggregate.User", null)
+                        .WithMany("Reservations")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Stayza.Domain.BookAggregate.Book", b =>
@@ -317,6 +290,8 @@ namespace Stayza.Infrastructure.Migrations
             modelBuilder.Entity("Stayza.Domain.UserAggregate.User", b =>
                 {
                     b.Navigation("ExistingLoans");
+
+                    b.Navigation("Reservations");
                 });
 #pragma warning restore 612, 618
         }

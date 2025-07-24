@@ -24,7 +24,7 @@ public class BookCopy : AggregateRoot
     /// - Posibilă validare să nu poți rezerva o carte de mai multe ori consecutiv dacă ai deja o rezervare neexpirată
     /// - Poți limita numărul maxim de rezervări active per BookCopy
     /// </summary>
-    private readonly List<Reservation> _reservations = new();
+    private readonly HashSet<Reservation> _reservations = new();
 
     public IReadOnlyCollection<Reservation> ActiveReservations =>
         _reservations.Where(r => r.Status == ReservationStatus.Active).ToList();

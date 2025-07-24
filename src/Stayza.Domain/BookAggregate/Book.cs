@@ -11,7 +11,7 @@ public class Book : AggregateRoot
 
     public string ISBN { get; private set; }
 
-    private readonly List<BookCopy> _copies = new();
+    private readonly HashSet<BookCopy> _copies = new();
 
     [Obsolete("Used only by ef core")]
     public Book()
@@ -29,7 +29,7 @@ public class Book : AggregateRoot
         ISBN = isbn;
     }
 
-    public IReadOnlyCollection<BookCopy> Copies => _copies.AsReadOnly();
+    public IReadOnlyCollection<BookCopy> Copies => _copies.ToList().AsReadOnly();
 
     public BookCopy AddCopy(Guid bookCopyId)
     {

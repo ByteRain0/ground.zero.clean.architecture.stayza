@@ -12,6 +12,9 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.HasKey(x => x.Id);
 
         builder.Property(x => x.Title)
+            // If you want to make sure title comparison is case in-sensitive use this approach:
+            // https://www.npgsql.org/efcore/misc/collations-and-case-sensitivity.html?tabs=fluent-api
+            //.UseCollation("case_insensitive")
             .IsRequired()
             .HasMaxLength(150);
 
@@ -22,10 +25,6 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
         builder.Property(x => x.ISBN)
             .IsRequired()
             .HasMaxLength(14);
-
-        builder.HasMany<BookCopy>()
-            .WithOne()
-            .HasForeignKey(x => x.BookId);
 
         builder.Ignore(x => x.DomainEvents);
     }
