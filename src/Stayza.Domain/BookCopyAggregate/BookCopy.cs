@@ -29,6 +29,11 @@ public class BookCopy : AggregateRoot
     public IReadOnlyCollection<Reservation> ActiveReservations =>
         _reservations.Where(r => r.Status == ReservationStatus.Active).ToList();
 
+    [Obsolete("Used only by ef core")]
+    public BookCopy()
+    {
+    }
+    
     public BookCopy(Guid id, Guid bookId)
         : base(id)
     {

@@ -6,9 +6,9 @@ namespace Stayza.Application.Books;
 
 public class BooksService
 {
-    private readonly IBookRepository _repository;
+    private readonly IBooksRepository _repository;
 
-    public BooksService(IBookRepository repository)
+    public BooksService(IBooksRepository repository)
     {
         _repository = repository;
     }

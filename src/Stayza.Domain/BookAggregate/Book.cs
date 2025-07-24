@@ -13,6 +13,11 @@ public class Book : AggregateRoot
 
     private readonly List<BookCopy> _copies = new();
 
+    [Obsolete("Used only by ef core")]
+    public Book()
+    {
+    }
+    
     public Book(
         string title,
         string author,

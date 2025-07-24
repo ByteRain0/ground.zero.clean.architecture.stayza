@@ -21,6 +21,10 @@
 
     <ItemGroup>
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+      <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+        <PrivateAssets>all</PrivateAssets>
+        <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      </PackageReference>
       <PackageReference Include="O9d.AspNet.FluentValidation" />
       <PackageReference Include="Swashbuckle.AspNetCore" />
       <PackageReference Include="Swashbuckle.AspNetCore.Filters" />

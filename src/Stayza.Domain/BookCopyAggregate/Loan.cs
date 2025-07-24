@@ -14,6 +14,11 @@ public class Loan
 
     public bool IsReturned => ReturnDate.HasValue;
 
+    [Obsolete("Used only by ef core")]
+    public Loan()
+    {
+    }
+    
     public Loan(
         Guid bookCopyId,
         Guid userId,

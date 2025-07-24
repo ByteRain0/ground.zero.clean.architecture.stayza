@@ -18,6 +18,11 @@ public class User : AggregateRoot
 
     public List<Loan> ExistingLoans { get; private set; } = new();
 
+    [Obsolete("Used only by ef core")]
+    public User()
+    {
+    }
+    
     public User(
         string firstName,
         string lastName,

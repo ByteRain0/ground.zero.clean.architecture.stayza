@@ -1,6 +1,6 @@
 namespace Stayza.Domain.BookAggregate;
 
-public interface IBookRepository
+public interface IBooksRepository
 {
     Task<Book> Add(Book book);
 

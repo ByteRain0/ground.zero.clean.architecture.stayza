@@ -21,7 +21,7 @@ public class BookConfiguration : IEntityTypeConfiguration<Book>
 
         builder.Property(x => x.ISBN)
             .IsRequired()
-            .HasMaxLength(10);
+            .HasMaxLength(14);
 
         builder.HasMany<BookCopy>()
             .WithOne()

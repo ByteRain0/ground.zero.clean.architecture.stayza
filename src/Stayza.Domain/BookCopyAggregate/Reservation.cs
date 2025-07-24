@@ -17,6 +17,11 @@ public class Reservation : Entity
 
     public ReservationStatus Status { get; set; }
 
+    [Obsolete("Used only by ef core")]
+    public Reservation()
+    {
+    }
+    
     public Reservation(
         Guid userId,
         DateTimeOffset reservedAt,
