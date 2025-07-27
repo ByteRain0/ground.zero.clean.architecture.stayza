@@ -1,6 +1,20 @@
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World!");
+app.MapPost("/api/v1/notifications", (Notification notification) =>
+{
+    if (string.IsNullOrEmpty(notification.UserId))
+    {
+        return Results.BadRequest();
+    }
+
+    // Some mock result:
+    return Results.Created("api/v1/notifications", notification);
+});
 
 app.Run();
+
+public record Notification(
+    string UserId,
+    string Type,
+    string Message);

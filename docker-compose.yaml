@@ -32,6 +32,23 @@
     image: "redis:latest"
     ports:
       - "6379:6379" # Redis default port
-      
+  
+  notifications_api:
+    container_name: notifications_api
+    image: notifications_api
+    build:
+      context: .
+      dockerfile: src/Notifications.Web/dockerfile
+    ports:
+      - "1000:80"
+      - "1001:443"
+    environment: #https://learn.microsoft.com/en-us/aspnet/core/security/docker-https?view=aspnetcore-9.0 -> tutorial on generating certificates
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    
 volumes:
   postgres_data:
