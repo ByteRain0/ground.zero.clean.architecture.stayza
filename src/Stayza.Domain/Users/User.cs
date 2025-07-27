@@ -1,7 +1,7 @@
 using Stayza.Core.Entity;
-using Stayza.Domain.BookCopyAggregate;
+using Stayza.Domain.Loans;
 
-namespace Stayza.Domain.UserAggregate;
+namespace Stayza.Domain.Users;
 
 public class User : AggregateRoot
 {

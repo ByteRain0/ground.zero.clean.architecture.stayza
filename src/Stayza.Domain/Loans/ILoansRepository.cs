@@ -1,6 +1,6 @@
 using Stayza.Core.PagingAndSorting;
 
-namespace Stayza.Domain.BookCopyAggregate;
+namespace Stayza.Domain.Loans;
 
 public interface ILoansRepository
 {

@@ -1,4 +1,4 @@
-namespace Stayza.Domain.UserAggregate;
+namespace Stayza.Domain.Users;
 
 /// <summary>
 /// A DS is a service that contains only business logic.

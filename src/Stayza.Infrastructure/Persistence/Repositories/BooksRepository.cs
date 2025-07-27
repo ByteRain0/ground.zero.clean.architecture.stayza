@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Stayza.Core.Exceptions;
-using Stayza.Domain.BookAggregate;
+using Stayza.Domain.Books;
 
 namespace Stayza.Infrastructure.Persistence.Repositories;
 

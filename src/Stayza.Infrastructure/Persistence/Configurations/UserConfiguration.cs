@@ -1,7 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Stayza.Domain.BookCopyAggregate;
-using Stayza.Domain.UserAggregate;
+using Stayza.Domain.Users;
 
 namespace Stayza.Infrastructure.Persistence.Configurations;
 

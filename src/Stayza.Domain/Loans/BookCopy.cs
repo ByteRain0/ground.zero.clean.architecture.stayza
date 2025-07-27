@@ -1,9 +1,9 @@
 using Stayza.Core.Entity;
 using Stayza.Core.Exceptions;
-using Stayza.Domain.BookCopyAggregate.Events;
-using Stayza.Domain.BookCopyAggregate.Exceptions;
+using Stayza.Domain.Loans.Events;
+using Stayza.Domain.Loans.Exceptions;
 
-namespace Stayza.Domain.BookCopyAggregate;
+namespace Stayza.Domain.Loans;
 
 public class BookCopy : AggregateRoot
 {

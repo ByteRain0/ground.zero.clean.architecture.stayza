@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using Stayza.Domain.BookAggregate;
-using Stayza.Domain.BookCopyAggregate;
-using Stayza.Domain.UserAggregate;
+using Stayza.Domain.Books;
+using Stayza.Domain.Loans;
+using Stayza.Domain.Users;
 using Stayza.Infrastructure.Persistence.DataSeed;
 
 namespace Stayza.Infrastructure.Persistence;

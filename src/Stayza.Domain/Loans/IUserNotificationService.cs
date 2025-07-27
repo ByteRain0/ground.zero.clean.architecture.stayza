@@ -1,4 +1,4 @@
-namespace Stayza.Domain.BookCopyAggregate;
+namespace Stayza.Domain.Loans;
 
 public interface IUserNotificationService
 {

@@ -1,4 +1,4 @@
-namespace Stayza.Domain.BookAggregate;
+namespace Stayza.Domain.Books;
 
 public interface IBooksRepository
 {

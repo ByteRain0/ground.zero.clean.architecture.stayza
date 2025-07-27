@@ -1,6 +1,6 @@
 using Stayza.Core.Entity;
 
-namespace Stayza.Domain.BookCopyAggregate;
+namespace Stayza.Domain.Loans;
 
 public class Reservation : Entity
 {

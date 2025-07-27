@@ -1,3 +1,5 @@
+using Notifications.Web;
+
 var builder = WebApplication.CreateBuilder(args);
 var app = builder.Build();
 
@@ -14,7 +16,9 @@ app.MapPost("/api/v1/notifications", (Notification notification) =>
 
 app.Run();
 
-public record Notification(
-    string UserId,
-    string Type,
-    string Message);
+namespace Notifications.Web
+{
+    public record Notification(
+        string UserId,
+        string Type);
+}

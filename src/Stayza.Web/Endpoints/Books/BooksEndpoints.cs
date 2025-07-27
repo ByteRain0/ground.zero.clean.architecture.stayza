@@ -1,8 +1,8 @@
 using O9d.AspNet.FluentValidation;
 using Stayza.Application.Books;
 using Stayza.Application.Books.Commands;
-using Stayza.Domain.BookAggregate;
-using Stayza.Domain.BookCopyAggregate;
+using Stayza.Domain.Books;
+using Stayza.Domain.Loans;
 using Stayza.Web.Infrastructure.Endpoints;
 using static Stayza.Web.Infrastructure.Endpoints.Constants.ContentTypes;
 

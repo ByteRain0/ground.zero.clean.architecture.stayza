@@ -1,7 +1,7 @@
 using Stayza.Application.Loans.Commands;
 using Stayza.Application.Loans.Queries;
 using Stayza.Core.PagingAndSorting;
-using Stayza.Domain.BookCopyAggregate;
+using Stayza.Domain.Loans;
 
 namespace Stayza.Application.Loans;
 

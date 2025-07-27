@@ -1,4 +1,4 @@
-namespace Stayza.Domain.BookCopyAggregate.Exceptions;
+namespace Stayza.Domain.Loans.Exceptions;
 
 public class BookCopyAlreadyLoanedException : Exception
 {

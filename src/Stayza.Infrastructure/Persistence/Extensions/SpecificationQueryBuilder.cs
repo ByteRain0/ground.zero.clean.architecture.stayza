@@ -1,7 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Stayza.Core.Specifications;
 
-namespace Stayza.Infrastructure.Persistence.Specifications;
+namespace Stayza.Infrastructure.Persistence.Extensions;
 
 /// <summary>
 /// Query builder specific to the infrastructure implementation.

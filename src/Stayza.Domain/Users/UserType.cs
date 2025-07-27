@@ -1,4 +1,4 @@
-namespace Stayza.Domain.UserAggregate;
+namespace Stayza.Domain.Users;
 
 public enum UserType
 {

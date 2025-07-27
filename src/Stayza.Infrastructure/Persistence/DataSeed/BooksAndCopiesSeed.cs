@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
-using Stayza.Domain.BookAggregate;
-using Stayza.Domain.BookCopyAggregate;
+using Stayza.Domain.Books;
+using Stayza.Domain.Loans;
 
 namespace Stayza.Infrastructure.Persistence.DataSeed;
 

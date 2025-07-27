@@ -5,8 +5,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Stayza.Core.AsyncProcessing;
 using Stayza.Core.Context;
-using Stayza.Domain.BookAggregate;
-using Stayza.Domain.BookCopyAggregate;
+using Stayza.Domain.Books;
+using Stayza.Domain.Loans;
 using Stayza.Infrastructure.Messaging;
 using Stayza.Infrastructure.Notifications;
 using Stayza.Infrastructure.Persistence;
@@ -27,8 +27,12 @@ public static class AppllicationBuilderExtensions
             .AddScoped<IBooksRepository, BooksRepository>()
             .AddScoped<IUserContext, UserContextAccessor>()
             .AddSingleton<TimeProvider>(TimeProvider.System)
-            .AddScoped<IUserNotificationService, UserNotificationsService>()
-            .AddScoped<IPublisher, RabbitMqMessagePublisher>();
+            .AddScoped<IPublisher, RabbitMqMessagePublisher>()
+            .AddHttpClient<IUserNotificationService, UserNotificationsService>(client =>
+            {
+                client.BaseAddress = new Uri(builder.Configuration["Notifications__URL"] 
+                                             ?? throw new Exception("Invalid notifications api configuration provided"));
+            });
         
         builder.Services.AddHttpContextAccessor();
         return builder;

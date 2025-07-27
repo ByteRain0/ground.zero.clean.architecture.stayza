@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Stayza.Core.Exceptions;
 using Stayza.Core.PagingAndSorting;
-using Stayza.Domain.BookCopyAggregate;
+using Stayza.Domain.Loans;
 using Stayza.Infrastructure.Persistence.Extensions;
 
 namespace Stayza.Infrastructure.Persistence.Repositories;

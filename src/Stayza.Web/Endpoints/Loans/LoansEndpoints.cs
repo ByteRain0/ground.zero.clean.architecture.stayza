@@ -4,7 +4,7 @@ using Stayza.Application.Loans.Commands;
 using Stayza.Application.Loans.Queries;
 using Stayza.Core.Context;
 using Stayza.Core.PagingAndSorting;
-using Stayza.Domain.BookCopyAggregate;
+using Stayza.Domain.Loans;
 using Stayza.Web.Infrastructure.Endpoints;
 using static Stayza.Web.Infrastructure.Endpoints.Constants.ContentTypes;
 
