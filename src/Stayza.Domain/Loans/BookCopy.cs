@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using Stayza.Core.Entity;
 using Stayza.Core.Exceptions;
 using Stayza.Domain.Loans.Events;
@@ -9,22 +10,15 @@ public class BookCopy : AggregateRoot
 {
     public Guid BookId { get; set; }
 
-    public bool IsRetired { get; set; }
-        = false;
+    public bool IsRetired { get; private set; } = false;
 
     private Loan? _currentLoan;
 
-    public bool IsAvailable => (_currentLoan == null || _currentLoan.IsReturned) && !IsRetired;
+    public bool IsAvailable => _currentLoan == null || _currentLoan.IsReturned;
 
     public bool IsLoaned => _currentLoan != null && !_currentLoan.IsReturned;
-
-    /// <summary>
-    /// TODO: At some point the amount of reservations will increase so we need a way to remove/archive old reservations.
-    /// - Verificare ca o carte nu poate fi rezervată de două ori de același utilizator pe același BookCopy
-    /// - Posibilă validare să nu poți rezerva o carte de mai multe ori consecutiv dacă ai deja o rezervare neexpirată
-    /// - Poți limita numărul maxim de rezervări active per BookCopy
-    /// </summary>
-    private readonly HashSet<Reservation> _reservations = new();
+    
+    private readonly HashSet<Reservation> _reservations;
 
     public IReadOnlyCollection<Reservation> ActiveReservations =>
         _reservations.Where(r => r.Status == ReservationStatus.Active).ToList();
@@ -32,22 +26,28 @@ public class BookCopy : AggregateRoot
     [Obsolete("Used only by ef core")]
     public BookCopy()
     {
+        _reservations = new();
     }
-    
+
     public BookCopy(Guid id, Guid bookId)
         : base(id)
     {
         BookId = bookId;
+        _reservations = new();
     }
 
     public Reservation Reserve(
         Guid userId,
         DateTimeOffset utcNow)
     {
-        if (!IsAvailable && !IsRetired)
+        // Either this in every method or add a test at IRepository level.
+        Guard.Against.Null(_reservations);
+
+        if (IsRetired)
             throw new BookNotAvailableForReservation();
 
-        if (_reservations.Any(r => r.UserId == userId && r.Status == ReservationStatus.Active))
+        if (_reservations.Any(r => 
+                r.UserId == userId && r.Status == ReservationStatus.Active))
             throw new ReservationAlreadyExistsException(userId);
 
         var reservation = new Reservation(
@@ -65,6 +65,8 @@ public class BookCopy : AggregateRoot
         Guid userId,
         DateTimeOffset utcNow)
     {
+        Guard.Against.Null(_reservations);
+
         if (IsLoaned)
             throw new BookCopyAlreadyLoanedException(userId);
 
@@ -78,7 +80,7 @@ public class BookCopy : AggregateRoot
                 searchKey: $"userId: {userId}");
 
         _reservations.Remove(reservation);
-        
+
         _currentLoan = new Loan(
             bookCopyId: Id,
             userId: userId,
@@ -101,10 +103,12 @@ public class BookCopy : AggregateRoot
         Guid userId,
         DateTimeOffset utcNow)
     {
+        Guard.Against.Null(_currentLoan);
+
         if (!IsLoaned)
             throw new InvalidOperationException("Copy is not loaned.");
 
-        if (_currentLoan!.UserId != userId)
+        if (_currentLoan.UserId != userId)
             throw new InvalidOperationException("Cannot return not owned book");
 
         _currentLoan!.MarkAsReturned(returnedAt: utcNow);
@@ -121,6 +125,8 @@ public class BookCopy : AggregateRoot
         Guid reservationId,
         DateTimeOffset utcNow)
     {
+        Guard.Against.Null(_reservations);
+
         var reservation = _reservations.SingleOrDefault(x => x.Id == reservationId);
 
         if (reservation is null)
@@ -145,6 +151,8 @@ public class BookCopy : AggregateRoot
         Guid reservationId,
         DateTimeOffset utcNow)
     {
+        Guard.Against.Null(_reservations);
+
         var reservation = _reservations.SingleOrDefault(x => x.Id == reservationId);
 
         if (reservation is null)
@@ -172,6 +180,8 @@ public class BookCopy : AggregateRoot
         Guid reservationId,
         string reason)
     {
+        Guard.Against.Null(_reservations);
+
         var reservation = ActiveReservations.SingleOrDefault(x => x.Id == reservationId);
 
         if (reservation is null)
@@ -191,5 +201,17 @@ public class BookCopy : AggregateRoot
             Reason: reason));
 
         return reservation;
+    }
+    
+    public void Retire()
+    {
+        foreach (var activeReservation in ActiveReservations.Select(x => x.Id))
+        {
+            CancelReservation(
+                reservationId: activeReservation,
+                reason: "BOOK_RETIRED");
+        }
+
+        IsRetired = true;
     }
 }

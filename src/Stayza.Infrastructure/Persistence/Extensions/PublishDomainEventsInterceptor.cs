@@ -1,32 +1,32 @@
 using Microsoft.EntityFrameworkCore.Diagnostics;
-using Stayza.Core.AsyncProcessing;
 using Stayza.Core.Entity;
+using Stayza.Core.Messaging;
 
 namespace Stayza.Infrastructure.Persistence.Extensions;
 
 public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 {
-    private readonly IPublisher _publisher;
+    private readonly IMessageProducer _messageProducer;
 
-    public PublishDomainEventsInterceptor(IPublisher publisher)
+    public PublishDomainEventsInterceptor(IMessageProducer messageProducer)
     {
-        _publisher = publisher;
+        _messageProducer = messageProducer;
     }
 
-    public override async ValueTask<int> SavedChangesAsync(
+    public override ValueTask<int> SavedChangesAsync(
         SaveChangesCompletedEventData eventData,
         int result,
         CancellationToken cancellationToken = default)
     {
         if (eventData.Context is not null)
-        {
-            await PublishDomainEventsAsync(eventData.Context);
+        { 
+            PublishDomainEventsAsync(eventData.Context);
         }
 
-        return result;
+        return ValueTask.FromResult(result);
     }
 
-    private async Task PublishDomainEventsAsync(Microsoft.EntityFrameworkCore.DbContext context)
+    private void PublishDomainEventsAsync(Microsoft.EntityFrameworkCore.DbContext context)
     {
         var domainEvents = context
             .ChangeTracker
@@ -42,7 +42,13 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 
         foreach (IDomainEvent domainEvent in domainEvents)
         {
-            await _publisher.Publish(domainEvent);
+            var header = new Header(
+                sourceCode: "stayza_web",
+                eventCode: domainEvent.GetType().Name);
+
+            var message = new Message(header: header, body: domainEvent);
+            
+            _messageProducer.PublishMessage(message, domainEvent.RoutingKey);
         }
     }
 }

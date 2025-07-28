@@ -8,25 +8,15 @@ using Stayza.Infrastructure.Persistence.Extensions;
 
 namespace Stayza.Infrastructure.Persistence.Repositories;
 
-internal class LoansRepository : ILoansRepository
+internal class LoansRepository(
+    ApplicationDbContext applicationDbContext, 
+    ILogger<LoansRepository> logger) : ILoansRepository
 {
-    private readonly ApplicationDbContext _applicationDbContext;
-
-    private readonly ILogger<LoansRepository> _logger;
-
-    public LoansRepository(
-        ApplicationDbContext applicationDbContext,
-        ILogger<LoansRepository> logger)
-    {
-        _applicationDbContext = applicationDbContext;
-        _logger = logger;
-    }
-
     public async Task<BookCopy> GetBookCopyById(
         Guid id,
         CancellationToken cancellationToken)
     {
-        var bookCopy = await _applicationDbContext.BookCopies.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        var bookCopy = await applicationDbContext.BookCopies.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         if (bookCopy is null)
         {
@@ -40,8 +30,8 @@ internal class LoansRepository : ILoansRepository
 
     public async Task<BookCopy> UpdateBookCopy(BookCopy bookCopy)
     {
-        _applicationDbContext.Update(bookCopy);
-        await _applicationDbContext.SaveChangesAsync();
+        applicationDbContext.Update(bookCopy);
+        await applicationDbContext.SaveChangesAsync();
 
         return bookCopy;
     }
@@ -49,7 +39,7 @@ internal class LoansRepository : ILoansRepository
     public async Task<List<Loan>> GetLoansThatAreOverdueAfter(
         DateTimeOffset endTimeOffset,
         CancellationToken cancellationToken) =>
-        await _applicationDbContext.Loans
+        await applicationDbContext.Loans
             .Where(x => x.IsReturned == false)
             .Where(x => x.TimeRange.End < endTimeOffset)
             .ToListAsync(cancellationToken: cancellationToken);
@@ -57,25 +47,25 @@ internal class LoansRepository : ILoansRepository
     public Task<List<Reservation>> GetReservationThatShouldExpireAfter(
         DateTimeOffset endTimeOffset,
         CancellationToken cancellationToken) =>
-        _applicationDbContext.Reservations
+        applicationDbContext.Reservations
             .Where(x => x.Status == ReservationStatus.Active)
             .Where(x => x.ExpiresAt > endTimeOffset)
             .ToListAsync(cancellationToken: cancellationToken);
 
     public async Task RemoveExpiredOrCancelledReservations()
     {
-        var countOfEntries = await _applicationDbContext.Reservations.Where(x =>
+        var countOfEntries = await applicationDbContext.Reservations.Where(x =>
                 x.Status == ReservationStatus.Expired
                 || x.Status == ReservationStatus.Cancelled)
             .ExecuteDeleteAsync();
         
         // An example of a human focused log entry that can bring value.
-        _logger.LogInformation("A total of {deletedReservationsCount} expired and/or cancelled reservations have been deleted.", countOfEntries);
+        logger.LogInformation("A total of {deletedReservationsCount} expired and/or cancelled reservations have been deleted.", countOfEntries);
     }
 
     public async Task<Loan> GetLoanById(Guid id, CancellationToken cancellationToken)
     {
-        var loan = await _applicationDbContext.Loans
+        var loan = await applicationDbContext.Loans
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken: cancellationToken);
 
         if (loan is null)
@@ -96,7 +86,7 @@ internal class LoansRepository : ILoansRepository
         Guid? userId,
         CancellationToken cancellationToken)
     {
-        var dbQuery = _applicationDbContext.Loans
+        var dbQuery = applicationDbContext.Loans
             .Where(x => !userId.HasValue || x.UserId == userId.Value)
             .AsQueryable();
         

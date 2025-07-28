@@ -4,27 +4,20 @@ using Stayza.Domain.Books;
 
 namespace Stayza.Infrastructure.Persistence.Repositories;
 
-public class BooksRepository : IBooksRepository
+public class BooksRepository(ApplicationDbContext applicationDbContext) : IBooksRepository
 {
-    private readonly ApplicationDbContext _applicationDbContext;
-
-    public BooksRepository(ApplicationDbContext applicationDbContext)
-    {
-        _applicationDbContext = applicationDbContext;
-    }
-
     public async Task<Book> Add(Book book)
     {
-        await _applicationDbContext.Books.AddAsync(book);
-        await _applicationDbContext.SaveChangesAsync();
+        await applicationDbContext.Books.AddAsync(book);
+        await applicationDbContext.SaveChangesAsync();
 
         return book;
     }
 
     public async Task<Book> Update(Book book)
     {
-        _applicationDbContext.Books.Update(book);
-        await _applicationDbContext.SaveChangesAsync();
+        applicationDbContext.Books.Update(book);
+        await applicationDbContext.SaveChangesAsync();
         
         return book;
     }
@@ -33,7 +26,7 @@ public class BooksRepository : IBooksRepository
         Guid id,
         CancellationToken cancellationToken)
     {
-        var book = await _applicationDbContext.Books
+        var book = await applicationDbContext.Books
             .Include(x => x.Copies)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
@@ -51,7 +44,7 @@ public class BooksRepository : IBooksRepository
         string isbn,
         CancellationToken cancellationToken)
     {
-        var book = await _applicationDbContext.Books
+        var book = await applicationDbContext.Books
             .Include(x => x.Copies)
             .FirstOrDefaultAsync(x => x.ISBN == isbn, cancellationToken);
 

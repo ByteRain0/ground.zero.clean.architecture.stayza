@@ -30,6 +30,9 @@ public class Reservation : Entity
     {
         UserId = userId;
         ReservedAt = reservedAt;
+        // Invariant: By default every reservation is maintained for 30 days. Left as magic number on purpose.
+        // Invariant: Once fulfilled reservation expiry is reset to +3 days.
+        ExpiresAt = reservedAt.AddDays(30);
         BookCopyId = bookCopyId;
         Status = ReservationStatus.Active;
     }

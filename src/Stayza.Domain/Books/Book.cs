@@ -1,4 +1,6 @@
+using Ardalis.GuardClauses;
 using Stayza.Core.Entity;
+using Stayza.Core.Exceptions;
 using Stayza.Domain.Loans;
 
 namespace Stayza.Domain.Books;
@@ -33,6 +35,8 @@ public class Book : AggregateRoot
 
     public BookCopy AddCopy(Guid bookCopyId)
     {
+        Guard.Against.Null(_copies);
+        
         if (_copies.Any(c => c.Id == bookCopyId))
             throw new InvalidOperationException("Copy already exists.");
 
@@ -45,10 +49,14 @@ public class Book : AggregateRoot
 
     public void RemoveCopy(Guid bookCopyId)
     {
+        Guard.Against.Null(_copies);
+        
         var copy = _copies.SingleOrDefault(c => c.Id == bookCopyId);
 
         if (copy == null)
-            throw new InvalidOperationException("Copy not found.");
+            throw new EntityNotFoundException(
+                entityType: nameof(BookCopy),
+                searchKey: bookCopyId.ToString());
 
         if (copy.IsLoaned)
             throw new InvalidOperationException("Cannot remove a loaned copy.");

@@ -3,18 +3,11 @@ using Stayza.Domain.Loans;
 
 namespace Stayza.Infrastructure.Notifications;
 
-public class UserNotificationsService : IUserNotificationService
+public class UserNotificationsService(HttpClient httpClient) : IUserNotificationService
 {
-    private readonly HttpClient _httpClient;
-
-    public UserNotificationsService(HttpClient httpClient)
-    {
-        _httpClient = httpClient;
-    }
-
     public async Task NotifyUser(Guid userId, string eventType)
     {
-        var request = await _httpClient.PostAsJsonAsync(
+        var request = await httpClient.PostAsJsonAsync(
             requestUri: "api/v1/notifications", 
             value: new Notification(UserId: userId.ToString(), Type: eventType));
 
