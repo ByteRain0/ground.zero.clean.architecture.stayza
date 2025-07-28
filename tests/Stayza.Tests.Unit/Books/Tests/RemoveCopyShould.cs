@@ -7,15 +7,6 @@ namespace Stayza.Tests.Unit.Books.Tests;
 
 public class RemoveCopyShould
 {
-    private readonly DateTimeOffset _testUtcNow = new DateTimeOffset(
-        year: 2024,
-        month: 12,
-        day: 25,
-        hour: 15,
-        minute: 30,
-        second: 0,
-        offset: TimeSpan.Zero);
-
     [Fact]
     public void Remove_book_when_copy_is_not_loaned()
     {
@@ -38,10 +29,10 @@ public class RemoveCopyShould
         var bookCopy = book.AddCopy(Constants.BookCopy.BookCopyId);
         bookCopy.Reserve(
             userId: Constants.Users.Id,
-            utcNow: _testUtcNow);
+            utcNow: Constants.Time.TestUtcNow);
         bookCopy.StartLoan(
             userId: Constants.Users.Id,
-            utcNow: _testUtcNow);
+            utcNow: Constants.Time.TestUtcNow);
 
         // Act / Assert
         Assert.Throws<InvalidOperationException>(

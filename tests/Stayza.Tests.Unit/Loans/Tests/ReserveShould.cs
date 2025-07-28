@@ -8,15 +8,6 @@ namespace Stayza.Tests.Unit.Loans.Tests;
 
 public class ReserveShould
 {
-    private readonly DateTimeOffset _testUtcNow = new(
-        year: 2024,
-        month: 12,
-        day: 25,
-        hour: 15,
-        minute: 30,
-        second: 0,
-        offset: TimeSpan.Zero);
-
     [Fact]
     public void Reserve_book_when_book_is_available()
     {
@@ -26,14 +17,14 @@ public class ReserveShould
         // Act
         var reservation = bookCopy.Reserve(
             userId: Constants.Users.Id,
-            utcNow: _testUtcNow);
+            utcNow: Constants.Time.TestUtcNow);
 
         // Assert
         reservation.ShouldNotBeNull();
         reservation.UserId.ShouldBe(Constants.Users.Id);
         reservation.BookCopyId.ShouldBe(Constants.BookCopy.BookCopyId);
-        reservation.ReservedAt.ShouldBe(_testUtcNow);
-        reservation.ExpiresAt.ShouldBe(_testUtcNow.AddDays(30));
+        reservation.ReservedAt.ShouldBe(Constants.Time.TestUtcNow);
+        reservation.ExpiresAt.ShouldBe(Constants.Time.TestUtcNow.AddDays(30));
         reservation.Status.ShouldBe(ReservationStatus.Active);
     }
     
@@ -45,15 +36,15 @@ public class ReserveShould
         var bookCopy = book.AddCopy(Constants.BookCopy.BookCopyId);
         bookCopy.Reserve(
             userId: Constants.Users.Id,
-            utcNow: _testUtcNow);
+            utcNow: Constants.Time.TestUtcNow);
         bookCopy.StartLoan(
             userId: Constants.Users.Id,
-            utcNow: _testUtcNow);
+            utcNow: Constants.Time.TestUtcNow);
         
         // Act 
         bookCopy.Reserve(
             userId: Constants.Users.Id2,
-            utcNow: _testUtcNow);
+            utcNow: Constants.Time.TestUtcNow);
         
         bookCopy.IsLoaned.ShouldBeTrue();
         bookCopy.ActiveReservations.Count.ShouldBe(1);
@@ -71,7 +62,7 @@ public class ReserveShould
         Assert.Throws<BookNotAvailableForReservation>(() =>
             bookCopy.Reserve(
                 userId: Constants.Users.Id,
-                utcNow: _testUtcNow));
+                utcNow: Constants.Time.TestUtcNow));
     }
 
     [Fact]
@@ -81,12 +72,12 @@ public class ReserveShould
         var bookCopy = TestBooksFactory.CreateBookCopy();
         bookCopy.Reserve(
             userId: Constants.Users.Id,
-            utcNow: _testUtcNow);
+            utcNow: Constants.Time.TestUtcNow);
         
         // Act / Assert
         Assert.Throws<ReservationAlreadyExistsException>(() =>
             bookCopy.Reserve(
                 userId: Constants.Users.Id,
-                utcNow: _testUtcNow));
+                utcNow: Constants.Time.TestUtcNow));
     }
 }
