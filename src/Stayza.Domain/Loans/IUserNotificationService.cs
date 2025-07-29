@@ -11,6 +11,6 @@ public interface IUserNotificationService
     /// <param name="eventType"></param>
     /// <returns></returns>
     Task NotifyUser(
-        Guid userId,
+        string userId,
         string eventType);
 }

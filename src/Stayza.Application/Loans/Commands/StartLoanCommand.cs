@@ -4,7 +4,7 @@ namespace Stayza.Application.Loans.Commands;
 
 public record StartLoanCommand(
     Guid BookCopyId,
-    Guid UserId);
+    string UserId);
 
 
 public class StartLoanCommandValidator : AbstractValidator<ReturnBookCopyCommand>

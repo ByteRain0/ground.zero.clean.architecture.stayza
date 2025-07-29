@@ -6,7 +6,7 @@ public class Loan
 
     public Guid BookCopyId { get; private set; }
 
-    public Guid UserId { get; private set; }
+    public string UserId { get; private set; }
 
     public TimeRange TimeRange { get; set; }
 
@@ -21,7 +21,7 @@ public class Loan
     
     public Loan(
         Guid bookCopyId,
-        Guid userId,
+        string userId,
         TimeRange timeRange,
         Guid? id)
     {

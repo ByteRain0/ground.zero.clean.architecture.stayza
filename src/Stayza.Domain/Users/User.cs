@@ -1,16 +1,10 @@
-using Stayza.Core.Entity;
+using Microsoft.AspNetCore.Identity;
 using Stayza.Domain.Loans;
 
 namespace Stayza.Domain.Users;
 
-public class User : AggregateRoot
+public class User : IdentityUser
 {
-    public string EmailAddress { get; private set; }
-
-    public string FirstName { get; set; }
-
-    public string LastName { get; set; }
-
     public UserType UserType { get; set; }
 
     public bool IsActive { get; set; }
@@ -26,15 +20,9 @@ public class User : AggregateRoot
     {
     }
     
-    public User(
-        string firstName,
-        string lastName,
-        string emailAddress,
-        Guid id) : base(id)
+    public User(string id)
     {
-        FirstName = firstName;
-        LastName = lastName;
-        EmailAddress = emailAddress;
+        Id = id;
         UserType = UserType.General;
     }
 

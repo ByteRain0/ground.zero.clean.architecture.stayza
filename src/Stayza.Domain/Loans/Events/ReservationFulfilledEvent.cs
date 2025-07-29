@@ -6,7 +6,7 @@ namespace Stayza.Domain.Loans.Events;
 public record ReservationFulfilledEvent(
     Guid BookCopyId,
     Guid ReservationId,
-    Guid UserId,
+    string UserId,
     DateTimeOffset AvailableUntil) : IDomainEvent
 {
     public string RoutingKey => RoutingKeys.BookCopyReservationFulfilledTopic

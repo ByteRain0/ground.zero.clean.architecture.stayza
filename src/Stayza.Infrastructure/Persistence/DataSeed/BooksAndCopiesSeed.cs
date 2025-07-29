@@ -22,7 +22,7 @@ public static class BooksAndCopiesSeed
 
             new(title: "The Architect's Elevator",
                 author: "Gregor Hohpe",
-                isbn: "9781642955706",
+                isbn: "9781492077497",
                 id: Guid.Parse("c5e0a48f-9bcc-4e39-8474-81df953756a2")),
 
             new(title: "Balancing Coupling in Software Design",

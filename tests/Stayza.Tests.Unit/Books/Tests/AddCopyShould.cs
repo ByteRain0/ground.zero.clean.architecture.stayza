@@ -17,7 +17,7 @@ public class AddCopyShould
 
         // Assert
         book.Copies.Count.ShouldBe(1);
-        book.Copies.First(x => x.Id == Constants.BookCopy.BookCopyId);
+        book.Copies.Count(x => x.Id == Constants.BookCopy.BookCopyId).ShouldBe(1);
     }
 
     [Fact]

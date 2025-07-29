@@ -4,7 +4,7 @@ namespace Stayza.Domain.Loans;
 
 public class Reservation : Entity
 {
-    public Guid UserId { get; private set; }
+    public string UserId { get; private set; }
 
     public Guid BookCopyId { get; private set; }
 
@@ -23,7 +23,7 @@ public class Reservation : Entity
     }
     
     public Reservation(
-        Guid userId,
+        string userId,
         DateTimeOffset reservedAt,
         Guid bookCopyId,
         Guid id) : base(id)

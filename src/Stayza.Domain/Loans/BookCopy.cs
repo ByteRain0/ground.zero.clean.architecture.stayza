@@ -37,7 +37,7 @@ public class BookCopy : AggregateRoot
     }
 
     public Reservation Reserve(
-        Guid userId,
+        string userId,
         DateTimeOffset utcNow)
     {
         // Either this in every method or add a test at IRepository level.
@@ -62,7 +62,7 @@ public class BookCopy : AggregateRoot
     }
 
     public Loan StartLoan(
-        Guid userId,
+        string userId,
         DateTimeOffset utcNow)
     {
         Guard.Against.Null(_reservations);
@@ -76,7 +76,7 @@ public class BookCopy : AggregateRoot
 
         if (reservation is null)
             throw new EntityNotFoundException(
-                entityType: nameof(BookCopy),
+                entityType: nameof(Reservation),
                 searchKey: $"userId: {userId}");
 
         _reservations.Remove(reservation);
@@ -100,7 +100,7 @@ public class BookCopy : AggregateRoot
     }
 
     public Loan Return(
-        Guid userId,
+        string userId,
         DateTimeOffset utcNow)
     {
         Guard.Against.Null(_currentLoan);

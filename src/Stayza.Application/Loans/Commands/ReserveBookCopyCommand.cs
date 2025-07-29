@@ -4,7 +4,7 @@ namespace Stayza.Application.Loans.Commands;
 
 public record ReserveBookCopyCommand(
     Guid BookCopyId,
-    Guid UserId);
+    string UserId);
 
 public class ReserveBookCopyCommandValidator : AbstractValidator<ReserveBookCopyCommand>
 {

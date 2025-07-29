@@ -5,7 +5,7 @@ namespace Stayza.Domain.Loans.Events;
 
 public record BookLoanedEvent(
     Guid BookCopyId,
-    Guid UserId,
+    string UserId,
     Guid LoanId,
     DateTimeOffset LoanDate,
     DateTimeOffset DueDate) : IDomainEvent

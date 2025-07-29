@@ -83,11 +83,11 @@ internal class LoansRepository(
         int pageSize, 
         string? sortColumn, 
         SortOrder? sortOrder,
-        Guid? userId,
+        string? userId,
         CancellationToken cancellationToken)
     {
         var dbQuery = applicationDbContext.Loans
-            .Where(x => !userId.HasValue || x.UserId == userId.Value)
+            .Where(x => string.IsNullOrEmpty(userId) || x.UserId == userId)
             .AsQueryable();
         
         if (sortOrder is not null)

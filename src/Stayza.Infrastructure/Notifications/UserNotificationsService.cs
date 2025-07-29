@@ -5,7 +5,7 @@ namespace Stayza.Infrastructure.Notifications;
 
 public class UserNotificationsService(HttpClient httpClient) : IUserNotificationService
 {
-    public async Task NotifyUser(Guid userId, string eventType)
+    public async Task NotifyUser(string userId, string eventType)
     {
         var request = await httpClient.PostAsJsonAsync(
             requestUri: "api/v1/notifications", 

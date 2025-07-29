@@ -13,18 +13,5 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.Id)
             .IsRequired()
             .ValueGeneratedNever();
-
-        builder.Property(x => x.EmailAddress)
-            .IsRequired();
-
-        builder.Property(x => x.FirstName)
-            .IsRequired()
-            .HasMaxLength(50);
-
-        builder.Property(x => x.LastName)
-            .IsRequired()
-            .HasMaxLength(50);
-        
-        builder.Ignore(x => x.DomainEvents);
     }
 }

@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using Stayza.Application.Loans.EventHandlers;
 using Stayza.Core.Messaging;
@@ -8,16 +9,17 @@ using Stayza.Infrastructure.Messaging.Subscriber;
 
 namespace Stayza.Infrastructure.Messaging;
 
-public static class RabbitMQInstaller
+public static class RabbitMqApplicationBuilderExtensions
 {
-    public static IServiceCollection AddAsyncMessagingUsingRabbitMq(
-        this IServiceCollection services, 
-        IConfiguration configuration)
+    public static IHostApplicationBuilder AddAsyncMessagingUsingRabbitMq(
+        this IHostApplicationBuilder builder)
     {
-        services.SetUpRabbitMQ(configuration);
-        services.AddSingleton<RabbitMQReceiver>();
-        services.AddSingleton<IMessageProducer, MessageProducer>();
-        return services;
+        builder.Services
+            .SetUpRabbitMQ(builder.Configuration)
+            .AddSingleton<RabbitMQReceiver>()
+            .AddSingleton<IMessageProducer, MessageProducer>();
+        
+        return builder;
     }
 
     private static IServiceCollection SetUpRabbitMQ(

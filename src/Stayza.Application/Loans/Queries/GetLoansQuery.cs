@@ -12,5 +12,5 @@ public class GetLoansQuery : IPagedQuery, ISortedQuery
     
     public SortOrder? SortOrder { get; set; }
 
-    public Guid? UserId { get; set; }
+    public string? UserId { get; set; }
 }

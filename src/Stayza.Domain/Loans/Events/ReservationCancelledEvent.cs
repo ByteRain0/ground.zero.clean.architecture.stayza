@@ -6,7 +6,7 @@ namespace Stayza.Domain.Loans.Events;
 public record ReservationCancelledEvent(
     Guid BookCopyId,
     Guid ReservationId,
-    Guid UserId,
+    string UserId,
     string Reason)
     : IDomainEvent
 {

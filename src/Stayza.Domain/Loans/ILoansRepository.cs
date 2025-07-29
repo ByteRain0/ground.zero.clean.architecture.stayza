@@ -35,6 +35,6 @@ public interface ILoansRepository
         int pageSize,
         string? sortColumn,
         SortOrder? sortOrder,
-        Guid? userId,
+        string? userId,
         CancellationToken cancellationToken);
 }
