@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Stayza.Application.Loans;
 using Stayza.Application.Loans.Commands;
@@ -13,13 +14,24 @@ public class LoansEndpoints : IEndpointsDefinition
 {
     public static void ConfigureEndpoints(IEndpointRouteBuilder app)
     {
-        var bookCopiesGroup = app.MapGroup("api/v1/book-copies/")
+        var versionSet = app.NewApiVersionSet()
+            .HasApiVersion(new ApiVersion(1.0))
+            .ReportApiVersions()
+            .Build();
+        
+        var bookCopiesGroup = app.MapGroup("api/v{version:apiVersion}/book-copies/")
             .WithTags("copies")
-            .WithValidationFilter();
+            .WithValidationFilter()
+            .RequireAuthorization()
+            .WithApiVersionSet(versionSet)
+            .MapToApiVersion(1.0);
 
-        var loansGroup = app.MapGroup("api/v1/loans")
+        var loansGroup = app.MapGroup("api/v{version:apiVersion}/loans")
             .WithTags("loans")
-            .WithValidationFilter();
+            .WithValidationFilter()
+            .RequireAuthorization()
+            .WithApiVersionSet(versionSet)
+            .MapToApiVersion(1.0);
 
         bookCopiesGroup.MapPost("{id:guid}/reservations", ReserveBookCopy)
             .Produces(404)

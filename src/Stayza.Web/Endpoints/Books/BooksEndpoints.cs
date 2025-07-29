@@ -1,3 +1,4 @@
+using Asp.Versioning;
 using O9d.AspNet.FluentValidation;
 using Stayza.Application.Books;
 using Stayza.Application.Books.Commands;
@@ -12,9 +13,17 @@ public class BooksEndpoints : IEndpointsDefinition
 {
     public static void ConfigureEndpoints(IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("api/v1/books/")
+        var versionSet = app.NewApiVersionSet()
+            .HasApiVersion(new ApiVersion(1.0))
+            .ReportApiVersions()
+            .Build();
+        
+        var group = app.MapGroup("api/v{version:apiVersion}/books/")
             .WithTags("books")
-            .WithValidationFilter();
+            .WithValidationFilter()
+            .RequireAuthorization()
+            .WithApiVersionSet(versionSet)
+            .MapToApiVersion(1.0);
 
         group.MapPost("", AddBook)
             .Accepts<AddBookCommand>(ApplicationJson)

@@ -1,10 +1,12 @@
-using Microsoft.OpenApi.Models;
+using Asp.Versioning;
+using Microsoft.Extensions.Options;
 using Stayza.Application;
 using Stayza.Domain.Users;
 using Stayza.Infrastructure;
 using Stayza.Infrastructure.Persistence;
 using Stayza.Web.Infrastructure.Endpoints;
-using Swashbuckle.AspNetCore.Filters;
+using Stayza.Web.Infrastructure.Swagger;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -12,14 +14,26 @@ builder
     .AddApplication()
     .AddInfrastructure();
 
-builder.Services
+builder
+    .Services
     .AddEndpointsApiExplorer()
-    .AddSwaggerGen(config =>
+    .AddApiVersioning(config =>
     {
-        config.ExampleFilters();
-        config.SwaggerDoc("v1", new OpenApiInfo {Title = "Stayza API", Version = "v1"});
+        config.DefaultApiVersion = new ApiVersion(1.0);
+        config.AssumeDefaultVersionWhenUnspecified = true;
+        config.ApiVersionReader = new UrlSegmentApiVersionReader();
+        config.ReportApiVersions = true;
     })
-    .AddSwaggerExamplesFromAssemblyOf<Program>();
+    .AddApiExplorer(config =>
+    {
+        config.GroupNameFormat = "'v'VVV";
+        config.SubstituteApiVersionInUrl = true;
+    })
+    .EnableApiVersionBinding();
+
+builder.Services
+    .AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>()
+    .AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -35,7 +49,13 @@ app
     .UseSwagger()
     .UseSwaggerUI(config =>
     {
-        config.SwaggerEndpoint("/swagger/v1/swagger.json", "Stayza v1");
+        foreach (var description in app.DescribeApiVersions())
+        {
+            config.SwaggerEndpoint(
+                url: $"/swagger/{description.GroupName}/swagger.json",
+                name: description.GroupName);
+        }
+
         config.RoutePrefix = string.Empty;
     });
 
