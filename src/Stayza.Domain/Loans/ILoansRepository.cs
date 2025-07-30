@@ -18,15 +18,15 @@ public interface ILoansRepository
         DateTimeOffset endTimeOffset,
         CancellationToken cancellationToken);
 
-    Task<List<Reservation>> GetReservationThatShouldExpireAfter(
-        DateTimeOffset endTimeOffset,
+    Task<List<Reservation>> GetReservationThatShouldExpire(
+        DateTimeOffset after,
         CancellationToken cancellationToken);
 
     /// <summary>
     /// Remove reservations based on already set status.
     /// </summary>
     /// <returns></returns>
-    Task RemoveExpiredOrCancelledReservations();
+    Task RemoveExpiredAndCancelledReservations(DateTimeOffset after);
 
     Task<Loan> GetLoanById(Guid id, CancellationToken cancellationToken);
 

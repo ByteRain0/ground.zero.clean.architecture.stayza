@@ -123,33 +123,7 @@ public class BookCopy : AggregateRoot
 
         return _currentLoan;
     }
-
-    public Reservation ExpireReservation(
-        Guid reservationId,
-        DateTimeOffset utcNow)
-    {
-        Guard.Against.Null(_reservations);
-
-        var reservation = _reservations.SingleOrDefault(x => x.Id == reservationId);
-
-        if (reservation is null)
-            throw new EntityNotFoundException(
-                entityType: nameof(Reservation),
-                searchKey: reservationId.ToString());
-
-        if (utcNow < reservation.ExpiresAt)
-            throw new InvalidOperationException("Cannot expire still-valid reservation");
-
-        reservation.Status = ReservationStatus.Expired;
-
-        AddDomainEvent(new ReservationExpiredEvent(
-            ReservationId: reservation.Id,
-            UserId: reservation.UserId,
-            BookCopyId: Id));
-
-        return reservation;
-    }
-
+    
     public Reservation FulfillReservation(
         Guid reservationId,
         DateTimeOffset utcNow)

@@ -44,23 +44,23 @@ internal class LoansRepository(
             .Where(x => x.TimeRange.End < endTimeOffset)
             .ToListAsync(cancellationToken: cancellationToken);
 
-    public Task<List<Reservation>> GetReservationThatShouldExpireAfter(
-        DateTimeOffset endTimeOffset,
+    public Task<List<Reservation>> GetReservationThatShouldExpire(
+        DateTimeOffset after,
         CancellationToken cancellationToken) =>
         applicationDbContext.Reservations
             .Where(x => x.Status == ReservationStatus.Pending)
-            .Where(x => x.ExpiresAt > endTimeOffset)
+            .Where(x => x.ExpiresAt > after)
             .ToListAsync(cancellationToken: cancellationToken);
 
-    public async Task RemoveExpiredOrCancelledReservations()
+    public async Task RemoveExpiredAndCancelledReservations(DateTimeOffset after)
     {
-        var countOfEntries = await applicationDbContext.Reservations.Where(x =>
-                x.Status == ReservationStatus.Expired
-                || x.Status == ReservationStatus.Cancelled)
+        var countOfAffectedEntries = await applicationDbContext
+            .Reservations
+            .Where(x => x.ExpiresAt < after || x.Status == ReservationStatus.Cancelled)
             .ExecuteDeleteAsync();
         
         // An example of a human focused log entry that can bring value.
-        logger.LogInformation("A total of {deletedReservationsCount} expired and/or cancelled reservations have been deleted.", countOfEntries);
+        logger.LogInformation("A total of {deletedReservationsCount} expired reservations have been deleted.", countOfAffectedEntries);
     }
 
     public async Task<Loan> GetLoanById(Guid id, CancellationToken cancellationToken)
