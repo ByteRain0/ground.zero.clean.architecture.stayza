@@ -17,7 +17,7 @@ public class BooksEndpoints : IEndpointsDefinition
             .HasApiVersion(new ApiVersion(1.0))
             .ReportApiVersions()
             .Build();
-        
+
         var group = app.MapGroup("api/v{version:apiVersion}/books/")
             .WithTags("books")
             .WithValidationFilter()
@@ -65,9 +65,9 @@ public class BooksEndpoints : IEndpointsDefinition
     {
         var book = await service.AddBook(command);
         var path = linkGenerator.GetUriByName(
-            httpContext, 
-            endpointName: "GetBookById", 
-            new { id = book.Id });
+            httpContext,
+            endpointName: "GetBookById",
+            new {id = book.Id});
         return Results.Created(path, book);
     }
 
@@ -75,21 +75,25 @@ public class BooksEndpoints : IEndpointsDefinition
         Guid id,
         BooksService service,
         CancellationToken cancellationToken) =>
-        Results.Ok(await service.GetBookById(id, cancellationToken));
+        Results.Ok(await service.GetBookById(
+            id: id,
+            cancellationToken: cancellationToken));
 
     private static async Task<IResult> GetBookByIsbn(
         string isbn,
         BooksService service,
         CancellationToken cancellationToken) =>
-        Results.Ok(await service.GetBookByIsbn(isbn, cancellationToken));
+        Results.Ok(await service.GetBookByIsbn(
+            isbn: isbn,
+            cancellationToken: cancellationToken));
 
     private static async Task<IResult> RetireBook(
-        Guid id, 
+        Guid id,
         BooksService service)
         => Results.Ok(await service.Retire(new RetireBookCommand(BookId: id)));
 
     private static async Task<IResult> AddBookCopy(
-        Guid id, 
+        Guid id,
         BooksService service)
         => Results.Ok(await service.AddBookCopy(new AddBookCopyCommand(BookId: id)));
 
@@ -98,5 +102,7 @@ public class BooksEndpoints : IEndpointsDefinition
         Guid bookCopyId,
         BooksService service) =>
         Results.Ok(await service.RemoveBookCopy(
-            new RemoveBookCopyCommand(BookId: bookId, BookCopyId: bookCopyId)));
+            new RemoveBookCopyCommand(
+                BookId: bookId,
+                BookCopyId: bookCopyId)));
 }

@@ -13,26 +13,29 @@ public class LoansBackgroundJobs(
     {
         var reservationsToExpire = await repository.GetReservationThatShouldExpire(
             after: timeProvider.GetUtcNow().AddDays(1),
-            CancellationToken.None);
+            cancellationToken: CancellationToken.None);
 
         foreach (var reservation in reservationsToExpire)
         {
             try
             {
-                await userNotificationService.NotifyUser(reservation.UserId, "ReservationExpiresIn24H");
+                await userNotificationService.NotifyUser(
+                    userId: reservation.UserId,
+                    eventType: "ReservationExpiresIn24H");
             }
             catch (Exception e)
             {
-                logger.LogError(e, "Error encountered notifying user about reservation expiration. {userId}", reservation.UserId);
+                logger.LogError(e, "Error encountered notifying user about reservation expiration. {userId}",
+                    reservation.UserId);
             }
         }
     }
-    
+
     public async Task RemoveExpiredReservations()
     {
         try
         {
-            await repository.RemoveExpiredAndCancelledReservations(timeProvider.GetUtcNow());
+            await repository.RemoveExpiredAndCancelledReservations(after: timeProvider.GetUtcNow());
         }
         catch (Exception e)
         {

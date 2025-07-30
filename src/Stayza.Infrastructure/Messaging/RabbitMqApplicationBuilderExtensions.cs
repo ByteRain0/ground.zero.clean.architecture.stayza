@@ -49,6 +49,7 @@ public static class RabbitMqApplicationBuilderExtensions
     private static IServiceCollection RegisterListeners(this IServiceCollection services)
     {
         services.AddSingleton<IListener, ReservationFulfilledEventHandler>();
+        services.AddSingleton<IListener, BookReturnedEventHandler>();
 
         return services;
     }

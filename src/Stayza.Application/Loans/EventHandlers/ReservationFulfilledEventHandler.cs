@@ -7,8 +7,8 @@ using Stayza.Domain.Loans.Events;
 namespace Stayza.Application.Loans.EventHandlers;
 
 public class ReservationFulfilledEventHandler(
-        IUserNotificationService userNotificationService,
-        ILogger<ReservationFulfilledEventHandler> logger): IListener
+    IUserNotificationService userNotificationService,
+    ILogger<ReservationFulfilledEventHandler> logger) : IListener
 {
     // Subscribe to all notifications for all book copies and reservations.
     public string RoutingKey => RoutingKeys.BookCopyReservationFulfilledTopic
@@ -26,6 +26,8 @@ public class ReservationFulfilledEventHandler(
         }
 
         // Notify user that the book copy was returned and he can now loan it.
-        await userNotificationService.NotifyUser(incomingEvent!.UserId, nameof(ReservationFulfilledEvent));
+        await userNotificationService.NotifyUser(
+            userId: incomingEvent!.UserId,
+            eventType: "ReservationFulfilled");
     }
 }

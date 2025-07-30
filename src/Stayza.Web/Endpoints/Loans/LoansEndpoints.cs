@@ -9,7 +9,6 @@ using Stayza.Web.Infrastructure.Endpoints;
 using Stayza.Web.Infrastructure.Session;
 using static Stayza.Web.Infrastructure.Endpoints.Constants.ContentTypes;
 
-
 public class LoansEndpoints : IEndpointsDefinition
 {
     public static void ConfigureEndpoints(IEndpointRouteBuilder app)
@@ -18,7 +17,7 @@ public class LoansEndpoints : IEndpointsDefinition
             .HasApiVersion(new ApiVersion(1.0))
             .ReportApiVersions()
             .Build();
-        
+
         var bookCopiesGroup = app.MapGroup("api/v{version:apiVersion}/book-copies/")
             .WithTags("copies")
             .WithValidationFilter()
@@ -76,10 +75,12 @@ public class LoansEndpoints : IEndpointsDefinition
             new ReserveBookCopyCommand(
                 BookCopyId: id,
                 UserId: await sessionAccessorService.GetUserId()));
+
         var path = linkGenerator.GetUriByName(
             httpContext,
             endpointName: "GetBookCopyReservationById",
             new {id = reservation.Id});
+
         return Results.Created(path, reservation);
     }
 
@@ -104,6 +105,7 @@ public class LoansEndpoints : IEndpointsDefinition
         var loan = await service.StartLoan(new StartLoanCommand(
             BookCopyId: id,
             UserId: await sessionAccessorService.GetUserId()));
+
         var path = linkGenerator.GetUriByName(httpContext, endpointName: "GetLoanById", new {id = loan.Id});
         return Results.Created(path, loan);
     }
@@ -121,7 +123,9 @@ public class LoansEndpoints : IEndpointsDefinition
         Guid id,
         CancellationToken cancellationToken,
         LoansService service) =>
-        Results.Ok(await service.GetLoanById(id, cancellationToken));
+        Results.Ok(await service.GetLoanById(
+            id: id,
+            cancellationToken: cancellationToken));
 
     private static async Task<IResult> GetLoansByUserId(
         int? page,

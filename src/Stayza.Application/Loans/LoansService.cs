@@ -11,9 +11,14 @@ public class LoansService(
 {
     public async Task<Reservation> ReserveBookCopy(ReserveBookCopyCommand command)
     {
-        var bookCopy = await repository.GetBookCopyById(command.BookCopyId, CancellationToken.None);
-        var reservation =
-            bookCopy.Reserve(userId: command.UserId, utcNow: timeProvider.GetUtcNow());
+        var bookCopy = await repository.GetBookCopyById(
+            id: command.BookCopyId,
+            cancellationToken: CancellationToken.None);
+
+        var reservation = bookCopy.Reserve(
+            userId: command.UserId,
+            utcNow: timeProvider.GetUtcNow());
+
         await repository.UpdateBookCopy(bookCopy);
 
         return reservation;
@@ -21,18 +26,29 @@ public class LoansService(
 
     public async Task<Reservation> CancelReservation(CancelReservationCommand command)
     {
-        var bookCopy = await repository.GetBookCopyById(command.BookCopyId, CancellationToken.None);
-        var cancelledReservation =
-            bookCopy.CancelReservation(reservationId: command.ReservationId, reason: command.Reason);
+        var bookCopy = await repository.GetBookCopyById(
+            id: command.BookCopyId,
+            cancellationToken: CancellationToken.None);
+
+        var cancelledReservation = bookCopy.CancelReservation(
+            reservationId: command.ReservationId,
+            reason: command.Reason);
+
         await repository.UpdateBookCopy(bookCopy);
 
         return cancelledReservation;
     }
-    
+
     public async Task<Loan> StartLoan(StartLoanCommand command)
     {
-        var bookCopy = await repository.GetBookCopyById(command.BookCopyId, CancellationToken.None);
-        var loan = bookCopy.StartLoan(userId: command.UserId, timeProvider.GetUtcNow());
+        var bookCopy = await repository.GetBookCopyById(
+            id: command.BookCopyId,
+            cancellationToken: CancellationToken.None);
+
+        var loan = bookCopy.StartLoan(
+            userId: command.UserId,
+            utcNow: timeProvider.GetUtcNow());
+
         await repository.UpdateBookCopy(bookCopy);
 
         return loan;
@@ -40,24 +56,32 @@ public class LoansService(
 
     public async Task<Loan> ReturnBookCopy(ReturnBookCopyCommand command)
     {
-        var bookCopy = await repository.GetBookCopyById(command.BookCopyId, CancellationToken.None);
-        var loan = bookCopy.Return(command.UserId, timeProvider.GetUtcNow());
+        var bookCopy = await repository.GetBookCopyById(
+            id: command.BookCopyId,
+            cancellationToken: CancellationToken.None);
+
+        var loan = bookCopy.Return(
+            userId: command.UserId,
+            utcNow: timeProvider.GetUtcNow());
+
         await repository.UpdateBookCopy(bookCopy);
 
         return loan;
     }
 
-    public Task<Loan> GetLoanById(Guid id, CancellationToken cancellationToken) 
-        => repository.GetLoanById(id, cancellationToken);
+    public Task<Loan> GetLoanById(Guid id, CancellationToken cancellationToken)
+        => repository.GetLoanById(
+            id: id,
+            cancellationToken: cancellationToken);
 
     public Task<PagedList<Loan>> GetLoans(
         GetLoansQuery query,
         CancellationToken cancellationToken) =>
         repository.GetLoans(
-            page: query.Page, 
-            pageSize: query.PageSize, 
+            page: query.Page,
+            pageSize: query.PageSize,
             sortOrder: query.SortOrder,
-            sortColumn: query.SortColumn, 
+            sortColumn: query.SortColumn,
             userId: query.UserId,
             cancellationToken: cancellationToken);
 }

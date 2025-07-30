@@ -13,13 +13,21 @@ public class BooksService(IBooksRepository repository)
             isbn: command.ISBN,
             id: Guid.NewGuid()));
 
-    public Task<Book> GetBookById(Guid id, CancellationToken cancellationToken) => repository.GetById(id, cancellationToken);
+    public Task<Book> GetBookById(Guid id, CancellationToken cancellationToken) =>
+        repository.GetById(
+            id: id,
+            cancellationToken: cancellationToken);
 
-    public Task<Book> GetBookByIsbn(string isbn, CancellationToken cancellationToken) => repository.GetByIsbn(isbn, cancellationToken);
+    public Task<Book> GetBookByIsbn(string isbn, CancellationToken cancellationToken) =>
+        repository.GetByIsbn(
+            isbn: isbn,
+            cancellationToken: cancellationToken);
 
     public async Task<Book> Retire(RetireBookCommand command)
     {
-        var book = await repository.GetById(command.BookId, CancellationToken.None);
+        var book = await repository.GetById(
+            id: command.BookId,
+            cancellationToken: CancellationToken.None);
 
         foreach (var bookCopy in book.Copies)
         {
@@ -33,8 +41,12 @@ public class BooksService(IBooksRepository repository)
 
     public async Task<Book> RemoveBookCopy(RemoveBookCopyCommand command)
     {
-        var book = await repository.GetById(command.BookId, CancellationToken.None);
+        var book = await repository.GetById(
+            id: command.BookId,
+            cancellationToken: CancellationToken.None);
+
         book.RemoveCopy(command.BookCopyId);
+
         await repository.Update(book);
 
         return book;
@@ -42,8 +54,12 @@ public class BooksService(IBooksRepository repository)
 
     public async Task<BookCopy> AddBookCopy(AddBookCopyCommand command)
     {
-        var book = await repository.GetById(command.BookId, CancellationToken.None);
+        var book = await repository.GetById(
+            id: command.BookId,
+            cancellationToken: CancellationToken.None);
+
         var bookCopy = book.AddCopy(Guid.NewGuid());
+
         await repository.Update(book);
 
         return bookCopy;
