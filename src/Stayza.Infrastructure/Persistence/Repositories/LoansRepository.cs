@@ -48,7 +48,7 @@ internal class LoansRepository(
         DateTimeOffset endTimeOffset,
         CancellationToken cancellationToken) =>
         applicationDbContext.Reservations
-            .Where(x => x.Status == ReservationStatus.Active)
+            .Where(x => x.Status == ReservationStatus.Pending)
             .Where(x => x.ExpiresAt > endTimeOffset)
             .ToListAsync(cancellationToken: cancellationToken);
 

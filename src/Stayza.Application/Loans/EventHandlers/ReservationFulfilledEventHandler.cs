@@ -25,6 +25,7 @@ public class ReservationFulfilledEventHandler(
                 nameof(ReservationFulfilledEvent));
         }
 
-        await userNotificationService.NotifyUser(incomingEvent.UserId, nameof(ReservationFulfilledEvent));
+        // Notify user that the book copy was returned and he can now loan it.
+        await userNotificationService.NotifyUser(incomingEvent!.UserId, nameof(ReservationFulfilledEvent));
     }
 }

@@ -34,6 +34,6 @@ public class Reservation : Entity
         // Invariant: Once fulfilled reservation expiry is reset to +3 days.
         ExpiresAt = reservedAt.AddDays(30);
         BookCopyId = bookCopyId;
-        Status = ReservationStatus.Active;
+        Status = ReservationStatus.Pending;
     }
 }

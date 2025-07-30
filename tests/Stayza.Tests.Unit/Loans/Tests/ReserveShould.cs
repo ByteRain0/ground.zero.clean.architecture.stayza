@@ -25,7 +25,7 @@ public class ReserveShould
         reservation.BookCopyId.ShouldBe(Constants.BookCopy.BookCopyId);
         reservation.ReservedAt.ShouldBe(Constants.Time.TestUtcNow);
         reservation.ExpiresAt.ShouldBe(Constants.Time.TestUtcNow.AddDays(30));
-        reservation.Status.ShouldBe(ReservationStatus.Active);
+        reservation.Status.ShouldBe(ReservationStatus.Pending);
     }
     
     [Fact]
@@ -47,8 +47,8 @@ public class ReserveShould
             utcNow: Constants.Time.TestUtcNow);
         
         bookCopy.IsLoaned.ShouldBeTrue();
-        bookCopy.ActiveReservations.Count.ShouldBe(1);
-        bookCopy.ActiveReservations.First().UserId.ShouldBe(Constants.Users.Id2);
+        bookCopy.PendingReservations.Count.ShouldBe(1);
+        bookCopy.PendingReservations.First().UserId.ShouldBe(Constants.Users.Id2);
     }
 
     [Fact]

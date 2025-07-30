@@ -20,9 +20,12 @@ public class BookCopy : AggregateRoot
     
     private readonly HashSet<Reservation> _reservations;
 
-    public IReadOnlyCollection<Reservation> ActiveReservations =>
-        _reservations.Where(r => r.Status == ReservationStatus.Active).ToList();
+    public IReadOnlyCollection<Reservation> PendingReservations =>
+        _reservations.Where(r => r.Status == ReservationStatus.Pending).ToList();
 
+    public Reservation? ActiveReservation => _reservations
+        .SingleOrDefault(x => x.Status == ReservationStatus.Active);
+    
     [Obsolete("Used only by ef core")]
     public BookCopy()
     {
@@ -47,7 +50,7 @@ public class BookCopy : AggregateRoot
             throw new BookNotAvailableForReservation();
 
         if (_reservations.Any(r => 
-                r.UserId == userId && r.Status == ReservationStatus.Active))
+                r.UserId == userId && r.Status == ReservationStatus.Pending))
             throw new ReservationAlreadyExistsException(userId);
 
         var reservation = new Reservation(
@@ -72,7 +75,7 @@ public class BookCopy : AggregateRoot
 
         var reservation = _reservations.SingleOrDefault(r =>
             r.UserId == userId &&
-            r.Status == ReservationStatus.Active);
+            r.Status == ReservationStatus.Pending);
 
         if (reservation is null)
             throw new EntityNotFoundException(
@@ -154,7 +157,7 @@ public class BookCopy : AggregateRoot
         Guard.Against.Null(_reservations);
 
         var reservation = _reservations.SingleOrDefault(x => x.Id == reservationId);
-
+        
         if (reservation is null)
             throw new EntityNotFoundException(
                 entityType: nameof(Reservation),
@@ -163,7 +166,7 @@ public class BookCopy : AggregateRoot
         if (reservation.Status == ReservationStatus.Cancelled)
             throw new ReservationAlreadyCancelledException();
 
-        reservation.Status = ReservationStatus.Fulfilled;
+        reservation.Status = ReservationStatus.Active;
 
         reservation.ExpiresAt = utcNow.AddDays(3);
 
@@ -182,7 +185,7 @@ public class BookCopy : AggregateRoot
     {
         Guard.Against.Null(_reservations);
 
-        var reservation = ActiveReservations.SingleOrDefault(x => x.Id == reservationId);
+        var reservation = PendingReservations.SingleOrDefault(x => x.Id == reservationId);
 
         if (reservation is null)
             throw new EntityNotFoundException(
@@ -205,7 +208,7 @@ public class BookCopy : AggregateRoot
     
     public void Retire()
     {
-        foreach (var activeReservation in ActiveReservations.Select(x => x.Id))
+        foreach (var activeReservation in PendingReservations.Select(x => x.Id))
         {
             CancelReservation(
                 reservationId: activeReservation,

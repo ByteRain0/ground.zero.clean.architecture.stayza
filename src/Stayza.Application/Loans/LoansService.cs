@@ -39,16 +39,6 @@ public class LoansService(
         return expiredReservation;
     }
 
-    public async Task<Reservation> FulfillReservation(FulFillReservationCommand command)
-    {
-        var bookCopy = await repository.GetBookCopyById(command.BookCopyId, CancellationToken.None);
-        var fulfilledReservation =
-            bookCopy.FulfillReservation(reservationId: command.ReservationId, utcNow: timeProvider.GetUtcNow());
-        await repository.UpdateBookCopy(bookCopy);
-
-        return fulfilledReservation;
-    }
-
     public async Task<Loan> StartLoan(StartLoanCommand command)
     {
         var bookCopy = await repository.GetBookCopyById(command.BookCopyId, CancellationToken.None);

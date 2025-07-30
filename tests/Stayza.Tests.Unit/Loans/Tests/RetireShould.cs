@@ -24,7 +24,7 @@ public class RetireShould
         
         // Assert
         bookCopy.IsRetired.ShouldBeTrue();
-        bookCopy.ActiveReservations.Count.ShouldBe(0);
+        bookCopy.PendingReservations.Count.ShouldBe(0);
         bookCopy.DomainEvents.Count(x => 
             x.GetType().Name == nameof(ReservationCancelledEvent)).ShouldBe(2);
     }
