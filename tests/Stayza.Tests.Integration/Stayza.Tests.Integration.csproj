@@ -18,6 +18,16 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Stayza.Domain\Stayza.Domain.csproj" />
+    <ProjectReference Include="..\..\src\Stayza.Web\Stayza.Web.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Microsoft.AspNetCore.Authentication">
+      <HintPath>..\..\..\..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\9.0.3\Microsoft.AspNetCore.Authentication.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNetCore.Authentication.Abstractions">
+      <HintPath>..\..\..\..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\9.0.3\Microsoft.AspNetCore.Authentication.Abstractions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
