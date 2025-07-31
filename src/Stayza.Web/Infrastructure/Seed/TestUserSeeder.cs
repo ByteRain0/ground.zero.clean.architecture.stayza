@@ -6,7 +6,9 @@ namespace Stayza.Web.Infrastructure.Seed;
 public static class TestUserSeeder
 {
     public const string TestUserEmail = "jhon.doe@example.com";
+    
     public const string TestUserPassword = "Passw0rd!";
+    
     public const string TestUserId = "bbb875a2-b427-4ee5-8957-e30343e108b6";
     
     public static async Task SeedTestUser(this IApplicationBuilder app)
@@ -45,6 +47,7 @@ public static class TestUserSeeder
 
         if (!result.Succeeded)
         {
+            // If you decide to run this in live mode throwing a startup exception might be a bad idea.
             throw new InvalidOperationException("Test user creation failed");
         }
     }

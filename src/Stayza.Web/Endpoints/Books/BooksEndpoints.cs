@@ -51,7 +51,7 @@ public class BooksEndpoints : IEndpointsDefinition
             .Produces<BookCopy>()
             .WithName("AddBookCopy");
 
-        group.MapDelete("{bookId:guid}/{bookCopyId:guid}", RemoveBookCopy)
+        group.MapDelete("{bookId:guid}/copies/{bookCopyId:guid}", RemoveBookCopy)
             .Produces(404)
             .Produces<Book>()
             .WithName("RemoveBookCopy");
