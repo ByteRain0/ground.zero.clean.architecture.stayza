@@ -1,21 +1,28 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Stayza.Domain.Books;
 using Stayza.Domain.Loans;
 using Stayza.Domain.Users;
 using Stayza.Infrastructure.Persistence.DataSeed;
+using Stayza.Infrastructure.Persistence.Extensions;
 
 namespace Stayza.Infrastructure.Persistence;
 
 public class ApplicationDbContext : IdentityDbContext<User>
 {
+    private readonly PublishDomainEventsInterceptor _publishDomainEventsInterceptor;
+    
     /// <summary>
     /// Left as public in order to allow having an external source run the migrations.
     /// </summary>
     /// <param name="options"></param>
-    public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+    public ApplicationDbContext(
+        DbContextOptions<ApplicationDbContext> options,
+        PublishDomainEventsInterceptor publishDomainEventsInterceptor)
         : base(options)
     {
+        _publishDomainEventsInterceptor = publishDomainEventsInterceptor;
     }
 
     public DbSet<Book> Books { get; set; }
@@ -35,5 +42,11 @@ public class ApplicationDbContext : IdentityDbContext<User>
         base.OnModelCreating(builder);
         // in case you want to have a case_insensitive string comparison and not having .ToLower() everytime.
         //builder.HasCollation("case_insensitive", locale: "en-u-ks-primary", provider: "icu", deterministic: false);
+    }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor);
+        base.OnConfiguring(optionsBuilder);
     }
 }

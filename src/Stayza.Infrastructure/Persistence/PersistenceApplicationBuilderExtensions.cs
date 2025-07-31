@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Stayza.Domain.Books;
 using Stayza.Domain.Loans;
+using Stayza.Infrastructure.Persistence.Extensions;
 using Stayza.Infrastructure.Persistence.Repositories;
 
 namespace Stayza.Infrastructure.Persistence;
@@ -12,9 +13,11 @@ namespace Stayza.Infrastructure.Persistence;
 public static class PersistenceApplicationBuilderExtensions
 {
     internal static IHostApplicationBuilder AddPersistence(this IHostApplicationBuilder builder)
-    { 
-        builder.Services.AddDbContext<ApplicationDbContext>(opts => opts.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
-
+    {
+        builder.Services.AddSingleton<PublishDomainEventsInterceptor>();
+        builder.Services.AddDbContext<ApplicationDbContext>(opts => 
+            opts.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
+        
         builder.Services
             .AddScoped<ILoansRepository, LoansRepository>()
             .AddScoped<IBooksRepository, BooksRepository>();
