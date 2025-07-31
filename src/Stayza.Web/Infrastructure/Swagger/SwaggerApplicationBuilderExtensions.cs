@@ -4,7 +4,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace Stayza.Web.Infrastructure.Swagger;
 
-public static class SwaggerApplicationBuilderExtensions
+internal static class SwaggerApplicationBuilderExtensions
 {
     internal static IHostApplicationBuilder AddConfiguredSwagger(this IHostApplicationBuilder builder)
     {

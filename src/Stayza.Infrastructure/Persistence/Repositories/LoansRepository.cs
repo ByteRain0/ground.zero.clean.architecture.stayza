@@ -16,7 +16,9 @@ internal class LoansRepository(
         Guid id,
         CancellationToken cancellationToken)
     {
-        var bookCopy = await applicationDbContext.BookCopies.FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
+        var bookCopy = await applicationDbContext.BookCopies
+            .Include("._reservations")
+            .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         if (bookCopy is null)
         {

@@ -17,5 +17,10 @@ public class BookCopyConfiguration : IEntityTypeConfiguration<BookCopy>
             .IsRequired();
 
         builder.Ignore(x => x.DomainEvents);
+
+        builder.HasMany<Reservation>(x => x.Reservations)
+            .WithOne()
+            .HasForeignKey(x => x.BookCopyId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

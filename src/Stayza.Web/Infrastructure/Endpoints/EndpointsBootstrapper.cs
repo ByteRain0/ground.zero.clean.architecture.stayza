@@ -2,14 +2,14 @@ using System.Reflection;
 
 namespace Stayza.Web.Infrastructure.Endpoints;
 
-public static class EndpointsBootstrapper
+internal static class EndpointsBootstrapper
 {
-    public static void UseEndpoints<TMarker>(this IApplicationBuilder app)
+    internal static void UseEndpoints<TMarker>(this IApplicationBuilder app)
     {
         UseEndpoints(app, typeof(TMarker).Assembly);
     }
 
-    public static void UseEndpoints(this IApplicationBuilder app, Assembly assembly)
+    private static void UseEndpoints(this IApplicationBuilder app, Assembly assembly)
     {
         var endpointTypes = GetEndpointDefinitionsFromAssembly(assembly);
 

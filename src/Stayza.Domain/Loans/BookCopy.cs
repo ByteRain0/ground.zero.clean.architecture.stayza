@@ -19,6 +19,8 @@ public class BookCopy : AggregateRoot
     public bool IsLoaned => _currentLoan != null && !_currentLoan.IsReturned;
     
     private readonly HashSet<Reservation> _reservations;
+    
+    public IReadOnlyCollection<Reservation> Reservations => _reservations.ToList();
 
     public IReadOnlyCollection<Reservation> PendingReservations =>
         _reservations.Where(r => r.Status == ReservationStatus.Pending).ToList();

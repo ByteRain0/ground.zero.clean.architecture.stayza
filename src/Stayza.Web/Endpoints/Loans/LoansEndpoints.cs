@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Mvc;
 using Stayza.Application.Loans;
@@ -9,7 +10,7 @@ using Stayza.Web.Infrastructure.Endpoints;
 using Stayza.Web.Infrastructure.Session;
 using static Stayza.Web.Infrastructure.Endpoints.Constants.ContentTypes;
 
-public class LoansEndpoints : IEndpointsDefinition
+internal class LoansEndpoints : IEndpointsDefinition
 {
     public static void ConfigureEndpoints(IEndpointRouteBuilder app)
     {
@@ -64,17 +65,17 @@ public class LoansEndpoints : IEndpointsDefinition
     }
 
     private static async Task<IResult> ReserveBookCopy(
-        Guid id,
-        LoansService service,
-        SessionAccessorService sessionAccessorService,
-        LinkGenerator linkGenerator,
-        // The http context can be inferred from the UserContext if all you ever write are web api's.
+        [FromRoute] Guid id,
+        ClaimsPrincipal claimsPrincipal,
+        [FromServices] LoansService service,
+        [FromServices] SessionAccessorService sessionAccessorService,
+        [FromServices] LinkGenerator linkGenerator,
         HttpContext httpContext)
     {
         var reservation = await service.ReserveBookCopy(
             new ReserveBookCopyCommand(
                 BookCopyId: id,
-                UserId: await sessionAccessorService.GetUserId()));
+                UserId: await sessionAccessorService.GetUserId(claimsPrincipal)));
 
         var path = linkGenerator.GetUriByName(
             httpContext,
@@ -85,54 +86,56 @@ public class LoansEndpoints : IEndpointsDefinition
     }
 
     private static async Task<IResult> CancelBookReservation(
-        Guid id,
-        Guid reservationId,
+        [FromRoute] Guid id,
+        [FromRoute] Guid reservationId,
         [FromBody] string reason,
-        LoansService service) =>
+        [FromServices] LoansService service) =>
         Results.Ok(await service.CancelReservation(new CancelReservationCommand(
             BookCopyId: id,
             ReservationId: reservationId,
             Reason: reason)));
 
     private static async Task<IResult> LoanBookCopy(
-        Guid id,
-        LoansService service,
-        LinkGenerator linkGenerator,
-        SessionAccessorService sessionAccessorService,
-        // The http context can be inferred from the UserContext if all you ever write are web api's.
+        [FromRoute] Guid id,
+        ClaimsPrincipal claimsPrincipal,
+        [FromServices] LoansService service,
+        [FromServices] LinkGenerator linkGenerator,
+        [FromServices] SessionAccessorService sessionAccessorService,
         HttpContext httpContext)
     {
         var loan = await service.StartLoan(new StartLoanCommand(
             BookCopyId: id,
-            UserId: await sessionAccessorService.GetUserId()));
+            UserId: await sessionAccessorService.GetUserId(claimsPrincipal)));
 
         var path = linkGenerator.GetUriByName(httpContext, endpointName: "GetLoanById", new {id = loan.Id});
         return Results.Created(path, loan);
     }
 
     private static async Task<IResult> ReturnBookCopy(
-        Guid id,
-        SessionAccessorService sessionAccessorService,
-        LoansService service) =>
+        [FromRoute] Guid id,
+        ClaimsPrincipal claimsPrincipal,
+        [FromServices] SessionAccessorService sessionAccessorService,
+        [FromServices] LoansService service) =>
         Results.Ok(await service.ReturnBookCopy(
             new ReturnBookCopyCommand(
                 BookCopyId: id,
-                UserId: await sessionAccessorService.GetUserId())));
+                UserId: await sessionAccessorService.GetUserId(claimsPrincipal))));
 
     private static async Task<IResult> GetLoanById(
-        Guid id,
+        [FromRoute] Guid id,
         CancellationToken cancellationToken,
-        LoansService service) =>
+        [FromServices] LoansService service) =>
         Results.Ok(await service.GetLoanById(
             id: id,
             cancellationToken: cancellationToken));
 
     private static async Task<IResult> GetLoansByUserId(
-        int? page,
-        int? pageSize,
-        string? sortColumn,
-        SortOrder? sortOrder,
+        [FromQuery] int? page,
+        [FromQuery] int? pageSize,
+        [FromQuery] string? sortColumn,
+        [FromQuery] SortOrder? sortOrder,
         CancellationToken cancellationToken,
+        ClaimsPrincipal claimsPrincipal,
         [FromServices] SessionAccessorService sessionAccessorService,
         [FromServices] LoansService service
     ) =>
@@ -142,6 +145,6 @@ public class LoansEndpoints : IEndpointsDefinition
             PageSize = pageSize ?? 50,
             SortColumn = sortColumn ?? nameof(Loan.ReturnDate),
             SortOrder = sortOrder ?? SortOrder.Descending,
-            UserId = await sessionAccessorService.GetUserId()
+            UserId = await sessionAccessorService.GetUserId(claimsPrincipal)
         }, cancellationToken));
 }

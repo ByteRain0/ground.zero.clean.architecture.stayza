@@ -9,7 +9,7 @@ using static Stayza.Web.Infrastructure.Endpoints.Constants.ContentTypes;
 
 namespace Stayza.Web.Endpoints.Books;
 
-public class BooksEndpoints : IEndpointsDefinition
+internal class BooksEndpoints : IEndpointsDefinition
 {
     public static void ConfigureEndpoints(IEndpointRouteBuilder app)
     {

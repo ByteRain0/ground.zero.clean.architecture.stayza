@@ -1,6 +1,6 @@
 namespace Stayza.Web.Infrastructure.Endpoints;
 
-public interface IEndpointsDefinition
+internal interface IEndpointsDefinition
 {
     public static abstract void ConfigureEndpoints(IEndpointRouteBuilder app);
 }

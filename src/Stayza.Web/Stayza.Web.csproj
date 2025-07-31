@@ -17,6 +17,7 @@
 
     <ItemGroup>
       <Folder Include="Infrastructure\ExceptionHandlers\" />
+      <Folder Include="Infrastructure\Middleware\" />
     </ItemGroup>
 
     <ItemGroup>

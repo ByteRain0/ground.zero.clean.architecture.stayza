@@ -4,11 +4,10 @@ using Stayza.Domain.Users;
 
 namespace Stayza.Web.Infrastructure.Session;
 
-public class SessionAccessorService(
-    SignInManager<User> signInManager, 
-    ClaimsPrincipal claimsPrincipal)
+internal class SessionAccessorService(
+    SignInManager<User> signInManager)
 {
-    public async Task<string> GetUserId()
+    public async Task<string> GetUserId(ClaimsPrincipal claimsPrincipal)
     {
         var userManager = signInManager.UserManager;
         if (await userManager.GetUserAsync(claimsPrincipal) is not { } user)

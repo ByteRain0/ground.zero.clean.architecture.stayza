@@ -11,7 +11,7 @@ public static class TestUserSeeder
     
     public const string TestUserId = "bbb875a2-b427-4ee5-8957-e30343e108b6";
     
-    public static async Task SeedTestUser(this IApplicationBuilder app)
+    internal static async Task SeedTestUser(this IApplicationBuilder app)
     {
         using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
         using var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
