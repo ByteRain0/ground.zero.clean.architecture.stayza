@@ -15,12 +15,24 @@ public class BookCopyConfiguration : IEntityTypeConfiguration<BookCopy>
         
         builder.Property(x => x.BookId)
             .IsRequired();
-
-        builder.Ignore(x => x.DomainEvents);
-
-        builder.HasMany<Reservation>(x => x.Reservations)
+        
+        builder
+            .HasMany(x => x.Reservations)
             .WithOne()
-            .HasForeignKey(x => x.BookCopyId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .HasForeignKey(x => x.BookCopyId);
+        
+        builder
+            .HasOne(x => x.CurrentLoan)
+            .WithOne()
+            .HasForeignKey<Loan>(l => l.BookCopyId)
+            .IsRequired(false);
+        
+        builder
+            .Ignore(x => x.DomainEvents)
+            .Ignore(x => x.IsAvailable)
+            .Ignore(x => x.IsLoaned)
+            .Ignore(x => x.ActiveReservation)
+            .Ignore(x => x.PendingReservations);
+
     }
 }

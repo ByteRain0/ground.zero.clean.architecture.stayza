@@ -9,7 +9,7 @@ using Stayza.Infrastructure.Persistence.Extensions;
 namespace Stayza.Infrastructure.Persistence.Repositories;
 
 internal class LoansRepository(
-    ApplicationDbContext applicationDbContext, 
+    ApplicationDbContext applicationDbContext,
     ILogger<LoansRepository> logger) : ILoansRepository
 {
     public async Task<BookCopy> GetBookCopyById(
@@ -17,7 +17,8 @@ internal class LoansRepository(
         CancellationToken cancellationToken)
     {
         var bookCopy = await applicationDbContext.BookCopies
-            .Include("._reservations")
+            .Include(x => x.Reservations)
+            .Include(x => x.CurrentLoan)
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken);
 
         if (bookCopy is null)
@@ -60,9 +61,10 @@ internal class LoansRepository(
             .Reservations
             .Where(x => x.ExpiresAt < after || x.Status == ReservationStatus.Cancelled)
             .ExecuteDeleteAsync();
-        
+
         // An example of a human focused log entry that can bring value.
-        logger.LogInformation("A total of {deletedReservationsCount} expired reservations have been deleted.", countOfAffectedEntries);
+        logger.LogInformation("A total of {deletedReservationsCount} expired reservations have been deleted.",
+            countOfAffectedEntries);
     }
 
     public async Task<Loan> GetLoanById(Guid id, CancellationToken cancellationToken)
@@ -81,9 +83,9 @@ internal class LoansRepository(
     }
 
     public async Task<PagedList<Loan>> GetLoans(
-        int page, 
-        int pageSize, 
-        string? sortColumn, 
+        int page,
+        int pageSize,
+        string? sortColumn,
         SortOrder? sortOrder,
         string? userId,
         CancellationToken cancellationToken)
@@ -91,7 +93,7 @@ internal class LoansRepository(
         var dbQuery = applicationDbContext.Loans
             .Where(x => string.IsNullOrEmpty(userId) || x.UserId == userId)
             .AsQueryable();
-        
+
         if (sortOrder is not null)
         {
             if (sortOrder == SortOrder.Ascending)
@@ -103,8 +105,8 @@ internal class LoansRepository(
                 dbQuery.OrderByDescending(GetLoanSortColumn(sortColumn));
             }
         }
-        
-        
+
+
         return await PagedListExtensions<Loan>.CreateAsync(
             source: dbQuery,
             page: page,

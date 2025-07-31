@@ -11,12 +11,12 @@ public class BookCopy : AggregateRoot
     public Guid BookId { get; set; }
 
     public bool IsRetired { get; private set; } = false;
+    
+    public Loan? CurrentLoan { get; private set; }
 
-    private Loan? _currentLoan;
+    public bool IsAvailable => CurrentLoan == null || CurrentLoan.IsReturned;
 
-    public bool IsAvailable => _currentLoan == null || _currentLoan.IsReturned;
-
-    public bool IsLoaned => _currentLoan != null && !_currentLoan.IsReturned;
+    public bool IsLoaned => CurrentLoan != null && !CurrentLoan.IsReturned;
     
     private readonly HashSet<Reservation> _reservations;
     
@@ -86,7 +86,7 @@ public class BookCopy : AggregateRoot
 
         _reservations.Remove(reservation);
 
-        _currentLoan = new Loan(
+        CurrentLoan = new Loan(
             bookCopyId: Id,
             userId: userId,
             timeRange: new TimeRange(
@@ -97,33 +97,33 @@ public class BookCopy : AggregateRoot
         AddDomainEvent(new BookLoanedEvent(
             BookCopyId: Id,
             UserId: userId,
-            LoanId: _currentLoan.Id,
-            LoanDate: _currentLoan.TimeRange.Start,
-            DueDate: _currentLoan.TimeRange.End));
+            LoanId: CurrentLoan.Id,
+            LoanDate: CurrentLoan.TimeRange.Start,
+            DueDate: CurrentLoan.TimeRange.End));
 
-        return _currentLoan;
+        return CurrentLoan;
     }
 
     public Loan Return(
         string userId,
         DateTimeOffset utcNow)
     {
-        Guard.Against.Null(_currentLoan);
+        Guard.Against.Null(CurrentLoan);
 
         if (!IsLoaned)
             throw new InvalidOperationException("Copy is not loaned.");
 
-        if (_currentLoan.UserId != userId)
+        if (CurrentLoan.UserId != userId)
             throw new InvalidOperationException("Cannot return not owned book");
 
-        _currentLoan!.MarkAsReturned(returnedAt: utcNow);
+        CurrentLoan!.MarkAsReturned(returnedAt: utcNow);
 
         AddDomainEvent(new BookReturnedEvent(
             BookCopyId: Id,
-            LoanId: _currentLoan.Id,
+            LoanId: CurrentLoan.Id,
             ReturnDate: utcNow));
 
-        return _currentLoan;
+        return CurrentLoan;
     }
     
     public Reservation FulfillReservation(

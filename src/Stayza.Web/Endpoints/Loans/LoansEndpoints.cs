@@ -88,7 +88,7 @@ internal class LoansEndpoints : IEndpointsDefinition
     private static async Task<IResult> CancelBookReservation(
         [FromRoute] Guid id,
         [FromRoute] Guid reservationId,
-        [FromBody] string reason,
+        [FromBody] string reason, // Not really best example but will prove the point :P
         [FromServices] LoansService service) =>
         Results.Ok(await service.CancelReservation(new CancelReservationCommand(
             BookCopyId: id,
