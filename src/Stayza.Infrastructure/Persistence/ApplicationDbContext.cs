@@ -1,11 +1,10 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
 using Stayza.Domain.Books;
 using Stayza.Domain.Loans;
 using Stayza.Domain.Users;
 using Stayza.Infrastructure.Persistence.DataSeed;
-using Stayza.Infrastructure.Persistence.Extensions;
+using Stayza.Infrastructure.Persistence.Interceptors;
 
 namespace Stayza.Infrastructure.Persistence;
 

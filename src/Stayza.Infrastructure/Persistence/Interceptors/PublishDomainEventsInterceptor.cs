@@ -2,7 +2,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Stayza.Core.Entity;
 using Stayza.Core.Messaging;
 
-namespace Stayza.Infrastructure.Persistence.Extensions;
+namespace Stayza.Infrastructure.Persistence.Interceptors;
 
 public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 {
@@ -34,7 +34,7 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
             .Select(entry => entry.Entity)
             .SelectMany(aggregateRoot =>
             {
-                var domainEvents = aggregateRoot.DomainEvents;
+                var domainEvents = aggregateRoot.DomainEvents.ToList();
                 aggregateRoot.ClearDomainEvents();
                 return domainEvents;
             })

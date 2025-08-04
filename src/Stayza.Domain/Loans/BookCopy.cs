@@ -44,8 +44,7 @@ public class BookCopy : AggregateRoot
     public Reservation Reserve(
         string userId,
         DateTimeOffset utcNow)
-    {
-        // Either this in every method or add a test at IRepository level.
+    { 
         Guard.Against.Null(_reservations);
 
         if (IsRetired)

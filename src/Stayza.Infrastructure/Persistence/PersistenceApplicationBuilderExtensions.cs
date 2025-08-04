@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Stayza.Domain.Books;
 using Stayza.Domain.Loans;
-using Stayza.Infrastructure.Persistence.Extensions;
+using Stayza.Infrastructure.Persistence.Interceptors;
 using Stayza.Infrastructure.Persistence.Repositories;
 
 namespace Stayza.Infrastructure.Persistence;
