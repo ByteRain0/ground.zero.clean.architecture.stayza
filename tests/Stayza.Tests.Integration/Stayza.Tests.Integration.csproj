@@ -31,4 +31,9 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Books\Tests\" />
+    <Folder Include="Loans\Tests\" />
+  </ItemGroup>
+
 </Project>

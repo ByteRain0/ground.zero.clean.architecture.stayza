@@ -4,6 +4,7 @@ using Stayza.Infrastructure.Auth;
 using Stayza.Infrastructure.Messaging;
 using Stayza.Infrastructure.Notifications;
 using Stayza.Infrastructure.Persistence;
+using Stayza.Infrastructure.Telemetry;
 
 namespace Stayza.Infrastructure;
 
@@ -14,6 +15,7 @@ public static class AppllicationBuilderExtensions
         builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 
         builder
+            .AddCustomTelemetry()
             .AddAuth()
             .AddAsyncMessagingUsingRabbitMq()
             .AddNotifications()

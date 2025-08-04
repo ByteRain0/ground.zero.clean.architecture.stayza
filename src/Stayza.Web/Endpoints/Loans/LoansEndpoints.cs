@@ -24,43 +24,47 @@ internal class LoansEndpoints : IEndpointsDefinition
             .WithValidationFilter()
             .RequireAuthorization()
             .WithApiVersionSet(versionSet)
-            .MapToApiVersion(1.0);
+            .MapToApiVersion(1.0)
+            .ProducesProblem(statusCode: 400)
+            .ProducesProblem(statusCode: 500);
 
         var loansGroup = app.MapGroup("api/v{version:apiVersion}/loans")
             .WithTags("loans")
             .WithValidationFilter()
             .RequireAuthorization()
             .WithApiVersionSet(versionSet)
-            .MapToApiVersion(1.0);
+            .MapToApiVersion(1.0)
+            .ProducesProblem(statusCode: 400)
+            .ProducesProblem(statusCode: 500);
 
         bookCopiesGroup.MapPost("{id:guid}/reservations", ReserveBookCopy)
-            .Produces(404)
-            .Produces<Reservation>(201, ApplicationJson)
+            .Produces(statusCode: 404)
+            .Produces<Reservation>(statusCode: 201, ApplicationJson)
             .WithName("ReserveBookCopy");
 
         bookCopiesGroup.MapPut("{id:guid}/reservations/{reservationId:guid}/cancel", CancelBookReservation)
-            .Produces(404)
-            .Produces<Reservation>(200, ApplicationJson)
+            .Produces(statusCode: 404)
+            .Produces<Reservation>(statusCode: 200, ApplicationJson)
             .WithName("CancelBookReservation");
 
         bookCopiesGroup.MapPost("{id:guid}/loans", LoanBookCopy)
-            .Produces(404)
-            .Produces<Loan>(201, ApplicationJson)
+            .Produces(statusCode: 404)
+            .Produces<Loan>(statusCode: 201, ApplicationJson)
             .WithName("LoanBookCopy");
 
         bookCopiesGroup.MapPut("{id:guid}/loans/return", ReturnBookCopy)
-            .Produces(404)
-            .Produces<Loan>(200, ApplicationJson)
+            .Produces(statusCode: 404)
+            .Produces<Loan>(statusCode: 200, ApplicationJson)
             .WithName("ReturnBookCopy");
 
         loansGroup.MapGet("{id:guid}", GetLoanById)
-            .Produces(404)
-            .Produces<Loan>(200, ApplicationJson)
+            .Produces(statusCode: 404)
+            .Produces<Loan>(statusCode: 200, ApplicationJson)
             .WithName("GetLoanById");
 
         loansGroup.MapGet("/personal", GetLoansByUserId)
-            .Produces(404)
-            .Produces<PagedList<Loan>>(200, ApplicationJson)
+            .Produces(statusCode: 404)
+            .Produces<PagedList<Loan>>(statusCode: 200, ApplicationJson)
             .WithName("LoansByUserId");
     }
 

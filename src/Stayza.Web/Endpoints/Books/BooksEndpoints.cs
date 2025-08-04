@@ -1,4 +1,5 @@
 using Asp.Versioning;
+using Microsoft.AspNetCore.Mvc;
 using O9d.AspNet.FluentValidation;
 using Stayza.Application.Books;
 using Stayza.Application.Books.Commands;
@@ -23,36 +24,38 @@ internal class BooksEndpoints : IEndpointsDefinition
             .WithValidationFilter()
             .RequireAuthorization()
             .WithApiVersionSet(versionSet)
-            .MapToApiVersion(1.0);
+            .MapToApiVersion(1.0)
+            .ProducesProblem(statusCode: 400)
+            .ProducesProblem(statusCode: 500); // Mark that all endpoints might produce problem details of status codes 400 and 500.
 
         group.MapPost("", AddBook)
             .Accepts<AddBookCommand>(ApplicationJson)
-            .Produces<Book>(201, ApplicationJson)
+            .Produces<Book>(statusCode: 201, ApplicationJson)
             .ProducesValidationProblem()
             .WithName("AddBook");
 
         group.MapGet("{id:guid}", GetBookById)
-            .Produces(404)
-            .Produces<Book>(200, ApplicationJson)
+            .Produces(statusCode: 404)
+            .Produces<Book>(statusCode: 200, ApplicationJson)
             .WithName("GetBookById");
 
         group.MapGet("{isbn}", GetBookByIsbn)
-            .Produces(404)
-            .Produces<Book>(200, ApplicationJson)
+            .Produces(statusCode: 404)
+            .Produces<Book>(statusCode: 200, ApplicationJson)
             .WithName("GetBookByIsbn");
 
         group.MapPost("{id:guid}/retire", RetireBook)
-            .Produces(404)
+            .Produces(statusCode: 404)
             .Produces<Book>()
             .WithName("RetireBook");
 
         group.MapPost("{id:guid}/copies", AddBookCopy)
-            .Produces(404)
+            .Produces(statusCode: 404)
             .Produces<BookCopy>()
             .WithName("AddBookCopy");
 
         group.MapDelete("{bookId:guid}/copies/{bookCopyId:guid}", RemoveBookCopy)
-            .Produces(404)
+            .Produces(statusCode: 404)
             .Produces<Book>()
             .WithName("RemoveBookCopy");
     }
@@ -72,35 +75,35 @@ internal class BooksEndpoints : IEndpointsDefinition
     }
 
     private static async Task<IResult> GetBookById(
-        Guid id,
-        BooksService service,
+        [FromRoute] Guid id,
+        [FromServices] BooksService service,
         CancellationToken cancellationToken) =>
         Results.Ok(await service.GetBookById(
             id: id,
             cancellationToken: cancellationToken));
 
     private static async Task<IResult> GetBookByIsbn(
-        string isbn,
-        BooksService service,
+        [FromRoute] string isbn,
+        [FromServices] BooksService service,
         CancellationToken cancellationToken) =>
         Results.Ok(await service.GetBookByIsbn(
             isbn: isbn,
             cancellationToken: cancellationToken));
 
     private static async Task<IResult> RetireBook(
-        Guid id,
-        BooksService service)
+        [FromRoute] Guid id,
+        [FromServices] BooksService service)
         => Results.Ok(await service.Retire(new RetireBookCommand(BookId: id)));
 
     private static async Task<IResult> AddBookCopy(
-        Guid id,
-        BooksService service)
+        [FromRoute] Guid id,
+        [FromServices] BooksService service)
         => Results.Ok(await service.AddBookCopy(new AddBookCopyCommand(BookId: id)));
 
     private static async Task<IResult> RemoveBookCopy(
-        Guid bookId,
-        Guid bookCopyId,
-        BooksService service) =>
+        [FromRoute] Guid bookId,
+        [FromRoute] Guid bookCopyId,
+        [FromServices] BooksService service) =>
         Results.Ok(await service.RemoveBookCopy(
             new RemoveBookCopyCommand(
                 BookId: bookId,

@@ -1,0 +1,48 @@
+#https://opentelemetry.io/docs/collector/configuration -> for more information
+receivers:
+  otlp:
+    protocols:
+      grpc:
+      http:
+
+processors:
+  batch:
+  filter/healthcheck:
+    error_mode: ignore
+    traces:
+      span:
+        - 'attributes["http.route"] == "/healthcheck"'
+  attributes/environment:
+    actions:
+      - key: environment
+        value: development
+        action: upsert
+      # Example of how to delete specific data so no PII is breached
+      - key: sureName
+        action: delete
+
+exporters:
+  otlp:
+    endpoint: "aspire-dashboard:18889"
+    tls:
+      insecure: true
+
+service:
+  pipelines:
+    logs:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlp]
+    traces:
+      receivers: [otlp]
+      processors:
+        - batch
+        - filter/healthcheck
+        - attributes/environment
+      exporters:
+        - otlp
+    metrics:
+      receivers: [otlp]
+      processors: [batch]
+      exporters:
+        - otlp

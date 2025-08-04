@@ -20,4 +20,8 @@
     <ProjectReference Include="..\..\src\Stayza.Domain\Stayza.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Architecture\" />
+  </ItemGroup>
+
 </Project>
