@@ -2,6 +2,7 @@ using System.Text;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using Stayza.Core.Messaging;
+using Stayza.Core.Telemetry;
 
 namespace Stayza.Infrastructure.Messaging.Producer;
 
@@ -23,10 +24,13 @@ public class MessageProducer : IMessageProducer
 
     public void PublishMessage(Message message, string key)
     {
+        using var publishActivity = RunTimeDiagnosticConfig.Source.StartActivity("RabbitMQ Publish");
+        message.Header.Properties?.Add("traceparent", publishActivity.Id);
+        
         var properties = _channel.CreateBasicProperties();
         properties.ContentType = "text/plain";
         properties.Headers = message.Header.Properties;
-
+        
         var body = Encoding.UTF8.GetBytes(message.Body);
         
         _channel.BasicPublish(

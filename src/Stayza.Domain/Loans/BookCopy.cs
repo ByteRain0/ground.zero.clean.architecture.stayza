@@ -1,6 +1,7 @@
 using Ardalis.GuardClauses;
 using Stayza.Core.Entity;
 using Stayza.Core.Exceptions;
+using Stayza.Core.Telemetry;
 using Stayza.Domain.Loans.Events;
 using Stayza.Domain.Loans.Exceptions;
 
@@ -11,15 +12,15 @@ public class BookCopy : AggregateRoot
     public Guid BookId { get; set; }
 
     public bool IsRetired { get; private set; } = false;
-    
+
     public Loan? CurrentLoan { get; private set; }
 
     public bool IsAvailable => CurrentLoan == null || CurrentLoan.IsReturned;
 
     public bool IsLoaned => CurrentLoan != null && !CurrentLoan.IsReturned;
-    
+
     private readonly HashSet<Reservation> _reservations;
-    
+
     public IReadOnlyCollection<Reservation> Reservations => _reservations.ToList();
 
     public IReadOnlyCollection<Reservation> PendingReservations =>
@@ -27,7 +28,7 @@ public class BookCopy : AggregateRoot
 
     public Reservation? ActiveReservation => _reservations
         .SingleOrDefault(x => x.Status == ReservationStatus.Active);
-    
+
     [Obsolete("Used only by ef core")]
     public BookCopy()
     {
@@ -41,23 +42,43 @@ public class BookCopy : AggregateRoot
         _reservations = new();
     }
 
+    //TODO: HW - based on this example set up the rest of the methods with telemetry data.
     public Reservation Reserve(
         string userId,
         DateTimeOffset utcNow)
-    { 
+    {
+        using var reserveActivity = RunTimeDiagnosticConfig.Source.StartActivity("Reserve book copy");
+
+        reserveActivity?
+            .SetBookCopyId(Id)
+            .SetUserId(userId)
+            .SetDateTimeOffset(utcNow);
+
         Guard.Against.Null(_reservations);
 
         if (IsRetired)
-            throw new BookNotAvailableForReservation();
+        {
+            reserveActivity?.AddTag("isRetired", true);
+            var exception = new BookNotAvailableForReservation();
+            reserveActivity.AddExceptionAndFail(exception);
+            throw exception;
+        }
 
         var existingReservation = _reservations.FirstOrDefault(r =>
             r.UserId == userId && r.Status == ReservationStatus.Pending);
 
         if (existingReservation is not null)
         {
-            throw new ReservationAlreadyExistsException(
-                userId:userId,
+            reserveActivity.SetReservationId(existingReservation.Id)
+                ?.SetTag("reservedAt", existingReservation.ReservedAt)
+                ?.SetTag("expiresAt", existingReservation.ExpiresAt);
+
+            var exception = new ReservationAlreadyExistsException(
+                userId: userId,
                 reservationId: existingReservation.Id);
+
+            reserveActivity.AddExceptionAndFail(exception);
+            throw exception;
         }
 
         var reservation = new Reservation(
@@ -130,7 +151,7 @@ public class BookCopy : AggregateRoot
 
         return CurrentLoan;
     }
-    
+
     public Reservation FulfillReservation(
         Guid reservationId,
         DateTimeOffset utcNow)
@@ -138,7 +159,7 @@ public class BookCopy : AggregateRoot
         Guard.Against.Null(_reservations);
 
         var reservation = _reservations.SingleOrDefault(x => x.Id == reservationId);
-        
+
         if (reservation is null)
             throw new EntityNotFoundException(
                 entityType: nameof(Reservation),
@@ -186,7 +207,7 @@ public class BookCopy : AggregateRoot
 
         return reservation;
     }
-    
+
     public void Retire()
     {
         foreach (var activeReservation in PendingReservations.Select(x => x.Id))

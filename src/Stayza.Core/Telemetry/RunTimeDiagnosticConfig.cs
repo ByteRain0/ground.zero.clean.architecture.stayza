@@ -12,7 +12,4 @@ public static class RunTimeDiagnosticConfig
     public static ActivitySource Source = new(ServiceName);
     
     public static Meter Meter = new(ServiceName, ServiceVersion);
-    
-    public static Counter<int> ChampionshipParticipationRequests =
-        Meter.CreateCounter<int>("participation_requests", "Number of partification requests");
 }
