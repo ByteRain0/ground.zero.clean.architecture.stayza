@@ -7,6 +7,7 @@ using Stayza.Infrastructure.Telemetry;
 using Stayza.Web.Infrastructure.Endpoints;
 using Stayza.Web.Infrastructure.ExceptionHandlers;
 using Stayza.Web.Infrastructure.Health;
+using Stayza.Web.Infrastructure.Middleware;
 using Stayza.Web.Infrastructure.Seed;
 using Stayza.Web.Infrastructure.Session;
 using Stayza.Web.Infrastructure.Swagger;
@@ -40,7 +41,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseEndpoints<Program>();
+app
+    .UseMiddleware<ActivityTracingMiddleware>()
+    .UseMiddleware<LoggingMiddleware>()
+    .UseMiddleware<PerformanceMonitoringMiddleware>();
+
+app.MapEndpointsFrom<Program>();
 app.MapIdentityApi<User>();
 app.MapConfiguredSwagger();
 app.MapDefaultHealthEndpoints();

@@ -4,12 +4,14 @@ namespace Stayza.Web.Infrastructure.Endpoints;
 
 internal static class EndpointsBootstrapper
 {
-    internal static void UseEndpoints<TMarker>(this IApplicationBuilder app)
+    internal static IApplicationBuilder MapEndpointsFrom<TMarker>(this IApplicationBuilder app)
     {
-        UseEndpoints(app, typeof(TMarker).Assembly);
+        MapEndpointsFrom(app, typeof(TMarker).Assembly);
+
+        return app;
     }
 
-    private static void UseEndpoints(this IApplicationBuilder app, Assembly assembly)
+    private static void MapEndpointsFrom(this IApplicationBuilder app, Assembly assembly)
     {
         var endpointTypes = GetEndpointDefinitionsFromAssembly(assembly);
 
