@@ -10,6 +10,8 @@ using Stayza.Web.Infrastructure.Endpoints;
 using Stayza.Web.Infrastructure.Session;
 using static Stayza.Web.Infrastructure.Endpoints.Constants.ContentTypes;
 
+namespace Stayza.Web.Endpoints.Loans;
+
 internal class LoansEndpoints : IEndpointsDefinition
 {
     public static void ConfigureEndpoints(IEndpointRouteBuilder app)

@@ -50,9 +50,15 @@ public class BookCopy : AggregateRoot
         if (IsRetired)
             throw new BookNotAvailableForReservation();
 
-        if (_reservations.Any(r => 
-                r.UserId == userId && r.Status == ReservationStatus.Pending))
-            throw new ReservationAlreadyExistsException(userId);
+        var existingReservation = _reservations.FirstOrDefault(r =>
+            r.UserId == userId && r.Status == ReservationStatus.Pending);
+
+        if (existingReservation is not null)
+        {
+            throw new ReservationAlreadyExistsException(
+                userId:userId,
+                reservationId: existingReservation.Id);
+        }
 
         var reservation = new Reservation(
             userId: userId,

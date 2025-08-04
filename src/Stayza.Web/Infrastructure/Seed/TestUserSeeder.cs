@@ -20,7 +20,7 @@ public static class TestUserSeeder
         var existingUser = await userStore.FindByIdAsync(
             userId: TestUserId,
             cancellationToken: CancellationToken.None);
-
+        
         if (existingUser is not null)
         {
             // User already exists.
@@ -30,7 +30,11 @@ public static class TestUserSeeder
         var emailStore = (IUserEmailStore<User>)userStore;
         var email = TestUserEmail;
         
-        var user = new User();
+        var user = new User
+        {
+            Id = TestUserId
+        };
+        
         await userStore.SetUserNameAsync(
             user: user, 
             userName: email,

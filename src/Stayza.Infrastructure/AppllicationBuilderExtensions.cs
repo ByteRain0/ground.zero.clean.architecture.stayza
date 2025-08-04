@@ -15,7 +15,6 @@ public static class AppllicationBuilderExtensions
         builder.Services.AddSingleton<TimeProvider>(TimeProvider.System);
 
         builder
-            .AddCustomTelemetry()
             .AddAuth()
             .AddAsyncMessagingUsingRabbitMq()
             .AddNotifications()

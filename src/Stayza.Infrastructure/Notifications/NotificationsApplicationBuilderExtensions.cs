@@ -14,6 +14,12 @@ public static class NotificationsApplicationBuilderExtensions
                                          ?? throw new Exception("Invalid notifications api configuration provided"));
         });
 
+        builder.Services.ConfigureHttpClientDefaults(http =>
+        {
+            // Turn on resilience by default
+            http.AddStandardResilienceHandler();
+        });
+        
         return builder;
     }
 }

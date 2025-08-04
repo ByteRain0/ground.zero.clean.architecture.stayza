@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Stayza.Domain.Loans.Exceptions;
 
-namespace Stayza.Web.Infrastructure.ExceptionHandlers.Books;
+namespace Stayza.Web.Infrastructure.ExceptionHandlers.Loans;
 
 /// <summary>
 /// Alternatively you can have a single exception handler per aggregate root and switch through multiple exception types.

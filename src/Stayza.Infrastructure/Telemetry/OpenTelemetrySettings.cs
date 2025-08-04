@@ -7,7 +7,7 @@ public class OpenTelemetrySettings
     
     public List<TelemetryAttribute> Attributes { get; set; }
 
-    public bool Disabled { get; set; }
+    public bool Enabled { get; set; }
 
     public List<KeyValuePair<string, object>> GetOtelAttributes()
     {

@@ -1,4 +1,4 @@
-using Stayza.Web.Infrastructure.ExceptionHandlers.Books;
+using Stayza.Web.Infrastructure.ExceptionHandlers.Loans;
 
 namespace Stayza.Web.Infrastructure.ExceptionHandlers;
 
@@ -16,6 +16,7 @@ internal static class ExceptionHandlersApplicationBuilderExtension
         });
         
         builder.Services.AddExceptionHandler<BookCopyAlreadyLoanedExceptionHandler>();
+        builder.Services.AddExceptionHandler<ReservationAlreadyExistsExceptionHandler>();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
         return builder;
