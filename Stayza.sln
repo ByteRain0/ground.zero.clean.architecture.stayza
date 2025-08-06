@@ -36,6 +36,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Tests.Integration", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Tests.EndToEnd", "tests\Stayza.Tests.EndToEnd\Stayza.Tests.EndToEnd.csproj", "{509512E8-6574-44FF-92FB-2ED7CD5D8584}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Tests.Subcutaneous", "tests\Stayza.Tests.Subcutaneous\Stayza.Tests.Subcutaneous.csproj", "{C9B142A8-4CE0-4014-9AA5-D059FAD0A273}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{509512E8-6574-44FF-92FB-2ED7CD5D8584}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{509512E8-6574-44FF-92FB-2ED7CD5D8584}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{509512E8-6574-44FF-92FB-2ED7CD5D8584}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C9B142A8-4CE0-4014-9AA5-D059FAD0A273}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C9B142A8-4CE0-4014-9AA5-D059FAD0A273}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C9B142A8-4CE0-4014-9AA5-D059FAD0A273}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C9B142A8-4CE0-4014-9AA5-D059FAD0A273}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EC35144E-60B4-4981-9227-9EBCAFED883E} = {D90BBA51-88AD-4B79-9CE3-64F01C1DECC2}
@@ -92,5 +98,6 @@ Global
 		{B1B74583-D0C8-45F0-881A-6CCB017CEAFA} = {CF0806DB-3B4A-4ED8-BA3E-F22DC47752EB}
 		{A2A9B146-B2FD-42C7-94D8-AD3526A12E24} = {752D6934-C1C9-4970-ACE8-D02698643FE5}
 		{509512E8-6574-44FF-92FB-2ED7CD5D8584} = {752D6934-C1C9-4970-ACE8-D02698643FE5}
+		{C9B142A8-4CE0-4014-9AA5-D059FAD0A273} = {752D6934-C1C9-4970-ACE8-D02698643FE5}
 	EndGlobalSection
 EndGlobal

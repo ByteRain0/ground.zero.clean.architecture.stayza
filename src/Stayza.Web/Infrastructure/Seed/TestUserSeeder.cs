@@ -3,7 +3,7 @@ using Stayza.Domain.Users;
 
 namespace Stayza.Web.Infrastructure.Seed;
 
-public static class TestUserSeeder
+internal static class TestUserSeeder
 {
     public const string TestUserEmail = "jhon.doe@example.com";
     

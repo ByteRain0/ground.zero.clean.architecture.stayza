@@ -36,8 +36,13 @@ public static class RabbitMqApplicationBuilderExtensions
         // As the connection factory is disposable, need to ensure container disposes of it when finished
         services.AddSingleton<IConnectionFactory>(_ => new ConnectionFactory
         {
-            HostName = settings.HostName,
-            DispatchConsumersAsync = true
+            DispatchConsumersAsync = true,
+            // Depending on the personal preference you can use either the username/password approach
+            // or via connection string
+            //HostName = settings.HostName,
+            //UserName = settings.UserName,
+            //Password = settings.Password
+            Uri = new Uri(settings.ConnectionString)
         });
 
         services.AddSingleton<ModelFactory>();

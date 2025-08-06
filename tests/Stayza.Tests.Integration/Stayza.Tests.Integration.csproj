@@ -9,8 +9,12 @@
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="Shouldly" />
+    <PackageReference Include="Testcontainers.PostgreSql" />
+    <PackageReference Include="Testcontainers.RabbitMq" />
+    <PackageReference Include="WireMock.Net.Testcontainers" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
+    <PackageReference Include="PracticalOtel.xUnit.OpenTelemetry"/>
   </ItemGroup>
 
   <ItemGroup>
@@ -33,7 +37,7 @@
 
   <ItemGroup>
     <Folder Include="Books\Tests\" />
-    <Folder Include="Loans\Tests\" />
+    <Folder Include="Publisher\" />
   </ItemGroup>
 
 </Project>

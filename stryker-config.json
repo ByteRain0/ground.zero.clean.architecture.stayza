@@ -1,0 +1,28 @@
+{
+  "stryker-config": {
+    // Define how extensive you want the test suite. Complete will run all possible mutations.
+    // The stricter the setting the more time your test suite will run, so be warned.
+    "mutation-level": "Standard",
+    "language-version": "latest",
+    "solution": "Stayza.sln",
+    "project": "src/Stayza.Web/Stayza.Web.csproj",
+    "thresholds": {
+      "high": 80, // Define what a "well-tested" solution should look like. Our case if the score is >80 we are good
+      "low": 60, // i.e. start working on your tests once here
+      "break": 0 // Break the CI pipeline once we hit this threshold
+    },
+    "reporters": [
+      "Progress",
+      "Html",
+      "markdown"
+    ],
+    "report-file-name": "mutation-report",
+    "break-on-initial-test-failure": false,
+    "test-projects": [
+      "tests/Stayza.Tests.Unit/Stayza.Tests.Unit.csproj",
+      "tests/Stayza.Tests.Integration/Stayza.Tests.Integration.csproj",
+      "tests/Stayza.Tests.Subcutaneous/Stayza.Tests.Subcutaneous.csproj",
+      "tests/Stayza.Tests.EndToEnd/Stayza.Tests.EndToEnd.csproj"
+    ]
+  }
+}
