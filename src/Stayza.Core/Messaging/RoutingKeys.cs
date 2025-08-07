@@ -2,7 +2,7 @@ namespace Stayza.Core.Messaging;
 
 public static class RoutingKeys
 {
-    public static string EventsTopicBase = "events.";
+    public static string EventsTopicBase = "events";
     
     public static string BookEvents = $"{EventsTopicBase}.[isbn]";
     
@@ -24,11 +24,11 @@ public static class RoutingKeys
         => routingKey.Replace("[isbn]", value.ToLowerInvariant());
     
     public static string ReplaceLoanIdPlaceholderWith(this string routingKey, string value)
-        => routingKey.Replace("[loanId]", value.ToString().ToLowerInvariant());
+        => routingKey.Replace("[loanId]", value.ToLowerInvariant());
     
     public static string ReplaceBookCopyIdPlaceholderWith(this string routingKey, string value)
-        => routingKey.Replace("[bookCopyId]", value.ToString().ToLowerInvariant());
+        => routingKey.Replace("[bookCopyId]", value.ToLowerInvariant());
     
     public static string ReplaceReservationIdPlaceholderWith(this string routingKey, string value)
-        => routingKey.Replace("[reservationId]", value.ToString().ToLowerInvariant());
+        => routingKey.Replace("[reservationId]", value.ToLowerInvariant());
 }

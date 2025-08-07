@@ -15,7 +15,7 @@ public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
     private readonly HttpClient _stayzaWebClient;
 
     private readonly RabbitMqTestMessageConsumer _messageConsumer;
-    
+
     public LoanBookCopyEndpointShould(ApiFactory factory)
     {
         _stayzaWebClient = factory.GetEnrichedApiClient();
@@ -27,35 +27,40 @@ public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
     {
         // Arrange
         await _stayzaWebClient.AuthenticateTestUser();
-        //_messageConsumer.BindQueue(Constants.Exchange.ExchangeName);
-        
+
         // Set up a test book
         var bookResponse = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", new AddBookCommand(
-            Title:Constants.Book.Title,
-            Author:Constants.Book.Author,
-            ISBN:Constants.Book.ISBN));
+            Title: Constants.Book.Title,
+            Author: Constants.Book.Author,
+            ISBN: Constants.Book.ISBN));
         var book = await bookResponse.Content.ReadFromJsonAsync<Book>();
 
         // Set up a book copy
         var bookCopyResponse = await _stayzaWebClient.PostAsync($"api/v1/books/{book!.Id}/copies", default);
         var bookCopy = await bookCopyResponse.Content.ReadFromJsonAsync<BookCopy>();
-        
+
         // Reserve a book before loaning
         await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy!.Id}/reservations", default);
-        
+
         // Act
-        var loanResponse = await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy.Id}/loans", default);
+        var subscriptionTask = await _messageConsumer.BindAndConsumeAsyncV2(
+            timeout: TimeSpan.FromSeconds(60),
+            exchangeName: Constants.Exchange.ExchangeName,
+            routingKey: RoutingKeys
+                .BookCopyLoanedTopic
+                .ReplaceBookCopyIdPlaceholderWith("*"));
         
+        var loanResponse = await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy.Id}/loans", default);
+
         // Assert
         loanResponse.IsSuccessStatusCode.ShouldBeTrue();
         var loan = await loanResponse.Content.ReadFromJsonAsync<Loan>();
         loan.BookCopyId.ShouldBe(bookCopy.Id);
         loan.UserId.ShouldBe(TestUserSeeder.TestUserId);
         loan.IsReturned.ShouldBeFalse();
-        
-        var routingKey = RoutingKeys
-            .BookCopyLoanedTopic
-            .ReplaceBookCopyIdPlaceholderWith(bookCopy.ToString());
-        (await _messageConsumer.TryConsumeAsync(TimeSpan.FromSeconds(10))).ShouldBeTrue();
+
+        // Step 4: Await and assert the background message result
+        var messageReceived = await subscriptionTask;
+        messageReceived.ShouldBeTrue();
     }
 }

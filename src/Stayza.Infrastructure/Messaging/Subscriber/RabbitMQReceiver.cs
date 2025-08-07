@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.DependencyInjection;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -52,14 +53,22 @@ public class RabbitMQReceiver
             _channel.BasicAck(ea.DeliveryTag, false);
         };
 
-        _channel.BasicConsume(queue: queueName,
+        _channel.BasicConsume(
+            queue: queueName,
             autoAck: false,
             consumer: consumerAsync);
     }
 
     public void Dispose()
     {
-        _channel.Dispose();
+        try
+        {
+            _channel.Dispose();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Critical error encountered disposing of rabbitmq channel error : {e.Message}");
+        }
     }
 
     public void RegisterListeners()

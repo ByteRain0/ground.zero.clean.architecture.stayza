@@ -1,3 +1,4 @@
+using Ardalis.GuardClauses;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 
@@ -9,58 +10,43 @@ public class RabbitMqTestMessageConsumer
 
     public RabbitMqTestMessageConsumer(string connectionString)
     {
-        _factory = new ConnectionFactory()
+        _factory = new ConnectionFactory
         {
             Uri = new Uri(connectionString)
         };
     }
-
-    public void BindQueue(
-        string exchange,
-        string routingKey = "")
-    {
-        using var connection = _factory.CreateConnection();
-        using var channel = connection.CreateModel();
-
-        channel.ExchangeDeclare(
-            exchange: exchange,
-            type: ExchangeType.Topic,
-            durable: false);
-        
-        var queueName = channel.QueueDeclare().QueueName;
-        
-        var queueResult = channel.QueueDeclare(
-            queue: queueName,
-            durable: false,
-            exclusive: false);
-
-        channel.QueueBind(
-            queue: queueResult.QueueName,
-            exchange: exchange,
-            routingKey: routingKey);
-    }
-
-    public async Task<bool> TryConsumeAsync(TimeSpan timeout)
+    
+    public Task<Task<bool>> BindAndConsumeAsyncV2(
+        string exchangeName,
+        string routingKey,
+        TimeSpan timeout)
     {
         var messageReceived = new TaskCompletionSource<bool>();
-        using var connection = _factory.CreateConnection();
-        using var channel = connection.CreateModel();
 
-        var queueName = channel.QueueDeclare().QueueName;
+        var task = Task.Run(async () =>
+        {
+            using var connection = _factory.CreateConnection();
+            using var channel = connection.CreateModel();
+
+            channel.ExchangeDeclare(exchange: exchangeName, type: ExchangeType.Topic);
+            var queueName = channel.QueueDeclare().QueueName;
+
+            channel.QueueBind(queue: queueName, exchange: exchangeName, routingKey: routingKey);
+
+            var consumer = new EventingBasicConsumer(channel);
+            consumer.Received += (_, _) =>
+            {
+                messageReceived.TrySetResult(true);
+            };
+
+            channel.BasicConsume(queue: queueName, autoAck: true, consumer: consumer);
+
+            var timeoutTask = Task.Delay(timeout);
+            var completedTask = await Task.WhenAny(messageReceived.Task, timeoutTask);
         
-        var consumer = new EventingBasicConsumer(channel);
-        consumer.Received += (_, _) => { messageReceived.SetResult(true); };
+            return completedTask == messageReceived.Task;
+        });
 
-        channel.BasicConsume(
-            queue: queueName, 
-            autoAck: true, 
-            consumer: consumer);
-
-        var timeoutTask = Task.Delay(timeout);
-        var completedTask = await Task.WhenAny(
-            messageReceived.Task, 
-            timeoutTask);
-
-        return completedTask == messageReceived.Task;
+        return Task.FromResult(task);
     }
 }

@@ -56,6 +56,7 @@ public static class RabbitMqApplicationBuilderExtensions
     {
         services.AddSingleton<IListener, ReservationFulfilledEventHandler>();
         services.AddSingleton<IListener, BookReturnedEventHandler>();
+        services.AddSingleton<IListener, BookCopyLoanedEventHandler>();
 
         return services;
     }
@@ -63,8 +64,12 @@ public static class RabbitMqApplicationBuilderExtensions
     private class ModelFactory : IDisposable
     {
         private readonly IConnection _connection;
+        
         private readonly RabbitMQSettings _settings;
-        public ModelFactory(IConnectionFactory connectionFactory, RabbitMQSettings settings)
+        
+        public ModelFactory(
+            IConnectionFactory connectionFactory,
+            RabbitMQSettings settings)
         {
             _settings = settings;
             _connection = connectionFactory.CreateConnection();
@@ -73,7 +78,11 @@ public static class RabbitMqApplicationBuilderExtensions
         public IModel CreateChannel()
         {
             var channel = _connection.CreateModel();
-            channel.ExchangeDeclare(exchange: _settings.ExchangeName, type: _settings.ExchangeType);
+            
+            channel.ExchangeDeclare(
+                exchange: _settings.ExchangeName, 
+                type: _settings.ExchangeType);
+            
             return channel;
         }
 
