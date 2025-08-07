@@ -25,7 +25,10 @@ public class MessageProducer : IMessageProducer
     public void PublishMessage(Message message, string key)
     {
         using var publishActivity = RunTimeDiagnosticConfig.Source.StartActivity("RabbitMQ Publish");
-        message.Header.Properties?.Add("traceparent", publishActivity.Id);
+        if (publishActivity is not null)
+        {
+            message.Header.Properties?.Add("traceparent", publishActivity.Id);
+        }
         
         var properties = _channel.CreateBasicProperties();
         properties.ContentType = "text/plain";

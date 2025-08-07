@@ -36,8 +36,7 @@ public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
         var bookCopy = await bookCopyResponse.Content.ReadFromJsonAsync<BookCopy>();
 
         // Reserve a book before loaning
-        var reservationResponse = await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy!.Id}/reserve", default);
-        var reservation = await bookResponse.Content.ReadFromJsonAsync<Reservation>();
+        await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy!.Id}/reservations", default);
         
         // Act
         var loanResponse = await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy.Id}/loans", default);

@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Ardalis.GuardClauses;
 using Stayza.Core.Entity;
 using Stayza.Core.Exceptions;
@@ -9,14 +10,19 @@ namespace Stayza.Domain.Loans;
 
 public class BookCopy : AggregateRoot
 {
+    [JsonInclude]
     public Guid BookId { get; set; }
 
+    [JsonInclude]
     public bool IsRetired { get; private set; } = false;
 
+    [JsonInclude]
     public Loan? CurrentLoan { get; private set; }
 
+    [JsonInclude]
     public bool IsAvailable => CurrentLoan == null || CurrentLoan.IsReturned;
 
+    [JsonInclude]
     public bool IsLoaned => CurrentLoan != null && !CurrentLoan.IsReturned;
 
     private readonly HashSet<Reservation> _reservations;

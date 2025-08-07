@@ -1,17 +1,25 @@
+using System.Text.Json.Serialization;
+
 namespace Stayza.Domain.Loans;
 
 public class Loan
 {
+    [JsonInclude]
     public Guid Id { get; private set; }
 
+    [JsonInclude]
     public Guid BookCopyId { get; private set; }
 
+    [JsonInclude]
     public string UserId { get; private set; }
 
+    [JsonInclude]
     public TimeRange TimeRange { get; set; }
 
+    [JsonInclude]
     public DateTimeOffset? ReturnDate { get; private set; }
 
+    [JsonInclude]
     public bool IsReturned => ReturnDate.HasValue;
 
     [Obsolete("Used only by ef core")]

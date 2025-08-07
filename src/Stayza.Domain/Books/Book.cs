@@ -1,3 +1,4 @@
+using System.Text.Json.Serialization;
 using Ardalis.GuardClauses;
 using Stayza.Core.Entity;
 using Stayza.Core.Exceptions;
@@ -7,10 +8,13 @@ namespace Stayza.Domain.Books;
 
 public class Book : AggregateRoot
 {
+    [JsonInclude]
     public string Title { get; private set; }
 
+    [JsonInclude]
     public string Author { get; private set; }
 
+    [JsonInclude]
     public string ISBN { get; private set; }
 
     private readonly HashSet<BookCopy> _copies = new();
