@@ -30,7 +30,8 @@ public class RabbitMQReceiver
 
         var queueName = _channel.QueueDeclare().QueueName;
 
-        _channel.QueueBind(queue: queueName,
+        _channel.QueueBind(
+            queue: queueName,
             exchange: _rabbitSettings.ExchangeName,
             routingKey: service.RoutingKey);
 

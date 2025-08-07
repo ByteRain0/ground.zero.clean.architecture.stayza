@@ -28,6 +28,8 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         .WithImage("rabbitmq:3.11")
         .Build();
     
+    public RabbitMqTestMessageConsumer MessageConsumer;
+    
     public NotificationsApiServer NotificationsApi { get; } = new();
     
     protected override void ConfigureWebHost(IWebHostBuilder builder)
@@ -68,6 +70,7 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         await NotificationsApi.StartAsync();
         await _postgreSqlContainer.StartAsync();
         await _rabbitMqContainer.StartAsync();
+        MessageConsumer = new RabbitMqTestMessageConsumer(_rabbitMqContainer.GetConnectionString());
     }
 
     public async Task DisposeAsync()

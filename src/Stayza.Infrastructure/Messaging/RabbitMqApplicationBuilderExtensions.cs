@@ -17,6 +17,7 @@ public static class RabbitMqApplicationBuilderExtensions
         builder.Services
             .SetUpRabbitMQ(builder.Configuration)
             .AddSingleton<RabbitMQReceiver>()
+            .RegisterListeners()
             .AddSingleton<IMessageProducer, MessageProducer>();
         
         return builder;

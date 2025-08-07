@@ -7,7 +7,8 @@ public class WorkerService : BackgroundService
 {
     private readonly ILogger<WorkerService> _logger;
     private readonly RabbitMQReceiver _rabbitMqReceiver;
-    public WorkerService(RabbitMQReceiver rabbitMqReceiver,
+    public WorkerService(
+        RabbitMQReceiver rabbitMqReceiver,
         ILogger<WorkerService> logger)
     {
         _logger = logger;

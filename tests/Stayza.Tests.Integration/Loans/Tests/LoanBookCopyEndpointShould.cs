@@ -1,6 +1,7 @@
 using System.Net.Http.Json;
 using Shouldly;
 using Stayza.Application.Books.Commands;
+using Stayza.Core.Messaging;
 using Stayza.Domain.Books;
 using Stayza.Domain.Loans;
 using Stayza.Tests.Integration.Base;
@@ -12,10 +13,13 @@ namespace Stayza.Tests.Integration.Loans.Tests;
 public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
 {
     private readonly HttpClient _stayzaWebClient;
+
+    private readonly RabbitMqTestMessageConsumer _messageConsumer;
     
     public LoanBookCopyEndpointShould(ApiFactory factory)
     {
         _stayzaWebClient = factory.GetEnrichedApiClient();
+        _messageConsumer = factory.MessageConsumer;
     }
 
     [Fact]
@@ -23,6 +27,7 @@ public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
     {
         // Arrange
         await _stayzaWebClient.AuthenticateTestUser();
+        //_messageConsumer.BindQueue(Constants.Exchange.ExchangeName);
         
         // Set up a test book
         var bookResponse = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", new AddBookCommand(
@@ -34,7 +39,7 @@ public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
         // Set up a book copy
         var bookCopyResponse = await _stayzaWebClient.PostAsync($"api/v1/books/{book!.Id}/copies", default);
         var bookCopy = await bookCopyResponse.Content.ReadFromJsonAsync<BookCopy>();
-
+        
         // Reserve a book before loaning
         await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy!.Id}/reservations", default);
         
@@ -47,5 +52,10 @@ public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
         loan.BookCopyId.ShouldBe(bookCopy.Id);
         loan.UserId.ShouldBe(TestUserSeeder.TestUserId);
         loan.IsReturned.ShouldBeFalse();
+        
+        var routingKey = RoutingKeys
+            .BookCopyLoanedTopic
+            .ReplaceBookCopyIdPlaceholderWith(bookCopy.ToString());
+        (await _messageConsumer.TryConsumeAsync(TimeSpan.FromSeconds(10))).ShouldBeTrue();
     }
 }

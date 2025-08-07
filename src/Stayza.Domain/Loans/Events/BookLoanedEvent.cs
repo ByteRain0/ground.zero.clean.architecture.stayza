@@ -10,6 +10,7 @@ public record BookLoanedEvent(
     DateTimeOffset LoanDate,
     DateTimeOffset DueDate) : IDomainEvent
 {
-    public string RoutingKey => RoutingKeys.BookCopyLoanedTopic
+    public string RoutingKey => RoutingKeys
+        .BookCopyLoanedTopic
         .ReplaceBookCopyIdPlaceholderWith(BookCopyId.ToString());
 }

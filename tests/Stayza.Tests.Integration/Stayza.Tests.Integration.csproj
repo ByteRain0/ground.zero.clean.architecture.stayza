@@ -37,7 +37,6 @@
 
   <ItemGroup>
     <Folder Include="Books\Tests\" />
-    <Folder Include="Publisher\" />
   </ItemGroup>
 
 </Project>
