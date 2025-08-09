@@ -29,6 +29,30 @@ public static class TelemetryExtensions
         return activity;
     }
     
+    public static Activity? SetBookId(this Activity? activity, Guid id)
+    {
+        activity?.SetTag(GlobalOTelTags.BookId, id);
+        return activity;
+    }
+    
+    public static Activity? SetBookIsbn(this Activity? activity, string isbn)
+    {
+        activity?.SetTag(GlobalOTelTags.BookIsbn, isbn);
+        return activity;
+    }
+    
+    public static Activity? SetBookTitle(this Activity? activity, string title)
+    {
+        activity?.SetTag(GlobalOTelTags.Title, title);
+        return activity;
+    }
+    
+    public static Activity? SetLoanId(this Activity? activity, Guid id)
+    {
+        activity?.SetTag(GlobalOTelTags.LoanId, id);
+        return activity;
+    }
+    
     public static Activity? SetDateTimeOffset(this Activity? activity, DateTimeOffset offset)
     {
         activity?.SetTag(GlobalOTelTags.UtcDateTimeOffset, offset);

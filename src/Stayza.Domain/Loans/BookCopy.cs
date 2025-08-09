@@ -97,6 +97,7 @@ public class BookCopy : AggregateRoot
         return reservation;
     }
 
+    // HW: add OTel activities to better understand how the app behaves.
     public Loan StartLoan(
         string userId,
         DateTimeOffset utcNow)

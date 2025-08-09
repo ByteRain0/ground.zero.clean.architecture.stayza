@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Stayza.Core.Exceptions;
 using Stayza.Core.PagingAndSorting;
+using Stayza.Core.Telemetry;
 using Stayza.Domain.Loans;
 using Stayza.Infrastructure.Persistence.Extensions;
 
@@ -16,6 +17,10 @@ internal class LoansRepository(
         Guid id,
         CancellationToken cancellationToken)
     {
+        using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
+        dbActivity?
+            .SetBookCopyId(id);
+        
         var bookCopy = await applicationDbContext.BookCopies
             .Include(x => x.Reservations)
             .Include(x => x.CurrentLoan)
@@ -23,9 +28,12 @@ internal class LoansRepository(
 
         if (bookCopy is null)
         {
-            throw new EntityNotFoundException(
+            var exception = new EntityNotFoundException(
                 entityType: nameof(BookCopy),
                 searchKey: id.ToString());
+            
+            dbActivity?.AddExceptionAndFail(exception);
+            throw exception;
         }
 
         return bookCopy;
@@ -33,6 +41,10 @@ internal class LoansRepository(
 
     public async Task<BookCopy> UpdateBookCopy(BookCopy bookCopy)
     {
+        using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
+        dbActivity?
+            .SetBookCopyId(bookCopy.Id);
+        
         applicationDbContext.Update(bookCopy);
         await applicationDbContext.SaveChangesAsync();
 
@@ -41,27 +53,44 @@ internal class LoansRepository(
 
     public async Task<List<Loan>> GetLoansThatAreOverdueAfter(
         DateTimeOffset endTimeOffset,
-        CancellationToken cancellationToken) =>
-        await applicationDbContext.Loans
+        CancellationToken cancellationToken)
+    {
+        using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
+        dbActivity?.SetTag("endTimeOffset", endTimeOffset);
+        
+        return await applicationDbContext.Loans
             .Where(x => x.IsReturned == false)
             .Where(x => x.TimeRange.End < endTimeOffset)
             .ToListAsync(cancellationToken: cancellationToken);
+    }
+
 
     public Task<List<Reservation>> GetReservationThatShouldExpire(
         DateTimeOffset after,
-        CancellationToken cancellationToken) =>
-        applicationDbContext.Reservations
+        CancellationToken cancellationToken)
+    {        
+        using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
+        dbActivity?.SetTag("afterOffset", after);
+        
+        return applicationDbContext.Reservations
             .Where(x => x.Status == ReservationStatus.Pending)
             .Where(x => x.ExpiresAt > after)
             .ToListAsync(cancellationToken: cancellationToken);
+    }
+
 
     public async Task RemoveExpiredAndCancelledReservations(DateTimeOffset after)
     {
+        using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
+        dbActivity?.SetTag("afterOffset", after);
+        
         var countOfAffectedEntries = await applicationDbContext
             .Reservations
             .Where(x => x.ExpiresAt < after || x.Status == ReservationStatus.Cancelled)
             .ExecuteDeleteAsync();
 
+        dbActivity?.SetTag("affectedEntriesCount", countOfAffectedEntries);
+        
         // An example of a human focused log entry that can bring value.
         logger.LogInformation("A total of {deletedReservationsCount} expired reservations have been deleted.",
             countOfAffectedEntries);
@@ -69,14 +98,20 @@ internal class LoansRepository(
 
     public async Task<Loan> GetLoanById(Guid id, CancellationToken cancellationToken)
     {
+        using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
+        dbActivity?.SetLoanId(id);
+        
         var loan = await applicationDbContext.Loans
             .FirstOrDefaultAsync(x => x.Id == id, cancellationToken: cancellationToken);
 
         if (loan is null)
         {
-            throw new EntityNotFoundException(
+            var exception = new EntityNotFoundException(
                 entityType: nameof(Loan),
                 searchKey: id.ToString());
+            
+            dbActivity?.AddExceptionAndFail(exception);
+            throw exception;
         }
 
         return loan;
