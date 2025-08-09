@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Stayza.Core.Entity;
 using Stayza.Core.Messaging;
@@ -29,7 +30,7 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
 
     private void PublishDomainEventsAsync(Microsoft.EntityFrameworkCore.DbContext context)
     {
-        using var activity = RunTimeDiagnosticConfig.Source.StartActivity();
+        using var activity = RunTimeDiagnosticConfig.Source.StartActivity("Checking for events to publish");
         
         var domainEvents = context
             .ChangeTracker
@@ -42,6 +43,8 @@ public sealed class PublishDomainEventsInterceptor : SaveChangesInterceptor
                 return domainEvents;
             })
             .ToList();
+
+        activity?.SetTag("countOfEventsToPublish", domainEvents.Count);
         
         foreach (IDomainEvent domainEvent in domainEvents)
         {

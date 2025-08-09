@@ -9,39 +9,169 @@ receivers:
 
 processors:
   batch:
+  attributes/db-connection:
+    actions:
+      - key: db.connection_string
+        action: delete
+  redaction/creditcard:
+    allow_all_keys: true
+    blocked_values:
+      - "4[0-9]{12}(?:[0-9]{3})?" ## Visa credit card number
+      - "(5[1-5][0-9]{14})"       ## MasterCard number
+  transform/environment:
+    error_mode: ignore
+    trace_statements:
+      - context: resource
+        statements:
+          - set(attributes["environment"], "development")
+    log_statements:
+      - context: resource
+        statements:
+          - set(attributes["environment"], "development")
+    metric_statements:
+      - context: resource
+        statements:
+          - set(attributes["environment"], "development")
   filter/healthcheck:
     error_mode: ignore
     traces:
       span:
         - 'attributes["http.route"] == "/healthcheck"'
-  attributes/environment:
-    actions:
-      - key: environment
-        value: development
-        action: upsert
-      # Example of how to delete specific data so no PII is breached
-      - key: sureName
-        action: delete
+  tail_sampling:
+    decision_wait: 5s
+    # Evaluates the following policies in case any match we sample the traces
+    policies:
+      [
+        {
+          # Rule: low sampling for readiness/liveness probes from
+          name: sample-partial-health-probes,
+          type: and,
+          and:
+            {
+              and_sub_policy:
+                [
+                  {
+                    # filter by service name
+                    name: service-name-policy,
+                    type: string_attribute,
+                    string_attribute:
+                      {
+                        key: service.name,
+                        values: [ dotnet-api ],
+                      },
+                  },
+                  {
+                    # filter by route
+                    name: route-live-ready-policy,
+                    type: string_attribute,
+                    string_attribute:
+                      {
+                        key: http.route,
+                        values: [ /live, /ready, /healthcheck ],
+                        enabled_regex_matching: true,
+                      },
+                  },
+                  {
+                    # apply probabilistic sampling
+                    name: probabilistic-policy,
+                    type: probabilistic,
+                    probabilistic: { sampling_percentage: 0.1 },
+                  },
+                ],
+            },
+        },
+        {
+          # Rule: Sample all errors from dotnet-api
+          name: sample-all-errors,
+          type: and,
+          and:
+            {
+              and_sub_policy:
+                [
+                  {
+                    # filter by service name
+                    name: service-name-policy,
+                    type: string_attribute,
+                    string_attribute:
+                      {
+                        key: service.name,
+                        values: [ dotnet-api],
+                      },
+                  },
+                  {
+                    name: error-check-policy,
+                    type: status_code,
+                    status_code: { status_codes: [ ERROR ] }
+                  }
+                ]
+            }
+        },
+        {
+          # Rule: low sampling for hangfire probes from dotnet-api -> if you will use Hangfire
+          name: sample-partial-hangfire-probes,
+          type: and,
+          and:
+            {
+              and_sub_policy:
+                [
+                  {
+                    name: service-name-policy,
+                    type: string_attribute,
+                    string_attribute:
+                      {
+                        key: service.name,
+                        values: [ dotnet-api ],
+                      },
+                  },
+                  {
+                    name: check-db-command-policy,
+                    type: string_attribute,
+                    string_attribute: { key: db.statement, values: [ ".*hangfire.*" ], enabled_regex_matching: true, cache_max_size: 10 }
+                  },
+                  {
+                    name: probabilistic-policy,
+                    type: probabilistic,
+                    probabilistic: { sampling_percentage: 0.1 },
+                  },
+                ]
+            }
+        },
+        {
+          name: sample-long-running-requests,
+          type: latency,
+          latency: { threshold_ms: 100 }
+        }
+      ]
+
 
 exporters:
   debug:
     verbosity: detailed
-  otlp:
+  otlp/aspire:
     endpoint: "aspire-dashboard:18889"
     tls:
       insecure: true
 
 service:
   pipelines:
-    logs:
-      receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp, debug]
     traces:
       receivers: [otlp]
-      processors: [batch, filter/healthcheck, attributes/environment]
-      exporters: [otlp, debug]
+      processors:
+        - batch
+        - attributes/db-connection
+        - redaction/creditcard
+        - transform/environment
+        - tail_sampling
+      exporters: [otlp/aspire]
     metrics:
       receivers: [otlp]
-      processors: [batch]
-      exporters: [otlp, debug]
+      processors:
+        - batch
+        - transform/environment
+      exporters: [otlp/aspire]
+    logs:
+      receivers: [otlp]
+      processors:
+        - batch
+        - transform/environment
+      exporters: [otlp/aspire]

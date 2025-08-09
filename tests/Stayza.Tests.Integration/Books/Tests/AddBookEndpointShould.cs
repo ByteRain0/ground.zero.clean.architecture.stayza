@@ -22,8 +22,10 @@ public class AddBookEndpointShould : IClassFixture<ApiFactory>
     public async Task Add_new_book()
     {
         // Arrange
+        using var rootTestActivity = OtelTestFramework.Source.StartActivity();
+        _stayzaWebClient.InjectTraceContext(rootTestActivity);
         await _stayzaWebClient.AuthenticateTestUser1();
-
+        
         // Act
         var bookResponse = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", new AddBookCommand(
             Title: Constants.Book.Title,
@@ -43,6 +45,9 @@ public class AddBookEndpointShould : IClassFixture<ApiFactory>
     public async Task Fail_if_book_with_same_isbn_exists()
     {
         // Arrange
+        using var rootActivity = OtelTestFramework.Source.StartActivity();
+        _stayzaWebClient.InjectTraceContext(rootActivity);
+        
         await _stayzaWebClient.AuthenticateTestUser1();
         var bookSetUp = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", new AddBookCommand(
             Title: Constants.Book.Title,

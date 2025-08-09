@@ -1,11 +1,14 @@
+using System.Diagnostics;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text.Json.Serialization;
+using OpenTelemetry;
+using OpenTelemetry.Context.Propagation;
 using Stayza.Web.Infrastructure.Seed;
 
 namespace Stayza.Tests.Integration.Base;
 
-public static class AuthenticationTestHelpers
+public static class HttpClientExtensions
 {
     public static async Task AuthenticateTestUser1(this HttpClient client)
     {
@@ -22,7 +25,27 @@ public static class AuthenticationTestHelpers
             email: TestUserSeeder.TestUser2Email,
             password: TestUserSeeder.TestUser2Password);
     }
+    
+    public static void InjectTraceContext(this HttpClient client, Activity activity)
+    {
+        if (activity == null)
+            throw new ArgumentNullException(nameof(activity));
+        
+        // Remove existing trace headers if any, to avoid duplicates
+        client.DefaultRequestHeaders.Remove("traceparent");
+        client.DefaultRequestHeaders.Remove("tracestate");
+        // Add any other headers your propagator uses if needed
 
+        OtelTestFramework.Propagator.Inject(
+            new PropagationContext(activity.Context, Baggage.Current),
+            client,
+            (c, key, value) =>
+            {
+                if (!c.DefaultRequestHeaders.Contains(key))
+                    c.DefaultRequestHeaders.Add(key, value);
+            });
+    }
+    
     private static async Task AuthenticateUser(
         HttpClient client,
         string email,

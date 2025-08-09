@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Stayza.Core.Telemetry;
 using Stayza.Domain.Loans.Exceptions;
 
 namespace Stayza.Web.Infrastructure.ExceptionHandlers.Loans;
@@ -29,6 +31,8 @@ internal class BookCopyAlreadyLoanedExceptionHandler(
             message: "Book copy was already loaned to specific user. {userId}",
             args: copyAlreadyLoanedException.UserId);
 
+        Activity.Current?.AddExceptionAndFail(exception);
+        
         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
         var context = new ProblemDetailsContext

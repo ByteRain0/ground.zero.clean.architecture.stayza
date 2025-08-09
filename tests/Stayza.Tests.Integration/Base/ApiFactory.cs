@@ -1,4 +1,5 @@
 using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using DotNet.Testcontainers.Builders;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
@@ -43,18 +44,7 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
     {
         builder.ConfigureServices(services =>
         {
-            // Un-register current EF core setup.
-            var descriptor = services.SingleOrDefault(
-                d => d.ServiceType ==
-                     typeof(DbContextOptions<ApplicationDbContext>));
-
-            if (descriptor != null)
-            {
-                services.Remove(descriptor);
-            }
-            
-            // Register EF Core with Test container
-            services.AddDbContext<ApplicationDbContext>(opts => opts.UseNpgsql(_postgreSqlContainer.GetConnectionString()));
+            // over-write DI services if needed.
         });
     }
     
@@ -62,10 +52,10 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
     {
         // Way easier to just wire it in here :P
         Environment.SetEnvironmentVariable("OpenTelemetrySettings__Enabled", "false");
+        Environment.SetEnvironmentVariable("ConnectionStrings__Default", _postgreSqlContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("RabbitMQSettings__ConnectionString", _rabbitMqContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("RabbitMQSettings__ExchangeName", ExchangeName);
         Environment.SetEnvironmentVariable("Notifications__URL", NotificationsApi.Url);
-        
         return base.CreateHost(builder);
     }
     
@@ -75,7 +65,8 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         await _postgreSqlContainer.StartAsync();
         await _rabbitMqContainer.StartAsync();
         MessageConsumer = new RabbitMqTestMessageConsumer(_rabbitMqContainer.GetConnectionString());
-        HttpClient = GetEnrichedApiClient();
+        // Create a single client to be reused and at the same time trigger migration.
+        HttpClient = CreateClient();
         await InitializeDbRespawner();
     }
 
@@ -91,28 +82,6 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         await using var conn = new NpgsqlConnection(_postgreSqlContainer.GetConnectionString());
         await conn.OpenAsync();
         await _respawner.ResetAsync(conn);
-    }
-    
-    private HttpClient GetEnrichedApiClient()
-    {
-        var httpClient = CreateClient();
-        
-        if (Activity.Current is null)
-        {
-            return httpClient;
-        }
-        
-        var contextToInject = Activity.Current?.Context ?? default;
-        
-        OtelTestFramework.Propagator.Inject(
-            new PropagationContext(contextToInject, Baggage.Current),
-            httpClient,
-            InjectTraceContext);
-        
-        return httpClient;
-        
-        static void InjectTraceContext(HttpClient client, string key, string value)
-            => client.DefaultRequestHeaders.Add(key, new[] {value});
     }
     
     private async Task InitializeDbRespawner()

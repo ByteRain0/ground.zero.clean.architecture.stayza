@@ -33,6 +33,9 @@ public class ReturningBookShould :
     public async Task Notify_next_user_with_reservation_about_fulfillment()
     {
         // Arrange
+        using var rootActivity = OtelTestFramework.Source.StartActivity();
+        _stayzaWebClient.InjectTraceContext(rootActivity);
+        
         await _notificationsApiServer.SetUpNotificationResponse(true);
         await _stayzaWebClient.AuthenticateTestUser1();
 

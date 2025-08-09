@@ -54,6 +54,7 @@ public static class OpenTelemetryApplicationBuilderExtensions
                     .AddNpgsql()
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
+                    //.AddEntityFrameworkCoreInstrumentation()
                     .AddOtlpExporter(options =>
                     {
                         options.Endpoint = telemetrySettings.TracesEndpoint;

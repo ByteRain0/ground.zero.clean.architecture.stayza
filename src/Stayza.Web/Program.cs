@@ -37,7 +37,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app
-    .UseMiddleware<TraceContextMiddleware>()
     .UseMiddleware<ActivityTracingMiddleware>()
     .UseMiddleware<LoggingMiddleware>()
     .UseMiddleware<PerformanceMonitoringMiddleware>();

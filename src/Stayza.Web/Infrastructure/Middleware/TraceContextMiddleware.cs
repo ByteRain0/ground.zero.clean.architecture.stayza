@@ -4,6 +4,7 @@ using Stayza.Core.Telemetry;
 
 namespace Stayza.Web.Infrastructure.Middleware;
 
+// Example of how you can set up your own propagator at the start of the request pipeline.
 public class TraceContextMiddleware
 {
     private readonly RequestDelegate _next;

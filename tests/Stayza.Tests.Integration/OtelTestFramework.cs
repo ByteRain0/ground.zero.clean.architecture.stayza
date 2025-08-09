@@ -21,7 +21,10 @@ public class OtelTestFramework : TracedTestFramework
         traceProviderSetup = tpb => {
             tpb
                 .ConfigureResource(resource => 
-                    resource.AddService("Stayza.Tests.Integration"))
+                    resource
+                        .AddService("Stayza.Tests.Integration")
+                        .AddService(RunTimeDiagnosticConfig.ServiceName, RunTimeDiagnosticConfig.ServiceVersion)
+                    )
                 .AddSource(Source.Name)
                 .AddHttpClientInstrumentation()
                 .AddAspNetCoreInstrumentation()

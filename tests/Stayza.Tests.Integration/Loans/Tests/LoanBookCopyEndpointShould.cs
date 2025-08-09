@@ -38,7 +38,9 @@ public class LoanBookCopyEndpointShould :
     public async Task Start_new_loan()
     {
         // Arrange
-        using var rootActivity = OtelTestFramework.Source.StartActivity(nameof(Start_new_loan), ActivityKind.Internal);
+        using var rootActivity = OtelTestFramework.Source.StartActivity();
+        _stayzaWebClient.InjectTraceContext(rootActivity);
+        
         await _stayzaWebClient.AuthenticateTestUser1();
 
         // Set up a test book

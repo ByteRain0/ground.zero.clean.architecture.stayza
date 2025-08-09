@@ -1,5 +1,7 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
+using Stayza.Core.Telemetry;
 
 namespace Stayza.Web.Infrastructure.ExceptionHandlers;
 
@@ -14,6 +16,8 @@ public class GlobalExceptionHandler(
         CancellationToken cancellationToken)
     {
         logger.LogError(exception, "Unhandled exception occured");
+        
+        Activity.Current?.AddExceptionAndFail(exception);
 
         httpContext.Response.StatusCode = StatusCodes.Status500InternalServerError;
 

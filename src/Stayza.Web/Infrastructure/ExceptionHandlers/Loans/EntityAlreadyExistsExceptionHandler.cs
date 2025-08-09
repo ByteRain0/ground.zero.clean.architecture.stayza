@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Stayza.Core.Exceptions;
+using Stayza.Core.Telemetry;
 
 namespace Stayza.Web.Infrastructure.ExceptionHandlers.Loans;
 
@@ -23,6 +25,8 @@ public class EntityAlreadyExistsExceptionHandler(
             exception: exception,
             message: copyAlreadyLoanedException.Message);
 
+        Activity.Current?.AddExceptionAndFail(exception);
+        
         httpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
 
         var context = new ProblemDetailsContext

@@ -34,6 +34,12 @@ public static class TelemetryExtensions
         activity?.SetTag(GlobalOTelTags.UtcDateTimeOffset, offset);
         return activity;
     }
+
+    public static Activity? SetRoutingKey(this Activity? activity, string routingKey)
+    {
+        activity?.SetTag("routingKey", routingKey);
+        return activity;
+    }
     
     // TODO: add rest of OTel tags.
 }
