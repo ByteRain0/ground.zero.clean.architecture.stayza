@@ -14,8 +14,12 @@ namespace Stayza.Infrastructure.Migrations
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "library");
+
             migrationBuilder.CreateTable(
                 name: "AspNetRoles",
+                schema: "library",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -30,6 +34,7 @@ namespace Stayza.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUsers",
+                schema: "library",
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "text", nullable: false),
@@ -57,6 +62,7 @@ namespace Stayza.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "Books",
+                schema: "library",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -71,6 +77,7 @@ namespace Stayza.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
+                schema: "library",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -85,6 +92,7 @@ namespace Stayza.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetRoleClaims_AspNetRoles_RoleId",
                         column: x => x.RoleId,
+                        principalSchema: "library",
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -92,6 +100,7 @@ namespace Stayza.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserClaims",
+                schema: "library",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -106,6 +115,7 @@ namespace Stayza.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserClaims_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "library",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -113,6 +123,7 @@ namespace Stayza.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserLogins",
+                schema: "library",
                 columns: table => new
                 {
                     LoginProvider = table.Column<string>(type: "text", nullable: false),
@@ -126,6 +137,7 @@ namespace Stayza.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserLogins_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "library",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -133,6 +145,7 @@ namespace Stayza.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserRoles",
+                schema: "library",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "text", nullable: false),
@@ -144,12 +157,14 @@ namespace Stayza.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetRoles_RoleId",
                         column: x => x.RoleId,
+                        principalSchema: "library",
                         principalTable: "AspNetRoles",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_AspNetUserRoles_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "library",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -157,6 +172,7 @@ namespace Stayza.Infrastructure.Migrations
 
             migrationBuilder.CreateTable(
                 name: "AspNetUserTokens",
+                schema: "library",
                 columns: table => new
                 {
                     UserId = table.Column<string>(type: "text", nullable: false),
@@ -170,13 +186,36 @@ namespace Stayza.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_AspNetUserTokens_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "library",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
+                name: "BookCopies",
+                schema: "library",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    BookId = table.Column<Guid>(type: "uuid", nullable: false),
+                    IsRetired = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BookCopies", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BookCopies_Books_BookId",
+                        column: x => x.BookId,
+                        principalSchema: "library",
+                        principalTable: "Books",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Loans",
+                schema: "library",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -192,32 +231,21 @@ namespace Stayza.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Loans_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "library",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "BookCopies",
-                columns: table => new
-                {
-                    Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    BookId = table.Column<Guid>(type: "uuid", nullable: false),
-                    IsRetired = table.Column<bool>(type: "boolean", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_BookCopies", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_BookCopies_Books_BookId",
-                        column: x => x.BookId,
-                        principalTable: "Books",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        name: "FK_Loans_BookCopies_BookCopyId",
+                        column: x => x.BookCopyId,
+                        principalSchema: "library",
+                        principalTable: "BookCopies",
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Reservations",
+                schema: "library",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -233,18 +261,21 @@ namespace Stayza.Infrastructure.Migrations
                     table.ForeignKey(
                         name: "FK_Reservations_AspNetUsers_UserId",
                         column: x => x.UserId,
+                        principalSchema: "library",
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Reservations_BookCopies_BookCopyId",
                         column: x => x.BookCopyId,
+                        principalSchema: "library",
                         principalTable: "BookCopies",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.InsertData(
+                schema: "library",
                 table: "Books",
                 columns: new[] { "Id", "Author", "ISBN", "Title" },
                 values: new object[,]
@@ -257,6 +288,7 @@ namespace Stayza.Infrastructure.Migrations
                 });
 
             migrationBuilder.InsertData(
+                schema: "library",
                 table: "BookCopies",
                 columns: new[] { "Id", "BookId", "IsRetired" },
                 values: new object[,]
@@ -270,58 +302,76 @@ namespace Stayza.Infrastructure.Migrations
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
+                schema: "library",
                 table: "AspNetRoleClaims",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
+                schema: "library",
                 table: "AspNetRoles",
                 column: "NormalizedName",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserClaims_UserId",
+                schema: "library",
                 table: "AspNetUserClaims",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserLogins_UserId",
+                schema: "library",
                 table: "AspNetUserLogins",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetUserRoles_RoleId",
+                schema: "library",
                 table: "AspNetUserRoles",
                 column: "RoleId");
 
             migrationBuilder.CreateIndex(
                 name: "EmailIndex",
+                schema: "library",
                 table: "AspNetUsers",
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
+                schema: "library",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
                 unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_BookCopies_BookId",
+                schema: "library",
                 table: "BookCopies",
                 column: "BookId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Loans_BookCopyId",
+                schema: "library",
+                table: "Loans",
+                column: "BookCopyId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Loans_UserId",
+                schema: "library",
                 table: "Loans",
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_BookCopyId",
+                schema: "library",
                 table: "Reservations",
                 column: "BookCopyId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Reservations_UserId",
+                schema: "library",
                 table: "Reservations",
                 column: "UserId");
         }
@@ -330,37 +380,48 @@ namespace Stayza.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "AspNetRoleClaims");
+                name: "AspNetRoleClaims",
+                schema: "library");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserClaims");
+                name: "AspNetUserClaims",
+                schema: "library");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserLogins");
+                name: "AspNetUserLogins",
+                schema: "library");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserRoles");
+                name: "AspNetUserRoles",
+                schema: "library");
 
             migrationBuilder.DropTable(
-                name: "AspNetUserTokens");
+                name: "AspNetUserTokens",
+                schema: "library");
 
             migrationBuilder.DropTable(
-                name: "Loans");
+                name: "Loans",
+                schema: "library");
 
             migrationBuilder.DropTable(
-                name: "Reservations");
+                name: "Reservations",
+                schema: "library");
 
             migrationBuilder.DropTable(
-                name: "AspNetRoles");
+                name: "AspNetRoles",
+                schema: "library");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "AspNetUsers",
+                schema: "library");
 
             migrationBuilder.DropTable(
-                name: "BookCopies");
+                name: "BookCopies",
+                schema: "library");
 
             migrationBuilder.DropTable(
-                name: "Books");
+                name: "Books",
+                schema: "library");
         }
     }
 }

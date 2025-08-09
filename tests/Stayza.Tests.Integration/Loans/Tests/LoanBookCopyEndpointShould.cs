@@ -18,7 +18,7 @@ public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
 
     public LoanBookCopyEndpointShould(ApiFactory factory)
     {
-        _stayzaWebClient = factory.GetEnrichedApiClient();
+        _stayzaWebClient = factory.HttpClient;
         _messageConsumer = factory.MessageConsumer;
     }
 
@@ -43,12 +43,12 @@ public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
         await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy!.Id}/reservations", default);
 
         // Act
-        var subscriptionTask = await _messageConsumer.BindAndConsumeAsyncV2(
-            timeout: TimeSpan.FromSeconds(60),
+        var consumeEvents = await _messageConsumer.BindAndConsumeAsyncV2(
             exchangeName: Constants.Exchange.ExchangeName,
             routingKey: RoutingKeys
                 .BookCopyLoanedTopic
-                .ReplaceBookCopyIdPlaceholderWith("*"));
+                .ReplaceBookCopyIdPlaceholderWith("*"),
+            timeout: TimeSpan.FromSeconds(30));
         
         var loanResponse = await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy.Id}/loans", default);
 
@@ -59,8 +59,7 @@ public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
         loan.UserId.ShouldBe(TestUserSeeder.TestUserId);
         loan.IsReturned.ShouldBeFalse();
 
-        // Step 4: Await and assert the background message result
-        var messageReceived = await subscriptionTask;
-        messageReceived.ShouldBeTrue();
+        // Await and assert the background message result
+        (await consumeEvents).ShouldBeTrue();
     }
 }

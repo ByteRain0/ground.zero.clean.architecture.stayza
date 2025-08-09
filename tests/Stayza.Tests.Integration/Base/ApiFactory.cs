@@ -1,12 +1,16 @@
+using System.Data.Common;
 using System.Diagnostics;
 using DotNet.Testcontainers.Builders;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Npgsql;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
+using Respawn;
 using Stayza.Infrastructure.Persistence;
 using Stayza.Web;
 using Testcontainers.PostgreSql;
@@ -20,7 +24,6 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         .WithImage("postgres:16")
         .Build();    
     
-    // TODO: decide if you really want to test against the real RabbitMqContainer???
     private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder()
         .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5672))
         .WithPassword("guest")
@@ -28,7 +31,13 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         .WithImage("rabbitmq:3.11")
         .Build();
     
+    private NpgsqlConnection _dbConnection = default!;
+    
+    private Respawner _respawner = default!;
+    
     public RabbitMqTestMessageConsumer MessageConsumer;
+    
+    public HttpClient HttpClient = default!;
     
     public NotificationsApiServer NotificationsApi { get; } = new();
     
@@ -48,9 +57,6 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
             
             // Register EF Core with Test container
             services.AddDbContext<ApplicationDbContext>(opts => opts.UseNpgsql(_postgreSqlContainer.GetConnectionString()));
-            
-            // Re-register the publisher and listener to RabbitMq
-            
         });
     }
     
@@ -58,9 +64,6 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
     {
         // Way easier to just wire it in here :P
         Environment.SetEnvironmentVariable("OpenTelemetrySettings__Enabled", "false");
-        // Environment.SetEnvironmentVariable("RabbitMQSettings__UserName", "guest");
-        // Environment.SetEnvironmentVariable("RabbitMQSettings__Password", "guest");
-        // Environment.SetEnvironmentVariable("RabbitMQSettings__HostName", _rabbitMqContainer.Hostname);
         Environment.SetEnvironmentVariable("RabbitMQSettings__ConnectionString", _rabbitMqContainer.GetConnectionString());
         return base.CreateHost(builder);
     }
@@ -71,6 +74,8 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         await _postgreSqlContainer.StartAsync();
         await _rabbitMqContainer.StartAsync();
         MessageConsumer = new RabbitMqTestMessageConsumer(_rabbitMqContainer.GetConnectionString());
+        HttpClient = GetEnrichedApiClient();
+        await InitializeDbRespawner();
     }
 
     public async Task DisposeAsync()
@@ -80,7 +85,14 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         await _rabbitMqContainer.StopAsync();
     }
     
-    public HttpClient GetEnrichedApiClient()
+    public async Task ResetDatabaseAsync()
+    {
+        await using var conn = new NpgsqlConnection(_postgreSqlContainer.GetConnectionString());
+        await conn.OpenAsync();
+        await _respawner.ResetAsync(conn);
+    }
+    
+    private HttpClient GetEnrichedApiClient()
     {
         var httpClient = CreateClient();
         
@@ -100,5 +112,16 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         
         static void InjectTraceContext(HttpClient client, string key, string value)
             => client.DefaultRequestHeaders.Add(key, new[] {value});
+    }
+    
+    private async Task InitializeDbRespawner()
+    {
+        _dbConnection = new NpgsqlConnection(_postgreSqlContainer.GetConnectionString());
+        await _dbConnection.OpenAsync();
+        _respawner = await Respawner.CreateAsync(_dbConnection, new RespawnerOptions
+        {
+            DbAdapter = DbAdapter.Postgres,
+            SchemasToInclude = ["public", "postgres", "library"]
+        });
     }
 }

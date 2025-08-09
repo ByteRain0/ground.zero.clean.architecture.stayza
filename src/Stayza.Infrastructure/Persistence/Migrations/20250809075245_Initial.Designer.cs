@@ -12,14 +12,15 @@ using Stayza.Infrastructure.Persistence;
 namespace Stayza.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250731201636_AddBookCopyRelations")]
-    partial class AddBookCopyRelations
+    [Migration("20250809075245_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
+                .HasDefaultSchema("library")
                 .HasAnnotation("ProductVersion", "9.0.7")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
@@ -48,7 +49,7 @@ namespace Stayza.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("RoleNameIndex");
 
-                    b.ToTable("AspNetRoles", (string)null);
+                    b.ToTable("AspNetRoles", "library");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -73,7 +74,7 @@ namespace Stayza.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetRoleClaims", (string)null);
+                    b.ToTable("AspNetRoleClaims", "library");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
@@ -98,7 +99,7 @@ namespace Stayza.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserClaims", (string)null);
+                    b.ToTable("AspNetUserClaims", "library");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
@@ -120,7 +121,7 @@ namespace Stayza.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("AspNetUserLogins", (string)null);
+                    b.ToTable("AspNetUserLogins", "library");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
@@ -135,7 +136,7 @@ namespace Stayza.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("AspNetUserRoles", (string)null);
+                    b.ToTable("AspNetUserRoles", "library");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -154,7 +155,7 @@ namespace Stayza.Infrastructure.Migrations
 
                     b.HasKey("UserId", "LoginProvider", "Name");
 
-                    b.ToTable("AspNetUserTokens", (string)null);
+                    b.ToTable("AspNetUserTokens", "library");
                 });
 
             modelBuilder.Entity("Stayza.Domain.Books.Book", b =>
@@ -179,7 +180,7 @@ namespace Stayza.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", "library");
 
                     b.HasData(
                         new
@@ -234,7 +235,7 @@ namespace Stayza.Infrastructure.Migrations
 
                     b.HasIndex("BookId");
 
-                    b.ToTable("BookCopies");
+                    b.ToTable("BookCopies", "library");
 
                     b.HasData(
                         new
@@ -291,7 +292,7 @@ namespace Stayza.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Loans");
+                    b.ToTable("Loans", "library");
                 });
 
             modelBuilder.Entity("Stayza.Domain.Loans.Reservation", b =>
@@ -321,7 +322,7 @@ namespace Stayza.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Reservations");
+                    b.ToTable("Reservations", "library");
                 });
 
             modelBuilder.Entity("Stayza.Domain.Users.User", b =>
@@ -391,7 +392,7 @@ namespace Stayza.Infrastructure.Migrations
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
 
-                    b.ToTable("AspNetUsers", (string)null);
+                    b.ToTable("AspNetUsers", "library");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -479,7 +480,7 @@ namespace Stayza.Infrastructure.Migrations
 
                             b1.HasKey("LoanId");
 
-                            b1.ToTable("Loans");
+                            b1.ToTable("Loans", "library");
 
                             b1.WithOwner()
                                 .HasForeignKey("LoanId");

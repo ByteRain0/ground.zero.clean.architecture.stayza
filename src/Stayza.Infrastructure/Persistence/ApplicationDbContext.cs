@@ -34,6 +34,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        builder.HasDefaultSchema("library");
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         builder.SeedBooks();
         builder.SeedBookCopies();
