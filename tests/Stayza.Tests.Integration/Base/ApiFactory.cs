@@ -1,9 +1,7 @@
-using System.Data.Common;
 using System.Diagnostics;
 using DotNet.Testcontainers.Builders;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -65,6 +63,8 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         // Way easier to just wire it in here :P
         Environment.SetEnvironmentVariable("OpenTelemetrySettings__Enabled", "false");
         Environment.SetEnvironmentVariable("RabbitMQSettings__ConnectionString", _rabbitMqContainer.GetConnectionString());
+        Environment.SetEnvironmentVariable("Notifications__URL", NotificationsApi.Url);
+        
         return base.CreateHost(builder);
     }
     

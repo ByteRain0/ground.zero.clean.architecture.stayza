@@ -21,7 +21,7 @@ public class AddBookEndpointShould : IClassFixture<ApiFactory>
     public async Task Add_new_book()
     {
         // Arrange
-        await _stayzaWebClient.AuthenticateTestUser();
+        await _stayzaWebClient.AuthenticateTestUser1();
 
         // Act
         var bookResponse = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", new AddBookCommand(
@@ -42,7 +42,7 @@ public class AddBookEndpointShould : IClassFixture<ApiFactory>
     public async Task Fail_if_book_with_same_isbn_exists()
     {
         // Arrange
-        await _stayzaWebClient.AuthenticateTestUser();
+        await _stayzaWebClient.AuthenticateTestUser1();
         var bookSetUp = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", new AddBookCommand(
             Title: Constants.Book.Title,
             Author: Constants.Book.Author,

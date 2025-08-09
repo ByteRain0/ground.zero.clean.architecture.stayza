@@ -37,7 +37,7 @@ app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
 {
     app.ApplyDbMigrations();
-    await app.SeedTestUser();
+    await app.SeedTestUsers();
     app.MapOpenApi();
 }
 

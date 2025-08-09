@@ -19,7 +19,6 @@ public class LoanBookCopyEndpointShould :
     private readonly RabbitMqTestMessageConsumer _messageConsumer;
     
     private Func<Task> _resetDatabase;
-    
 
     public LoanBookCopyEndpointShould(ApiFactory factory)
     {
@@ -32,7 +31,7 @@ public class LoanBookCopyEndpointShould :
     public async Task Start_new_loan()
     {
         // Arrange
-        await _stayzaWebClient.AuthenticateTestUser();
+        await _stayzaWebClient.AuthenticateTestUser1();
 
         // Set up a test book
         var bookResponse = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", new AddBookCommand(
@@ -62,7 +61,7 @@ public class LoanBookCopyEndpointShould :
         loanResponse.IsSuccessStatusCode.ShouldBeTrue();
         var loan = await loanResponse.Content.ReadFromJsonAsync<Loan>();
         loan.BookCopyId.ShouldBe(bookCopy.Id);
-        loan.UserId.ShouldBe(TestUserSeeder.TestUserId);
+        loan.UserId.ShouldBe(TestUserSeeder.TestUser1Id);
         loan.IsReturned.ShouldBeFalse();
 
         // Await and assert the background message result

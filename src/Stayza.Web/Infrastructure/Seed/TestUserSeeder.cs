@@ -5,20 +5,43 @@ namespace Stayza.Web.Infrastructure.Seed;
 
 internal static class TestUserSeeder
 {
-    public const string TestUserEmail = "jhon.doe@example.com";
+    public const string TestUser1Email = "jhon.doe@example.com";
+    public const string TestUser2Email = "jhoana.doe@example.com";
     
-    public const string TestUserPassword = "Passw0rd!";
+    public const string TestUser1Password = "Passw0rd!";
+    public const string TestUser2Password = "Passw0rd!";
     
-    public const string TestUserId = "bbb875a2-b427-4ee5-8957-e30343e108b6";
+    public const string TestUser1Id = "bbb875a2-b427-4ee5-8957-e30343e108b6";
+    public const string TestUser2Id = "cda77814-8cac-4a65-9bff-cd441cc63711";
+
+
+    internal static async Task SeedTestUsers(this IApplicationBuilder app)
+    {
+        await SeedUser(
+            app: app, 
+            userId: TestUser1Id,
+            email: TestUser1Email,
+            password: TestUser1Password);
+        
+        await SeedUser(
+            app: app, 
+            userId: TestUser2Id,
+            email: TestUser2Email,
+            password: TestUser2Password);
+    }
     
-    internal static async Task SeedTestUser(this IApplicationBuilder app)
+    private static async Task SeedUser(
+        IApplicationBuilder app,
+        string userId,
+        string email,
+        string password)
     {
         using var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope();
         using var userManager = serviceScope.ServiceProvider.GetService<UserManager<User>>();
         var userStore = serviceScope.ServiceProvider.GetRequiredService<IUserStore<User>>();
 
         var existingUser = await userStore.FindByIdAsync(
-            userId: TestUserId,
+            userId: userId,
             cancellationToken: CancellationToken.None);
         
         if (existingUser is not null)
@@ -28,11 +51,10 @@ internal static class TestUserSeeder
         }
         
         var emailStore = (IUserEmailStore<User>)userStore;
-        var email = TestUserEmail;
         
         var user = new User
         {
-            Id = TestUserId
+            Id = userId
         };
         
         await userStore.SetUserNameAsync(
@@ -47,12 +69,12 @@ internal static class TestUserSeeder
         
         var result = await userManager!.CreateAsync(
             user: user,
-            password: TestUserPassword);
+            password: password);
 
         if (!result.Succeeded)
         {
             // If you decide to run this in live mode throwing a startup exception might be a bad idea.
-            throw new InvalidOperationException("Test user creation failed");
+            throw new InvalidOperationException("User creation failed");
         }
     }
 }

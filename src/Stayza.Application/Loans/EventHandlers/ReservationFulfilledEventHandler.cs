@@ -7,7 +7,9 @@ using Stayza.Domain.Loans.Events;
 
 namespace Stayza.Application.Loans.EventHandlers;
 
-public class ReservationFulfilledEventHandler(IServiceScopeFactory serviceScopeFactory) : IListener
+public class ReservationFulfilledEventHandler(
+    IServiceScopeFactory serviceScopeFactory) 
+    : IListener
 {
     // Subscribe to all notifications for all book copies and reservations.
     public string RoutingKey => RoutingKeys.BookCopyReservationFulfilledTopic
