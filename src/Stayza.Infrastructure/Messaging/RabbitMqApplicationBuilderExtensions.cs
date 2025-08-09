@@ -16,7 +16,7 @@ public static class RabbitMqApplicationBuilderExtensions
     {
         builder.Services
             .SetUpRabbitMQ(builder.Configuration)
-            .AddSingleton<RabbitMQReceiver>()
+            .AddSingleton<RabbitMqReceiver>()
             .RegisterListeners()
             .AddSingleton<IMessageProducer, MessageProducer>();
         
@@ -27,8 +27,6 @@ public static class RabbitMqApplicationBuilderExtensions
         this IServiceCollection services, 
         IConfiguration config)
     {
-        // add the settings for later use by other classes via injection
-        // might use IOptions pattern together with snapshots for realtime update of the settings
         var configSection = config.GetSection("RabbitMQSettings");
         var settings = new RabbitMQSettings();
         configSection.Bind(settings);

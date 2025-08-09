@@ -14,12 +14,7 @@ using Stayza.Web.Infrastructure.Swagger;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder
-    .AddBaseTelemetryConfiguration()
-    .Services
-    .AddOpenTelemetry()
-    .WithTracing(tracing => tracing.AddSource(RunTimeDiagnosticConfig.Source.Name))
-    .WithMetrics(metrics => metrics.AddMeter(RunTimeDiagnosticConfig.Meter.Name));
+builder.AddBaseTelemetryConfiguration();
 
 builder
     .AddApplication()
@@ -42,6 +37,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app
+    .UseMiddleware<TraceContextMiddleware>()
     .UseMiddleware<ActivityTracingMiddleware>()
     .UseMiddleware<LoggingMiddleware>()
     .UseMiddleware<PerformanceMonitoringMiddleware>();

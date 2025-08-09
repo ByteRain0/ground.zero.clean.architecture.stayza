@@ -8,6 +8,7 @@ using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
+using Stayza.Core.Telemetry;
 
 namespace Stayza.Infrastructure.Telemetry;
 
@@ -28,7 +29,10 @@ public static class OpenTelemetryApplicationBuilderExtensions
 
         builder.Logging.AddOpenTelemetry(config =>
         {
-            var resourceBuilder = ResourceBuilder.CreateDefault();
+            var resourceBuilder = ResourceBuilder.CreateDefault()
+                .AddService(
+                    serviceName: RunTimeDiagnosticConfig.ServiceName,
+                    serviceVersion: RunTimeDiagnosticConfig.ServiceVersion);
             config.SetResourceBuilder(resourceBuilder);
             config.IncludeScopes = true;
             config.IncludeFormattedMessage = true;
@@ -41,8 +45,12 @@ public static class OpenTelemetryApplicationBuilderExtensions
 
         builder.Services
             .AddOpenTelemetry()
+            .ConfigureResource(res => res.AddService(
+                serviceName: RunTimeDiagnosticConfig.ServiceName,
+                serviceVersion: RunTimeDiagnosticConfig.ServiceVersion))
             .WithTracing(traceProviderBuilder =>
                 traceProviderBuilder
+                    .AddSource(RunTimeDiagnosticConfig.Source.Name)
                     .AddNpgsql()
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
@@ -51,6 +59,7 @@ public static class OpenTelemetryApplicationBuilderExtensions
                         options.Endpoint = telemetrySettings.TracesEndpoint;
                         options.Protocol = OtlpExportProtocol.Grpc;
                     })
+                    .AddConsoleExporter()
             )
             .WithMetrics(meterProviderBuilder =>
                 meterProviderBuilder
@@ -64,9 +73,12 @@ public static class OpenTelemetryApplicationBuilderExtensions
                     .AddMeter(
                         "System.Runtime",
                         "Microsoft.AspNetCore.Hosting",
-                        "Microsoft.AspNetCore.Server.Kestrel"
+                        "Microsoft.AspNetCore.Server.Kestrel",
+                        RunTimeDiagnosticConfig.Meter.Name
                     ));
 
+        builder.Services.AddSingleton(RunTimeDiagnosticConfig.Propagator);
+        
         return builder;
     }
 }

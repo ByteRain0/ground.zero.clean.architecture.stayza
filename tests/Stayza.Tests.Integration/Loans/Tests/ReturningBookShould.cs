@@ -9,6 +9,7 @@ using Stayza.Web.Infrastructure.Seed;
 
 namespace Stayza.Tests.Integration.Loans.Tests;
 
+[Collection("IntegrationTests")]
 public class ReturningBookShould : 
     IClassFixture<ApiFactory>,
     IAsyncLifetime
@@ -66,9 +67,8 @@ public class ReturningBookShould :
         loan.BookCopyId.ShouldBe(bookCopy.Id);
         loan.UserId.ShouldBe(TestUserSeeder.TestUser1Id);
         loan.IsReturned.ShouldBeTrue();
-
-        // Wait for 5 seconds for the api to process the event and call the notification service.
-        await Task.Delay(TimeSpan.FromSeconds(5));
+        
+        await Task.Delay(TimeSpan.FromSeconds(10)); // Add about 10 seconds delay for the call to the notifications api to be made.
         (await _notificationsApiServer.CheckThatNotificationHasBeenReceived(
                 userId: TestUserSeeder.TestUser2Id,
                 notificationType:"ReservationFulfilled"))

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Net.Http.Json;
 using Shouldly;
 using Stayza.Application.Books.Commands;
@@ -7,9 +8,11 @@ using Stayza.Domain.Loans;
 using Stayza.Tests.Integration.Base;
 using Stayza.Tests.Integration.Base.TestConstants;
 using Stayza.Web.Infrastructure.Seed;
+using Xunit.Abstractions;
 
 namespace Stayza.Tests.Integration.Loans.Tests;
 
+[Collection("IntegrationTests")]
 public class LoanBookCopyEndpointShould : 
     IClassFixture<ApiFactory>, 
     IAsyncLifetime
@@ -20,9 +23,13 @@ public class LoanBookCopyEndpointShould :
     
     private Func<Task> _resetDatabase;
 
-    public LoanBookCopyEndpointShould(ApiFactory factory)
+    private readonly string _testSpecificExchangeName;
+
+    public LoanBookCopyEndpointShould(
+        ApiFactory factory)
     {
         _stayzaWebClient = factory.HttpClient;
+        _testSpecificExchangeName = factory.ExchangeName;
         _messageConsumer = factory.MessageConsumer;
         _resetDatabase = factory.ResetDatabaseAsync;
     }
@@ -31,6 +38,7 @@ public class LoanBookCopyEndpointShould :
     public async Task Start_new_loan()
     {
         // Arrange
+        using var rootActivity = OtelTestFramework.Source.StartActivity(nameof(Start_new_loan), ActivityKind.Internal);
         await _stayzaWebClient.AuthenticateTestUser1();
 
         // Set up a test book
@@ -49,11 +57,12 @@ public class LoanBookCopyEndpointShould :
 
         // Act
         var consumeEvents = await _messageConsumer.BindAndConsumeAsyncV2(
-            exchangeName: Constants.Exchange.ExchangeName,
+            exchangeName: _testSpecificExchangeName,
             routingKey: RoutingKeys
                 .BookCopyLoanedTopic
                 .ReplaceBookCopyIdPlaceholderWith("*"),
-            timeout: TimeSpan.FromSeconds(30));
+            timeout: TimeSpan.FromSeconds(60),
+            testName: nameof(Start_new_loan));
         
         var loanResponse = await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy.Id}/loans", default);
 

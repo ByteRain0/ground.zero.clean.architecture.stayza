@@ -9,6 +9,7 @@
     <!-- Open Telemetry -->
     <PackageVersion Include="Npgsql.OpenTelemetry" Version="9.0.2" />
     <PackageVersion Include="OpenTelemetry" Version="$(OTelVersion)" />
+    <PackageVersion Include="OpenTelemetry.Api" Version="1.11.1" />
     <PackageVersion Include="OpenTelemetry.Exporter.Console" Version="$(OTelVersion)" />
     <PackageVersion Include="OpenTelemetry.Exporter.OpenTelemetryProtocol" Version="$(OTelVersion)" />
     <PackageVersion Include="OpenTelemetry.Extensions.Hosting" Version="$(OTelVersion)" />

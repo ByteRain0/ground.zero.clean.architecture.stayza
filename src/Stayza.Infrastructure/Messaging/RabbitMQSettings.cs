@@ -13,4 +13,6 @@ public class RabbitMQSettings
     public string Password { get; set; }
 
     public string ConnectionString { get; set; }
+
+    public string AppPrefix { get; set; } = "stazya.queue.";
 }

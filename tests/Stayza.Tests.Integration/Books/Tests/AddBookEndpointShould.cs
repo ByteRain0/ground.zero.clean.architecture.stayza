@@ -8,6 +8,7 @@ using Stayza.Tests.Integration.Base.TestConstants;
 
 namespace Stayza.Tests.Integration.Books.Tests;
 
+[Collection("IntegrationTests")]
 public class AddBookEndpointShould : IClassFixture<ApiFactory>
 {
     private readonly HttpClient _stayzaWebClient;

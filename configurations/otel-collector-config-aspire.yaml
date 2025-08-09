@@ -3,7 +3,9 @@ receivers:
   otlp:
     protocols:
       grpc:
+        endpoint: 0.0.0.0:4317
       http:
+        endpoint: 0.0.0.0:4318
 
 processors:
   batch:
@@ -22,6 +24,8 @@ processors:
         action: delete
 
 exporters:
+  debug:
+    verbosity: detailed
   otlp:
     endpoint: "aspire-dashboard:18889"
     tls:
@@ -32,17 +36,12 @@ service:
     logs:
       receivers: [otlp]
       processors: [batch]
-      exporters: [otlp]
+      exporters: [otlp, debug]
     traces:
       receivers: [otlp]
-      processors:
-        - batch
-        - filter/healthcheck
-        - attributes/environment
-      exporters:
-        - otlp
+      processors: [batch, filter/healthcheck, attributes/environment]
+      exporters: [otlp, debug]
     metrics:
       receivers: [otlp]
       processors: [batch]
-      exporters:
-        - otlp
+      exporters: [otlp, debug]

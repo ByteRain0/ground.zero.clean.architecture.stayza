@@ -16,14 +16,15 @@ public class RabbitMqTestMessageConsumer
         };
     }
 
-    public Task<Task<bool>> BindAndConsumeAsyncV2(
+    public async Task<Task<bool>> BindAndConsumeAsyncV2(
         string exchangeName,
         string routingKey,
-        TimeSpan timeout)
+        TimeSpan timeout,
+        string testName = "na")
     {
         Guard.Against.NullOrEmpty(exchangeName);
         Guard.Against.NullOrEmpty(routingKey);
-        
+
         var messageReceived = new TaskCompletionSource<bool>();
 
         var task = Task.Run(async () =>
@@ -35,7 +36,7 @@ public class RabbitMqTestMessageConsumer
                 exchange: exchangeName,
                 type: ExchangeType.Topic);
 
-            var queueName = channel.QueueDeclare().QueueName;
+            var queueName = channel.QueueDeclare(queue: $"consumer.for.{testName.ToLowerInvariant()}").QueueName;
 
             channel.QueueBind(
                 queue: queueName,
@@ -50,12 +51,14 @@ public class RabbitMqTestMessageConsumer
                 autoAck: true,
                 consumer: consumer);
 
+            // await Task.Delay(TimeSpan.FromSeconds(60));
+            
             var timeoutTask = Task.Delay(timeout);
             var completedTask = await Task.WhenAny(messageReceived.Task, timeoutTask);
 
             return completedTask == messageReceived.Task;
         });
 
-        return Task.FromResult(task);
+        return task;
     }
 }

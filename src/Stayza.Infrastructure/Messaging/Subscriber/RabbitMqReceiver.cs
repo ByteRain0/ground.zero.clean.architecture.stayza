@@ -9,13 +9,16 @@ using Stayza.Core.Telemetry;
 
 namespace Stayza.Infrastructure.Messaging.Subscriber;
 
-public class RabbitMQReceiver
+public class RabbitMqReceiver
 {
     private readonly RabbitMQSettings _rabbitSettings;
-    private readonly IModel _channel;
+    private readonly IModel? _channel;
     private readonly List<IListener> _listeningServices;
 
-    public RabbitMQReceiver(IServiceProvider sp, RabbitMQSettings rabbitSettings, IModel channel)
+    public RabbitMqReceiver(
+        IServiceProvider sp,
+        RabbitMQSettings rabbitSettings,
+        IModel channel)
     {
         _listeningServices = sp.GetServices<IListener>().ToList();
         _rabbitSettings = rabbitSettings;
@@ -29,7 +32,8 @@ public class RabbitMQReceiver
             type: _rabbitSettings.ExchangeType
         );
 
-        var queueName = _channel.QueueDeclare().QueueName;
+        var queueName = _channel.QueueDeclare(
+            queue: _rabbitSettings.AppPrefix + Guid.NewGuid()).QueueName;
 
         _channel.QueueBind(
             queue: queueName,
@@ -50,7 +54,7 @@ public class RabbitMQReceiver
                 serializedObject: Encoding.UTF8.GetString(body));
 
             await service.ProcessMessage(message, ea.RoutingKey);
-            _channel.BasicAck(ea.DeliveryTag, false);
+            _channel?.BasicAck(ea.DeliveryTag, false);
         };
 
         _channel.BasicConsume(
@@ -61,26 +65,24 @@ public class RabbitMQReceiver
 
     public void Dispose()
     {
-        try
+        if (_channel == null)
         {
-            _channel.Dispose();
+            Console.WriteLine("Warning: Channel was already disposed or not initialized");
+            return;
         }
-        catch (Exception e)
-        {
-            Console.WriteLine($"Critical error encountered disposing of rabbitmq channel error : {e.Message}");
-        }
+        _channel.Dispose();
     }
 
     public void RegisterListeners()
     {
         _listeningServices.ForEach(Listener);
     }
-    
+
     private static ActivityContext PropagateContextFromRabbitHeaders(IBasicProperties props)
     {
         if (props.Headers != null && props.Headers.TryGetValue("traceparent", out var traceParentObj))
         {
-            var traceParent = Encoding.UTF8.GetString((byte[])traceParentObj);
+            var traceParent = Encoding.UTF8.GetString((byte[]) traceParentObj);
             var ctx = ActivityContext.Parse(traceParent, null);
             return ctx;
         }

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
@@ -25,6 +26,7 @@ public class MessageProducer : IMessageProducer
     public void PublishMessage(Message message, string key)
     {
         using var publishActivity = RunTimeDiagnosticConfig.Source.StartActivity("RabbitMQ Publish");
+        
         if (publishActivity is not null)
         {
             message.Header.Properties?.Add("traceparent", publishActivity.Id);
@@ -35,13 +37,21 @@ public class MessageProducer : IMessageProducer
         properties.Headers = message.Header.Properties;
         
         var body = Encoding.UTF8.GetBytes(message.Body);
-        
-        _channel.BasicPublish(
-            exchange: _rabbitSettings.ExchangeName,
-            routingKey: key,
-            basicProperties: properties,
-            body: body);
 
-        _logger.LogInformation("Published message with key {Key} {Message}", key, message);
+        try
+        {
+            _channel.BasicPublish(
+                exchange: _rabbitSettings.ExchangeName,
+                routingKey: key,
+                basicProperties: properties,
+                body: body);
+            
+            _logger.LogInformation("Published message with key {Key} {Message}", key, message);
+        }
+        catch (Exception e)
+        {
+            _logger.LogError(e, "Failed publishing message");
+            throw;
+        }
     }
 }

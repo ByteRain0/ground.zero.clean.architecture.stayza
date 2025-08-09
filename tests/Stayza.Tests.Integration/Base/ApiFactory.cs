@@ -19,14 +19,12 @@ namespace Stayza.Tests.Integration.Base;
 public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
 {
     private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
-        .WithImage("postgres:16")
         .Build();    
     
     private readonly RabbitMqContainer _rabbitMqContainer = new RabbitMqBuilder()
         .WithWaitStrategy(Wait.ForUnixContainer().UntilPortIsAvailable(5672))
         .WithPassword("guest")
         .WithUsername("guest")
-        .WithImage("rabbitmq:3.11")
         .Build();
     
     private NpgsqlConnection _dbConnection = default!;
@@ -36,6 +34,8 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
     public RabbitMqTestMessageConsumer MessageConsumer;
     
     public HttpClient HttpClient = default!;
+
+    public string ExchangeName = "test_exchange";
     
     public NotificationsApiServer NotificationsApi { get; } = new();
     
@@ -63,6 +63,7 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         // Way easier to just wire it in here :P
         Environment.SetEnvironmentVariable("OpenTelemetrySettings__Enabled", "false");
         Environment.SetEnvironmentVariable("RabbitMQSettings__ConnectionString", _rabbitMqContainer.GetConnectionString());
+        Environment.SetEnvironmentVariable("RabbitMQSettings__ExchangeName", ExchangeName);
         Environment.SetEnvironmentVariable("Notifications__URL", NotificationsApi.Url);
         
         return base.CreateHost(builder);

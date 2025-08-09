@@ -6,9 +6,9 @@ namespace Stayza.Infrastructure.Messaging.Subscriber;
 public class WorkerService : BackgroundService
 {
     private readonly ILogger<WorkerService> _logger;
-    private readonly RabbitMQReceiver _rabbitMqReceiver;
+    private readonly RabbitMqReceiver _rabbitMqReceiver;
     public WorkerService(
-        RabbitMQReceiver rabbitMqReceiver,
+        RabbitMqReceiver rabbitMqReceiver,
         ILogger<WorkerService> logger)
     {
         _logger = logger;
@@ -23,7 +23,11 @@ public class WorkerService : BackgroundService
 
     public override Task StopAsync(CancellationToken cancellationToken)
     {
-        _rabbitMqReceiver.Dispose();
+        if (_rabbitMqReceiver is not null)
+        {
+            _rabbitMqReceiver.Dispose();
+        }
+        
         return Task.CompletedTask;
     }
 }
