@@ -39,7 +39,9 @@ public class LoanBookCopyEndpointShould :
     {
         // Arrange
         using var rootActivity = OtelTestFramework.Source.StartActivity();
-        _stayzaWebClient.InjectTraceContext(rootActivity);
+        
+        using var arrangeActivity = OtelTestFramework.Source.StartActivity("Arrange phase");
+        _stayzaWebClient.InjectTraceContext(arrangeActivity!);
         
         await _stayzaWebClient.AuthenticateTestUser1();
 
@@ -57,7 +59,12 @@ public class LoanBookCopyEndpointShould :
         // Reserve a book before loaning
         await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy!.Id}/reservations", default);
 
+        arrangeActivity?.Stop();
+        
         // Act
+        using var actActivity = OtelTestFramework.Source.StartActivity("Act phase");
+        _stayzaWebClient.InjectTraceContext(actActivity!);
+        
         var consumeEvents = await _messageConsumer.BindAndConsumeAsyncV2(
             exchangeName: _testSpecificExchangeName,
             routingKey: RoutingKeys
@@ -68,6 +75,8 @@ public class LoanBookCopyEndpointShould :
         
         var loanResponse = await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy.Id}/loans", default);
 
+        actActivity?.Stop();
+        
         // Assert
         loanResponse.IsSuccessStatusCode.ShouldBeTrue();
         var loan = await loanResponse.Content.ReadFromJsonAsync<Loan>();

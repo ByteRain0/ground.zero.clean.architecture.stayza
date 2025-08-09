@@ -7,7 +7,7 @@ namespace Stayza.Infrastructure.Persistence.Repositories;
 
 public class BooksRepository(ApplicationDbContext applicationDbContext) : IBooksRepository
 {
-    public async Task<Book> Add(Book book)
+    public async Task<Book> AddBook(Book book)
     {
         using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
         dbActivity?
@@ -27,7 +27,7 @@ public class BooksRepository(ApplicationDbContext applicationDbContext) : IBooks
         return book;
     }
 
-    public async Task<Book> Update(Book book)
+    public async Task<Book> UpdateBook(Book book)
     {
         using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
         dbActivity?
@@ -41,7 +41,7 @@ public class BooksRepository(ApplicationDbContext applicationDbContext) : IBooks
         return book;
     }
 
-    public async Task<Book> GetById(
+    public async Task<Book> GetBookById(
         Guid id,
         CancellationToken cancellationToken)
     {
@@ -66,7 +66,7 @@ public class BooksRepository(ApplicationDbContext applicationDbContext) : IBooks
         return book;
     }
 
-    public async Task<Book> GetByIsbn(
+    public async Task<Book> GetBookByIsbn(
         string isbn,
         CancellationToken cancellationToken)
     {

@@ -2,11 +2,11 @@ namespace Stayza.Domain.Books;
 
 public interface IBooksRepository
 {
-    Task<Book> Add(Book book);
+    Task<Book> AddBook(Book book);
 
-    Task<Book> Update(Book book);
+    Task<Book> UpdateBook(Book book);
 
-    Task<Book> GetById(Guid id, CancellationToken cancellationToken);
+    Task<Book> GetBookById(Guid id, CancellationToken cancellationToken);
 
-    Task<Book> GetByIsbn(string isbn, CancellationToken cancellationToken);
+    Task<Book> GetBookByIsbn(string isbn, CancellationToken cancellationToken);
 }
