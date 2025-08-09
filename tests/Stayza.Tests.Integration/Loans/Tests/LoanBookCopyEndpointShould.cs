@@ -10,16 +10,22 @@ using Stayza.Web.Infrastructure.Seed;
 
 namespace Stayza.Tests.Integration.Loans.Tests;
 
-public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
+public class LoanBookCopyEndpointShould : 
+    IClassFixture<ApiFactory>, 
+    IAsyncLifetime
 {
     private readonly HttpClient _stayzaWebClient;
 
     private readonly RabbitMqTestMessageConsumer _messageConsumer;
+    
+    private Func<Task> _resetDatabase;
+    
 
     public LoanBookCopyEndpointShould(ApiFactory factory)
     {
         _stayzaWebClient = factory.HttpClient;
         _messageConsumer = factory.MessageConsumer;
+        _resetDatabase = factory.ResetDatabaseAsync;
     }
 
     [Fact]
@@ -62,4 +68,8 @@ public class LoanBookCopyEndpointShould : IClassFixture<ApiFactory>
         // Await and assert the background message result
         (await consumeEvents).ShouldBeTrue();
     }
+
+    public Task InitializeAsync() => Task.CompletedTask;
+
+    public Task DisposeAsync() => _resetDatabase();
 }
