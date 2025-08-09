@@ -79,9 +79,8 @@ public class BookCopy : AggregateRoot
                 ?.SetTag("reservedAt", existingReservation.ReservedAt)
                 ?.SetTag("expiresAt", existingReservation.ExpiresAt);
 
-            var exception = new ReservationAlreadyExistsException(
-                userId: userId,
-                reservationId: existingReservation.Id);
+            var exception = new EntityAlreadyExistsException(
+                message: $"Reservation already exists. User: {userId}, ReservationId: {existingReservation.Id}");
 
             reserveActivity.AddExceptionAndFail(exception);
             throw exception;

@@ -16,7 +16,7 @@ internal static class ExceptionHandlersApplicationBuilderExtension
         });
         
         builder.Services.AddExceptionHandler<BookCopyAlreadyLoanedExceptionHandler>();
-        builder.Services.AddExceptionHandler<ReservationAlreadyExistsExceptionHandler>();
+        builder.Services.AddExceptionHandler<EntityAlreadyExistsExceptionHandler>();
         builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
         return builder;

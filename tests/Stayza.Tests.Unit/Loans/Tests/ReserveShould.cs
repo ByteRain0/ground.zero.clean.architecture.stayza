@@ -1,4 +1,5 @@
 using Shouldly;
+using Stayza.Core.Exceptions;
 using Stayza.Domain.Loans;
 using Stayza.Domain.Loans.Exceptions;
 using Stayza.Tests.Unit.Utils;
@@ -75,7 +76,7 @@ public class ReserveShould
             utcNow: Constants.Time.TestUtcNow);
         
         // Act / Assert
-        Assert.Throws<ReservationAlreadyExistsException>(() =>
+        Assert.Throws<EntityAlreadyExistsException>(() =>
             bookCopy.Reserve(
                 userId: Constants.Users.Id,
                 utcNow: Constants.Time.TestUtcNow));

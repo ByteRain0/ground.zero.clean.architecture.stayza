@@ -16,10 +16,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Infrastructure\ExceptionHandlers\Books\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" />
       <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
       <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
@@ -30,6 +26,10 @@
       <PackageReference Include="O9d.AspNet.FluentValidation" />
       <PackageReference Include="Swashbuckle.AspNetCore" />
       <PackageReference Include="Swashbuckle.AspNetCore.Filters" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Infrastructure\ExceptionHandlers\Books\" />
     </ItemGroup>
 
 </Project>

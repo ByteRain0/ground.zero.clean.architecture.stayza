@@ -8,6 +8,11 @@ public class BooksRepository(ApplicationDbContext applicationDbContext) : IBooks
 {
     public async Task<Book> Add(Book book)
     {
+        if (await applicationDbContext.Books.AnyAsync(x => x.ISBN == book.ISBN))
+        {
+            throw new EntityAlreadyExistsException($"Book with ISBN {book.ISBN} already exists.");
+        }
+        
         await applicationDbContext.Books.AddAsync(book);
         await applicationDbContext.SaveChangesAsync();
 

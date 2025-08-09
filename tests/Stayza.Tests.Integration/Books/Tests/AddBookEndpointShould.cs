@@ -8,16 +8,13 @@ using Stayza.Tests.Integration.Base.TestConstants;
 
 namespace Stayza.Tests.Integration.Books.Tests;
 
-public class AddBookEndpointShould : IClassFixture<ApiFactory>, IAsyncLifetime
+public class AddBookEndpointShould : IClassFixture<ApiFactory>
 {
     private readonly HttpClient _stayzaWebClient;
-
-    private Func<Task> _resetDatabaseCommand;
-
+    
     public AddBookEndpointShould(ApiFactory apiFactory)
     {
         _stayzaWebClient = apiFactory.HttpClient;
-        _resetDatabaseCommand = apiFactory.ResetDatabaseAsync;
     }
 
     [Fact]
@@ -40,8 +37,25 @@ public class AddBookEndpointShould : IClassFixture<ApiFactory>, IAsyncLifetime
         book.ISBN.ShouldBe(Constants.Book.ISBN);
     }
 
-
-    public Task InitializeAsync() => Task.CompletedTask;
-
-    public Task DisposeAsync() => _resetDatabaseCommand();
+    // Example of a flaky test that would be otherwise hard to catch.
+    [Fact]
+    public async Task Fail_if_book_with_same_isbn_exists()
+    {
+        // Arrange
+        await _stayzaWebClient.AuthenticateTestUser();
+        var bookSetUp = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", new AddBookCommand(
+            Title: Constants.Book.Title,
+            Author: Constants.Book.Author,
+            ISBN: Constants.Book.ISBN));
+        
+        // Act
+        var bookResponse = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", new AddBookCommand(
+            Title: Constants.Book.Title,
+            Author: Constants.Book.Author,
+            ISBN: Constants.Book.ISBN));
+        
+        // Assert
+        bookSetUp.IsSuccessStatusCode.ShouldBeTrue();
+        bookResponse.IsSuccessStatusCode.ShouldBeFalse();
+    }
 }
