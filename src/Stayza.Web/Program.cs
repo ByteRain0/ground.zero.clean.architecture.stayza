@@ -1,5 +1,4 @@
 using Stayza.Application;
-using Stayza.Core.Telemetry;
 using Stayza.Domain.Users;
 using Stayza.Infrastructure;
 using Stayza.Infrastructure.Persistence;
