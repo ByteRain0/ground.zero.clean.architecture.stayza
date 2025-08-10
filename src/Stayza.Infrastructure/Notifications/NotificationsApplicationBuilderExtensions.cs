@@ -10,7 +10,7 @@ public static class NotificationsApplicationBuilderExtensions
     {
         builder.Services.AddHttpClient<IUserNotificationService, UserNotificationsService>(client =>
         {
-            client.BaseAddress = new Uri(builder.Configuration["Notifications:URL"]
+            client.BaseAddress = new Uri(builder.Configuration["Notifications:BaseUrl"]
                                          ?? throw new Exception("Invalid notifications api url provided"));
         });
 

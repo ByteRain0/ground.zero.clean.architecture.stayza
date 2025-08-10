@@ -55,7 +55,7 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         Environment.SetEnvironmentVariable("ConnectionStrings__Default", _postgreSqlContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("RabbitMQSettings__ConnectionString", _rabbitMqContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("RabbitMQSettings__ExchangeName", ExchangeName);
-        Environment.SetEnvironmentVariable("Notifications__URL", NotificationsApi.Url);
+        Environment.SetEnvironmentVariable("Notifications__BaseUrl", NotificationsApi.Url);
         return base.CreateHost(builder);
     }
     

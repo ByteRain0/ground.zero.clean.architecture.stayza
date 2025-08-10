@@ -19,10 +19,7 @@
     "report-file-name": "mutation-report",
     "break-on-initial-test-failure": false,
     "test-projects": [
-      "tests/Stayza.Tests.Unit/Stayza.Tests.Unit.csproj",
-      "tests/Stayza.Tests.Integration/Stayza.Tests.Integration.csproj",
-      "tests/Stayza.Tests.Subcutaneous/Stayza.Tests.Subcutaneous.csproj",
-      "tests/Stayza.Tests.EndToEnd/Stayza.Tests.EndToEnd.csproj"
+      "tests/Stayza.Tests.Unit/Stayza.Tests.Unit.csproj"
     ]
   }
 }
