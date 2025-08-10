@@ -1,0 +1,49 @@
+{
+  "consumer": {
+    "name": "Stayza.API"
+  },
+  "interactions": [
+    {
+      "description": "A POST request to send notification",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "Type and UserId are provided"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "type": "ReservationFulfilled",
+            "userId": "bbb875a2-b427-4ee5-8957-e30343e108b6"
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "method": "POST",
+        "path": "/api/v1/notifications"
+      },
+      "response": {
+        "status": 201
+      },
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "ffi": "0.4.27",
+      "models": "1.2.8"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "Notifications.API"
+  }
+}

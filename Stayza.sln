@@ -42,6 +42,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Tests.Subcutaneous",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Notifications.Tests.Contract", "tests\Notifications.Tests.Contract\Notifications.Tests.Contract.csproj", "{A177D711-A45C-4815-847C-81B6366B16E0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Tests.Contract", "tests\Stayza.Tests.Contract\Stayza.Tests.Contract.csproj", "{130A4EFD-5E99-4B61-829A-AD2934CE3C3A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -95,6 +97,10 @@ Global
 		{A177D711-A45C-4815-847C-81B6366B16E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A177D711-A45C-4815-847C-81B6366B16E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A177D711-A45C-4815-847C-81B6366B16E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{130A4EFD-5E99-4B61-829A-AD2934CE3C3A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{130A4EFD-5E99-4B61-829A-AD2934CE3C3A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{130A4EFD-5E99-4B61-829A-AD2934CE3C3A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{130A4EFD-5E99-4B61-829A-AD2934CE3C3A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EC35144E-60B4-4981-9227-9EBCAFED883E} = {D90BBA51-88AD-4B79-9CE3-64F01C1DECC2}
@@ -108,5 +114,6 @@ Global
 		{509512E8-6574-44FF-92FB-2ED7CD5D8584} = {752D6934-C1C9-4970-ACE8-D02698643FE5}
 		{EEDA6E36-B85E-4B22-86E2-B78850644C1A} = {752D6934-C1C9-4970-ACE8-D02698643FE5}
 		{A177D711-A45C-4815-847C-81B6366B16E0} = {752D6934-C1C9-4970-ACE8-D02698643FE5}
+		{130A4EFD-5E99-4B61-829A-AD2934CE3C3A} = {752D6934-C1C9-4970-ACE8-D02698643FE5}
 	EndGlobalSection
 EndGlobal
