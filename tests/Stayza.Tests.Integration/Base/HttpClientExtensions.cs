@@ -4,7 +4,7 @@ using System.Net.Http.Json;
 using System.Text.Json.Serialization;
 using OpenTelemetry;
 using OpenTelemetry.Context.Propagation;
-using Stayza.Web.Infrastructure.Seed;
+using Stayza.Infrastructure.Persistence.DataSeed;
 
 namespace Stayza.Tests.Integration.Base;
 

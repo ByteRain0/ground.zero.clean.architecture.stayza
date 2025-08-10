@@ -1,9 +1,11 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.DependencyInjection;
 using Stayza.Domain.Users;
 
-namespace Stayza.Web.Infrastructure.Seed;
+namespace Stayza.Infrastructure.Persistence.DataSeed;
 
-internal static class TestUserSeeder
+public static class TestUserSeeder
 {
     public const string TestUser1Email = "jhon.doe@example.com";
     public const string TestUser2Email = "jhoana.doe@example.com";
@@ -14,7 +16,7 @@ internal static class TestUserSeeder
     public const string TestUser1Id = "bbb875a2-b427-4ee5-8957-e30343e108b6";
     public const string TestUser2Id = "cda77814-8cac-4a65-9bff-cd441cc63711";
     
-    internal static async Task SeedTestUsers(this IApplicationBuilder app)
+    public static async Task SeedTestUsers(this IApplicationBuilder app)
     {
         await SeedUser(
             app: app, 

@@ -5,9 +5,9 @@ using Stayza.Application.Loans;
 using Stayza.Domain.Books;
 using Stayza.Domain.Loans;
 using Stayza.Infrastructure.Persistence;
+using Stayza.Infrastructure.Persistence.DataSeed;
 using Stayza.Tests.Subcutaneous.Base;
 using Stayza.Tests.Subcutaneous.Base.TestConstants;
-using Stayza.Web.Infrastructure.Seed;
 
 namespace Stayza.Tests.Subcutaneous.BackgroundJobs;
 
