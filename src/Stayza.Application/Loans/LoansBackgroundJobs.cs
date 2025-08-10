@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Stayza.Domain.Loans;
 using TickerQ.Utilities.Base;
@@ -5,14 +6,17 @@ using TickerQ.Utilities.Base;
 namespace Stayza.Application.Loans;
 
 public class LoansBackgroundJobs(
-    ILoansRepository repository,
-    IUserNotificationService userNotificationService,
-    ILogger<LoansBackgroundJobs> logger,
+    IServiceScopeFactory serviceScopeFactory,
     TimeProvider timeProvider)
 {
     [TickerFunction(nameof(NotifyUsersAboutExpiringReservations), "0 7 * * *")]
     public async Task NotifyUsersAboutExpiringReservations()
     {
+        using var scope = serviceScopeFactory.CreateScope();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<LoansBackgroundJobs>>();
+        var repository = scope.ServiceProvider.GetRequiredService<ILoansRepository>();
+        var userNotificationService = scope.ServiceProvider.GetRequiredService<IUserNotificationService>();
+
         var reservationsToExpire = await repository.GetReservationThatShouldExpire(
             after: timeProvider.GetUtcNow().AddDays(1),
             cancellationToken: CancellationToken.None);
@@ -32,10 +36,14 @@ public class LoansBackgroundJobs(
             }
         }
     }
-    
-    [TickerFunction(nameof(RemoveExpiredReservations), "0 7 * * *")]
-    public async Task RemoveExpiredReservations()
+
+    [TickerFunction(nameof(RemoveExpiredAndCancelledReservations), "0 7 * * *")]
+    public async Task RemoveExpiredAndCancelledReservations()
     {
+        using var scope = serviceScopeFactory.CreateScope();
+        var repository = scope.ServiceProvider.GetRequiredService<ILoansRepository>();
+        var logger = scope.ServiceProvider.GetRequiredService<ILogger<LoansBackgroundJobs>>();
+
         try
         {
             await repository.RemoveExpiredAndCancelledReservations(after: timeProvider.GetUtcNow());

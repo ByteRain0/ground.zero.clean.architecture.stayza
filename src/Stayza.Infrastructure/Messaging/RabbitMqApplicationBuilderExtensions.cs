@@ -14,26 +14,13 @@ public static class RabbitMqApplicationBuilderExtensions
     public static IHostApplicationBuilder AddAsyncMessagingUsingRabbitMq(
         this IHostApplicationBuilder builder)
     {
-        builder.Services
-            .SetUpRabbitMQ(builder.Configuration)
-            .AddSingleton<RabbitMqReceiver>()
-            .RegisterListeners()
-            .AddSingleton<IMessageProducer, MessageProducer>();
-        
-        return builder;
-    }
-
-    private static IServiceCollection SetUpRabbitMQ(
-        this IServiceCollection services, 
-        IConfiguration config)
-    {
-        var configSection = config.GetSection("RabbitMQSettings");
+        var configSection = builder.Configuration.GetSection("RabbitMQSettings");
         var settings = new RabbitMQSettings();
         configSection.Bind(settings);
-        services.AddSingleton<RabbitMQSettings>(settings);
-
+        builder.Services.AddSingleton(settings);
+        
         // As the connection factory is disposable, need to ensure container disposes of it when finished
-        services.AddSingleton<IConnectionFactory>(_ => new ConnectionFactory
+        builder.Services.AddSingleton<IConnectionFactory>(_ => new ConnectionFactory
         {
             DispatchConsumersAsync = true,
             // Depending on the personal preference you can use either the username/password approach
@@ -44,49 +31,18 @@ public static class RabbitMqApplicationBuilderExtensions
             Uri = new Uri(settings.ConnectionString)
         });
 
-        services.AddSingleton<ModelFactory>();
-        services.AddSingleton(sp => sp.GetRequiredService<ModelFactory>().CreateChannel());
-
-        return services;
-    }
-
-    private static IServiceCollection RegisterListeners(this IServiceCollection services)
-    {
-        services.AddSingleton<IListener, ReservationFulfilledEventHandler>();
-        services.AddSingleton<IListener, BookReturnedEventHandler>();
-        services.AddSingleton<IListener, BookCopyLoanedEventHandler>();
-
-        return services;
-    }
-
-    private class ModelFactory : IDisposable
-    {
-        private readonly IConnection _connection;
+        builder.Services.AddSingleton<ModelFactory>();
+        builder.Services.AddSingleton(sp => sp.GetRequiredService<ModelFactory>().CreateChannel());
         
-        private readonly RabbitMQSettings _settings;
+        builder.Services.AddSingleton<RabbitMqReceiver>();
+        builder.Services.AddSingleton<IMessageProducer, MessageProducer>();
         
-        public ModelFactory(
-            IConnectionFactory connectionFactory,
-            RabbitMQSettings settings)
-        {
-            _settings = settings;
-            _connection = connectionFactory.CreateConnection();
-        }
-
-        public IModel CreateChannel()
-        {
-            var channel = _connection.CreateModel();
-            
-            channel.ExchangeDeclare(
-                exchange: _settings.ExchangeName, 
-                type: _settings.ExchangeType);
-            
-            return channel;
-        }
-
-        public void Dispose()
-        {
-            _connection.Dispose();
-        }
+        builder.Services.AddSingleton<IListener, ReservationFulfilledEventHandler>();
+        builder.Services.AddSingleton<IListener, BookReturnedEventHandler>();
+        builder.Services.AddSingleton<IListener, BookCopyLoanedEventHandler>();
+        
+        builder.Services.AddHostedService<WorkerService>();
+        
+        return builder;
     }
 }

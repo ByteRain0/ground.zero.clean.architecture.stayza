@@ -7,6 +7,9 @@ using Stayza.Domain.Books;
 using Stayza.Domain.Loans;
 using Stayza.Infrastructure.Persistence.Interceptors;
 using Stayza.Infrastructure.Persistence.Repositories;
+using TickerQ.Dashboard.DependencyInjection;
+using TickerQ.DependencyInjection;
+using TickerQ.EntityFrameworkCore.DependencyInjection;
 
 namespace Stayza.Infrastructure.Persistence;
 
@@ -15,9 +18,23 @@ public static class PersistenceApplicationBuilderExtensions
     internal static IHostApplicationBuilder AddPersistence(this IHostApplicationBuilder builder)
     {
         builder.Services.AddSingleton<PublishDomainEventsInterceptor>();
+        
         builder.Services.AddDbContext<ApplicationDbContext>(opts => 
             opts.UseNpgsql(builder.Configuration.GetConnectionString("Default")));
-        
+            
+        builder.Services.AddTickerQ(options =>
+        {
+            options.SetInstanceIdentifier("TickerQ");
+            options.AddOperationalStore<ApplicationDbContext>(efOpt =>
+            {
+                efOpt.UseModelCustomizerForMigrations();
+                efOpt.CancelMissedTickersOnApplicationRestart();
+            });
+
+            options.AddDashboard("/jobs");
+            options.AddDashboardBasicAuth();
+        });
+
         builder.Services
             .AddScoped<ILoansRepository, LoansRepository>()
             .AddScoped<IBooksRepository, BooksRepository>();

@@ -1,9 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Stayza.Infrastructure.Auth;
-using Stayza.Infrastructure.Background;
 using Stayza.Infrastructure.Messaging;
-using Stayza.Infrastructure.Messaging.Subscriber;
 using Stayza.Infrastructure.Notifications;
 using Stayza.Infrastructure.Persistence;
 
@@ -19,10 +17,7 @@ public static class ApplicationBuilderExtensions
             .AddAuth()
             .AddAsyncMessagingUsingRabbitMq()
             .AddNotifications()
-            .AddPersistence()
-            .AddBackgroundJobs();
-        
-        builder.Services.AddHostedService<WorkerService>();
+            .AddPersistence();
 
         return builder;
     }

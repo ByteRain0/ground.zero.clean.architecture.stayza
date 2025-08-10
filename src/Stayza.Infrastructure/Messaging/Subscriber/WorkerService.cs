@@ -6,7 +6,9 @@ namespace Stayza.Infrastructure.Messaging.Subscriber;
 public class WorkerService : BackgroundService
 {
     private readonly ILogger<WorkerService> _logger;
+    
     private readonly RabbitMqReceiver _rabbitMqReceiver;
+    
     public WorkerService(
         RabbitMqReceiver rabbitMqReceiver,
         ILogger<WorkerService> logger)
