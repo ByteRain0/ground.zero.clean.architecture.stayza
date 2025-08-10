@@ -5,6 +5,7 @@ using Stayza.Domain.Loans;
 using Stayza.Domain.Users;
 using Stayza.Infrastructure.Persistence.DataSeed;
 using Stayza.Infrastructure.Persistence.Interceptors;
+using TickerQ.EntityFrameworkCore.Configurations;
 
 namespace Stayza.Infrastructure.Persistence;
 
@@ -34,12 +35,14 @@ public class ApplicationDbContext : IdentityDbContext<User>
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
+        base.OnModelCreating(builder);
+        
         builder.HasDefaultSchema("library");
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        builder.ApplyConfigurationsFromAssembly(typeof(TimeTickerConfigurations).Assembly);
         builder.SeedBooks();
         builder.SeedBookCopies();
-
-        base.OnModelCreating(builder);
+        
         // in case you want to have a case_insensitive string comparison and not having .ToLower() everytime.
         //builder.HasCollation("case_insensitive", locale: "en-u-ks-primary", provider: "icu", deterministic: false);
     }

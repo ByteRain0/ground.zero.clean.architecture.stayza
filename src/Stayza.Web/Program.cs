@@ -10,6 +10,7 @@ using Stayza.Web.Infrastructure.Middleware;
 using Stayza.Web.Infrastructure.Seed;
 using Stayza.Web.Infrastructure.Session;
 using Stayza.Web.Infrastructure.Swagger;
+using TickerQ.DependencyInjection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,9 +41,12 @@ app
     .UseMiddleware<LoggingMiddleware>()
     .UseMiddleware<PerformanceMonitoringMiddleware>();
 
+app.UseTickerQ();
+
 app.MapEndpointsFrom<Program>();
 app.MapIdentityApi<User>();
 app.MapConfiguredSwagger();
 app.MapDefaultHealthEndpoints();
+
 
 app.Run();

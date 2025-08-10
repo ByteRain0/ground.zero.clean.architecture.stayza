@@ -1,5 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Stayza.Domain.Loans;
+using TickerQ.Utilities.Base;
 
 namespace Stayza.Application.Loans;
 
@@ -9,6 +10,7 @@ public class LoansBackgroundJobs(
     ILogger<LoansBackgroundJobs> logger,
     TimeProvider timeProvider)
 {
+    [TickerFunction(nameof(NotifyUsersAboutExpiringReservations), "0 7 * * *")]
     public async Task NotifyUsersAboutExpiringReservations()
     {
         var reservationsToExpire = await repository.GetReservationThatShouldExpire(
@@ -30,7 +32,8 @@ public class LoansBackgroundJobs(
             }
         }
     }
-
+    
+    [TickerFunction(nameof(RemoveExpiredReservations), "0 7 * * *")]
     public async Task RemoveExpiredReservations()
     {
         try
