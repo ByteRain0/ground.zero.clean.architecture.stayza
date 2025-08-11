@@ -12,75 +12,75 @@
       "status" : "Accepted",
       "title" : "Problem statement / What needs to be decided"
     }, {
-      "content" : "# 10. rich and anemic domain\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 10. Use of Rich Domain Models over Anemic Domain Models\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nIn designing the domain layer, there is a choice between:\n- **Anemic Domain Models**, where entities are simple data containers and business logic is implemented in services.\n- **Rich Domain Models**, where entities and aggregates encapsulate both data and behavior, enforcing business rules internally.\n\nOur architecture requires:\n- A clear, maintainable place to express and enforce business invariants.\n- Improved testability by focusing unit tests on domain behavior rather than procedural service logic.\n- Support for **Domain Events** within aggregate roots to model side effects and eventual consistency.\n- Structuring the domain into multiple subdomains with clear aggregate boundaries for scalability and clarity.\n\n## Decision\nWe will adopt **Rich Domain Models** that:\n- Encapsulate business logic and invariants inside entities and aggregates rather than exposing mutable data freely.\n- Use aggregate roots as transactional consistency boundaries, responsible for maintaining their own invariants.\n- Raise **Domain Events** from aggregates to communicate important state changes to other parts of the system asynchronously.\n- Organize the domain into well-defined **subdomains**, each with its own aggregates and bounded contexts, promoting modularity and team alignment.\n- Facilitate writing focused, behavior-driven unit tests directly on domain models without needing to mock extensive service logic.\n\n## Consequences\n- **Easier:** Business rules and invariants are centralized inside domain objects, reducing duplication and errors.\n- **Easier:** Unit testing focuses on domain behavior, improving test coverage and confidence.\n- **Easier:** Domain events enable clean separation of concerns and support for eventual consistency patterns.\n- **Harder:** Requires careful modeling and discipline to avoid overcomplicating domain objects or aggregate boundaries.\n- **Harder:** Learning curve for developers unfamiliar with rich domain modeling concepts.\n- **Risk:** Structure relying only on unit tests is not sufficient.\n- **Risk:** Poor aggregate design can lead to performance bottlenecks or transactional conflicts, requiring thoughtful design and iterative refinemen\n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "10",
       "status" : "Accepted",
-      "title" : "rich and anemic domain"
+      "title" : "Use of Rich Domain Models over Anemic Domain Models"
     }, {
-      "content" : "# 11. integration via domain events\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 11. Integration Between Aggregate Roots and Eventual Consistency\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nIn a domain-driven design, each aggregate root defines a transactional consistency boundary:\n- Changes within a single aggregate are consistent and atomic.\n- Different aggregates should not be directly coupled through shared transactions to avoid complexity and performance issues.\n\nHowever, business processes often require coordination and data propagation between multiple aggregates, potentially across different subdomains or bounded contexts.\n\nThis raises the need to handle integration between aggregates in a way that:\n- Respects aggregate boundaries and transactional consistency rules.\n- Supports eventual consistency where immediate synchronous updates are not required or feasible.\n- Enables asynchronous communication of state changes between aggregates.\n\n## Decision\nWe will integrate aggregates by:\n\n- Treating each aggregate root as an isolated transactional boundary, ensuring all state changes within it are atomic.\n- Using **Domain Events** emitted by aggregates to signal relevant state changes or intentions to other parts of the system.\n- Handling these domain events asynchronously via event handlers or message queues to update or trigger behavior in other aggregates, thereby achieving eventual consistency.\n- Avoiding direct references or database transactions spanning multiple aggregates.\n- Designing domain events carefully to convey intent and sufficient data for downstream processing without exposing internal aggregate details.\n\n## Consequences\n- **Easier:** Maintains strong transactional guarantees within aggregates while enabling cross-aggregate workflows.\n- **Easier:** Improves system scalability and resilience by decoupling aggregates through asynchronous messaging.\n- **Easier:** Domain events provide clear audit trails and help trace business processes.\n- **Harder:** Clients must handle eventual consistency scenarios, including stale reads and reconciliation logic.\n- **Harder:** Increased complexity in testing and debugging asynchronous workflows.\n- **Risk:** Without proper monitoring and retries, event handling failures may cause data inconsistencies or delays.  \n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "11",
       "status" : "Accepted",
-      "title" : "integration via domain events"
+      "title" : "Integration Between Aggregate Roots and Eventual Consistency"
     }, {
-      "content" : "# 12. usage of domain services\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 12. Usage of Domain Services in the Domain Layer\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nIn Domain-Driven Design, **Domain Services** represent operations or business logic that:\n- Don’t naturally belong to a single entity or value object, or\n- Involve coordination across multiple aggregates or domain concepts.\n\nHowever, overusing domain services can indicate a design smell where aggregates or entities are not well defined or responsibilities are misplaced.\n\nOur design goal is to:\n- Keep business logic encapsulated within entities and aggregates as much as possible.\n- Minimize the need for domain services by proper aggregate decomposition and modeling.\n\n## Decision\nWe will:\n- Prefer to place business rules and invariants within entities and aggregate roots, maintaining **rich domain models**.\n- Avoid creating domain services unless a clear, well-justified scenario arises that cannot be naturally expressed within aggregates or entities.\n- Regularly review domain model boundaries and responsibilities to reduce reliance on domain services.\n- When domain services are necessary, keep them focused, stateless, and clearly separated from domain entities.\n\n## Consequences\n- **Easier:** Rich domain models improve encapsulation, testability, and expressiveness of the domain layer.\n- **Easier:** Reduced cognitive overhead by limiting the number of domain services and distributing logic close to the data.\n- **Harder:** Requires careful upfront modeling and iterative refinement of aggregates and entities.\n- **Harder:** Some complex business logic might be more challenging to place, requiring thoughtful design trade-offs.\n- **Risk:** Ignoring the need for domain services where they truly belong can lead to overloading aggregates or forcing awkward models.  \n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "12",
       "status" : "Accepted",
-      "title" : "usage of domain services"
+      "title" : "Usage of Domain Services in the Domain Layer"
     }, {
-      "content" : "# 13. async communication\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 13. Asynchronous communication using RabbitMQ and custom integration helpers\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe system requires asynchronous communication for integrating domain events and external systems (e.g., notification services).\n\nKey requirements and constraints include:\n- Use of **domain events** stored in aggregate roots, published after EF Core commits changes.\n- Avoid dependency on commercial or heavyweight messaging libraries like MassTransit or NServiceBus to reduce licensing costs and complexity.\n- Maintain control and simplicity through a custom-built set of helper classes that integrate with **RabbitMQ** for message transport.\n- Support flexible routing of messages using RabbitMQ **Topic Exchanges** and **routing keys** to decouple publishers and subscribers.\n- Event handlers should be singletons, instantiated with `IServiceScopeFactory` to create scoped dependencies such as repositories or HTTP clients.\n- Integration event handlers will bridge to external systems (e.g., notifications) reliably and asynchronously.\n\n## Decision\nWe will implement asynchronous communication as follows:\n\n- Domain events are collected within aggregate roots during transaction processing.\n- After EF Core successfully saves changes, a **SaveChanges interceptor** will publish all domain events to RabbitMQ using our custom helper library.\n- RabbitMQ **Topic Exchanges** will be used to route messages based on event types or categories, allowing fine-grained subscription filtering via **routing keys**.\n- Event handlers implementing a custom `IListener` interface will consume and process messages selectively based on routing keys they subscribe to.\n- Handlers are registered as **singleton services** and receive an `IServiceScopeFactory` in their constructors for scoped dependency resolution.\n- Integration with external systems (e.g., notification services) will be encapsulated in dedicated event handlers listening to relevant domain or integration events.\n- The custom helper library will abstract RabbitMQ connection management, publishing, subscription, and routing logic, providing a lightweight and maintainable messaging layer.\n\n## Consequences\n- **Easier:** Full control over the messaging infrastructure without licensing costs or heavy dependencies.\n- **Easier:** Flexible and scalable message routing with Topic Exchanges and routing keys, improving decoupling.\n- **Easier:** Clear separation between domain event publication and handling, supporting eventual consistency.\n- **Harder:** Increased responsibility for maintaining and evolving the custom RabbitMQ integration code.\n- **Harder:** Requires careful design of event schemas, routing keys, and error handling to ensure reliability and scalability.\n- **Risk:** Potential for bugs or performance issues due to custom messaging implementation, requiring thorough testing and monitoring.  \n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "13",
       "status" : "Accepted",
-      "title" : "async communication"
+      "title" : "Asynchronous communication using RabbitMQ and custom integration helpers"
     }, {
-      "content" : "# 14. telementry architecture\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 14. Usage of OpenTelemetry for telemetry data collection and observability\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nTo achieve comprehensive observability, the system needs to collect telemetry data including traces, metrics, and logs.\n\nRequirements include:\n- Collecting distributed traces to understand request flows and performance bottlenecks.\n- Collecting metrics for dashboards and alerting.\n- Logging human-readable messages, such as audit trails and errors.\n- Efficiently filtering and sampling telemetry data to reduce overhead and storage costs.\n- Flexibility to create custom spans and add contextual information programmatically within the codebase.\n- Exporting telemetry data to a centralized OpenTelemetry Collector for further processing and integration with monitoring backends.\n\n## Decision\nWe will implement observability using **OpenTelemetry (OTel)** with the following approach:\n\n- Instrument the application codebase to create **custom spans** and add attributes for detailed trace context where appropriate.\n- Use OpenTelemetry SDK to automatically capture traces, metrics, and logs.\n- Configure **sampling** strategies and **filters** to control telemetry data volume and focus on relevant traces.\n- Export telemetry data to an **OpenTelemetry Collector**, which will forward data to backend systems (e.g., Jaeger, Prometheus, Loki, Grafana).\n- Use **logs** primarily for human-readable audit messages and error details.\n- Use **traces and spans** to provide technical, detailed insights into request flow and debugging information.\n- Use **metrics** for real-time monitoring, dashboards, and alerting.\n\n## Consequences\n- **Easier:** Improved visibility into system performance and behavior through structured telemetry data.\n- **Easier:** Efficient control of telemetry data volume and quality through sampling and filtering.\n- **Easier:** Separation of concerns by using logs for human-readable messages and traces/metrics for technical analysis.\n- **Harder:** Requires initial setup and ongoing tuning of sampling and filtering to balance observability and performance overhead.\n- **Harder:** Developers need to learn how to instrument code with custom spans and use OTel APIs effectively.\n- **Risk:** Misconfiguration can lead to loss of important telemetry or excessive overhead. Continuous monitoring and adjustment are needed.  \n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "14",
       "status" : "Accepted",
-      "title" : "telementry architecture"
+      "title" : "Usage of OpenTelemetry for telemetry data collection and observability"
     }, {
-      "content" : "# 15. integration with notification system\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 15. Integration via Domain Events with Notifications REST API\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe system needs to notify users about important events (e.g., reservation expiry) via an external notifications service.  \nWe want to keep domain logic decoupled from external communication concerns while ensuring timely notifications.\n\n## Decision\nWe will integrate the notifications REST API using the following approach:\n\n- Domain events capturing relevant business occurrences will be published after successful transactions.\n- An event handler, implementing the `IListener` interface, will listen for these domain events asynchronously.\n- This event handler will invoke the external notifications REST API to send user notifications.\n- The handler will use scoped dependencies (e.g., HTTP clients) created via `IServiceScopeFactory` to ensure proper resource management.\n- This keeps the domain layer free from direct integration code, preserving separation of concerns.\n\n## Consequences\n- **Easier:** Decouples domain logic from external notification infrastructure.\n- **Easier:** Supports asynchronous, reliable notification delivery.\n- **Easier:** Enables independent scaling and evolution of the notification system.\n- **Harder:** Requires robust error handling and retry policies in event handlers to ensure notifications are delivered.\n- **Risk:** Potential delays between domain event occurrence and notification delivery due to asynchronous processing.  \n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "15",
       "status" : "Accepted",
-      "title" : "integration with notification system"
+      "title" : "Integration via Domain Events with Notifications REST API"
     }, {
-      "content" : "# 16. unit testing\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 16. Unit Testing Domain Aggregate Roots and System Architecture\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nEnsuring domain correctness and system quality requires thorough automated testing.\n\nKey goals for unit testing domain aggregate roots include:\n- Verifying business invariants and rules enforced by aggregates.\n- Confirming correct publishing of domain events from aggregates.\n- Using factories and constant values to build repeatable, consistent test data.\n- Ensuring tests are low level, fast to execute, and provide quick feedback to developers.\n\nAdditionally, architectural unit tests help verify the overall structure and boundaries of the system (e.g., dependency rules, layering).\n\n## Decision\nWe will implement:\n\n- **Domain aggregate root unit tests** focusing on:\n    - Testing business invariants and behaviors directly on aggregates.\n    - Verifying that domain events are published as expected.\n    - Using test data factories and constant seed values to standardize test inputs.\n- Tests designed to be **fast**, isolated, and easy to write and maintain, enabling rapid developer feedback.\n- **Architectural unit tests** that validate constraints such as layer dependencies and module boundaries to prevent architectural drift.\n\n## Consequences\n- **Easier:** Early detection of domain logic errors and invariant violations.\n- **Easier:** High developer confidence due to fast and reliable test suite.\n- **Easier:** Consistent test data improves test reliability and maintainability.\n- **Easier:** Architectural tests help enforce system modularity and design principles over time.\n- **Harder:** Requires investment in writing comprehensive domain and architectural tests upfront.\n- **Risk:** Poorly designed tests can become brittle or slow, reducing effectiveness—careful test design is necessary.  \n- **Risk:** Unit tests should be used as only a fast feedback loop, most of the value from testing will be from the outside-in integration and e2e testing.  \n\n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "16",
       "status" : "Accepted",
-      "title" : "unit testing"
+      "title" : "Unit Testing Domain Aggregate Roots and System Architecture"
     }, {
-      "content" : "# 17. integration testing\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 17. Outside-In Integration Testing of the API with Infrastructure Dependencies\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nOutside-in integration testing aims to validate the system behavior end-to-end by exercising the API and all its infrastructure dependencies. \nUnlike unit tests, which isolate a small piece of logic, integration tests cover multiple layers and external systems, \nmaking them inherently more complex but crucial for confidence in production readiness.\n\nThe main challenges are:\n- **Infrastructure setup:** The API depends on external systems such as PostgreSQL for persistence, RabbitMQ for messaging, and an external notifications service. Reliable testing requires realistic, isolated instances of these systems.\n- **Test isolation:** Each test should run against a clean state to avoid flaky behavior caused by leftover data or messages.\n- **Performance:** Integration tests tend to be slower than unit tests. Balancing speed with reliability and coverage is essential to maintain developer productivity.\n- **Observability:** Detailed tracing and logging help diagnose issues when tests fail, especially when asynchronous messaging or external mocks are involved.\n\n## Decision\nTo address these challenges, we will adopt the following approach for outside-in integration testing:\n\n### 1. Spinning up the API for testing\n- Use **`WebApplicationFactory<TEntryPoint>`** from ASP.NET Core testing libraries to start an in-memory instance of the Web API. This allows sending real HTTP requests to test the API end-to-end without deploying externally.\n\n### 2. Infrastructure dependencies using Testcontainers\n- Use **Testcontainers** (a .NET library for managing Docker containers in tests) to launch disposable instances of required infrastructure:\n    - **PostgreSQL container**: A fresh, isolated database instance per test suite with network isolation.\n    - **RabbitMQ container**: A message broker instance that can be configured, monitored, and reset between tests.\n    - **WireMock container**: A mock HTTP server to simulate the external Notifications API, enabling request verification and controlled responses.\n\n### 3. Configuration overrides\n- Override the default configuration in `WebApplicationFactory` to redirect the API’s connection strings, messaging endpoints, and external service URLs to point to the test container instances and mocks. This ensures the API under test uses isolated test resources.\n\n### 4. Test lifecycle management\n- Implement **`IClassFixture<WebApplicationFactory>`** for each test class, allowing all tests in the class to share the API and infrastructure setup. This reduces overhead compared to spinning up and tearing down per test method, improving execution speed.\n- Use **Respawn** to reset the PostgreSQL database between individual tests by rolling back changes or truncating tables, guaranteeing a clean state without full container restarts.\n\n### 5. Verifying asynchronous messaging\n- Create a **custom RabbitMQ consumer** within the test suite that subscribes to relevant queues and verifies that messages are published correctly during test execution. This helps assert eventual consistency scenarios and side effects from domain events.\n\n### 6. Observability in tests\n- Integrate **OpenTelemetry (OTel)** into the test environment to collect traces, metrics, and logs of test executions. This helps:\n    - Visualize request flows including asynchronous operations.\n    - Diagnose slow or failed tests with detailed context.\n    - Correlate telemetry with test failures for rapid troubleshooting.\n\n## Consequences\n\n### Benefits\n- **Realistic environment:** Tests run against actual services rather than mocks or stubs, increasing confidence that the system behaves correctly in production-like conditions.\n- **Isolation and repeatability:** Disposable containers and database resets ensure tests do not interfere with each other, reducing flaky tests.\n- **Speed optimizations:** Sharing infrastructure setup at the test class level and resetting DB state between tests optimizes execution time while maintaining isolation.\n- **Comprehensive verification:** Testing message publication and external service calls validates side effects and integrations, which are often difficult to cover in unit tests.\n- **Improved diagnostics:** OpenTelemetry integration provides rich observability, aiding root cause analysis.\n\n### Challenges\n- **Increased complexity:** The test setup is more complicated than unit testing, requiring knowledge of Docker, container orchestration, and test lifecycle management.\n- **Maintenance overhead:** Testcontainers, mocks, and configuration overrides need to be kept in sync with production dependencies and updated when services evolve.\n- **Resource usage:** Running multiple containers and the full API can increase resource consumption and may slow down CI pipelines if not managed carefully.\n- **Potential flakiness:** External dependencies and network communications introduce possible points of failure that require robust retry and timeout strategies.\n\n## Additional considerations\n- **CI/CD integration:** Tests should be optimized for CI environments, need careful resource cleanup to prevent container leaks.\n- **Extensibility:** The custom RabbitMQ consumer and WireMock setup should be modular and reusable to support additional integration scenarios as the system grows.\n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "17",
       "status" : "Accepted",
-      "title" : "integration testing"
+      "title" : "Outside-In Integration Testing of the API with Infrastructure Dependencies"
     }, {
-      "content" : "# 18. subcutaneous testing\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 18. Subcutaneous Testing for Background Jobs and Internal Processes\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nCertain system behaviors, such as scheduled cron jobs and background processing tasks, execute “under the surface” without direct API endpoints or user interaction.  \nTesting these internal processes requires a different approach from typical API integration tests.\n\nChallenges include:\n- Exercising background jobs and internal logic that runs outside of HTTP request pipelines.\n- Maintaining realistic infrastructure dependencies such as database and messaging systems.\n- Isolating tests and ensuring repeatability in a complex asynchronous environment.\n\n## Decision\nWe will implement **subcutaneous tests** to cover background jobs and internal workflows with the following approach:\n\n- Use **Testcontainers** to provide isolated instances of infrastructure dependencies (PostgreSQL, RabbitMQ).\n- Use **`WebApplicationFactory`** to spin up the application host, providing full DI container and scoped service lifetimes.\n- Obtain required services (e.g., cron job classes, job schedulers, message publishers) directly from the **service scope** of the `WebApplicationFactory`.\n- Trigger job execution methods manually within the test to simulate scheduled runs or on-demand invocation.\n- Use scoped repositories and infrastructure services from the DI container to verify side effects and outcomes of job execution.\n- Reset state between tests using database cleanup tools (e.g., Respawn) and messaging queue purging to ensure test isolation.\n\n## Consequences\n- **Easier:** Allows testing of internal application logic and scheduled tasks without relying on external triggers or complex orchestration.\n- **Easier:** Leverages the existing application DI and infrastructure, improving test realism and reliability.\n- **Easier:** Provides fast feedback on critical background processes that might otherwise go untested until runtime.\n- **Harder:** Tests require careful setup to properly isolate state and dependencies.\n- **Harder:** Some background job behaviors may be time-dependent or asynchronous, requiring test synchronization strategies.\n- **Risk:** Over-reliance on manual triggering in tests may miss certain edge cases that happen only during real schedules.",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "18",
       "status" : "Accepted",
-      "title" : "subcutaneous testing"
+      "title" : "Subcutaneous Testing for Background Jobs and Internal Processes"
     }, {
-      "content" : "# 19. contract testing\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 19. Contract Testing Between Stayza.API and Notifications API Using Pact.net\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe Stayza.API integrates with an external Notifications API to send user notifications.  \nTo ensure both systems remain compatible despite independent development and deployment, we need a robust contract testing approach.\n\nChallenges include:\n- Avoiding integration failures caused by API contract mismatches.\n- Verifying that Stayza.API sends requests conforming to Notifications API expectations.\n- Allowing Notifications API to evolve without breaking Stayza.API’s assumptions.\n\n## Decision\nWe will implement **consumer-driven contract testing** using **Pact.net** and **xUnit**:\n\n- **Stayza.API acts as the consumer** and defines expectations for the Notifications API interactions using Pact contracts.\n- Pact contracts specify the requests Stayza.API will send and the expected responses from the Notifications API.\n- Use **xUnit** test framework to write automated contract tests in Stayza.API codebase validating these expectations.\n- Pact.net generates and publishes contracts that the Notifications API provider can use to verify compliance.\n- Contracts are versioned and stored alongside code, enabling CI pipelines to catch breaking changes early.\n- Integration with CI/CD pipelines automates contract verification for both consumer and provider.\n\n## Consequences\n- **Easier:** Early detection of breaking contract changes, reducing runtime integration issues.\n- **Easier:** Clear, executable documentation of integration points between Stayza.API and Notifications API.\n- **Easier:** Supports independent development and deployment cycles while maintaining integration safety.\n- **Harder:** Initial setup and maintenance overhead for contract tests and CI integration.\n- **Harder:** Requires coordination with Notifications API team to integrate contract verification on their side.\n- **Risk:** Over-reliance on contracts can miss behavioral or state-related integration issues beyond request/response schemas.  \n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "19",
       "status" : "Accepted",
-      "title" : "contract testing"
+      "title" : "Contract Testing Between Stayza.API and Notifications API Using Pact.net"
     }, {
       "content" : "# 2. Client app needs an easy way to integrate with the backend API\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe frontend application requires a straightforward and reliable way to communicate with the backend API.\n\nPotential integration approaches considered:\n- **REST**\n- **GraphQL**\n- **gRPC**\n\n## Decision\nWe will develop a **REST** interface for the API.\n\nThis approach was chosen because:\n- The development team has strong familiarity with REST, reducing ramp-up time and delivery risk.\n- REST is widely supported, well-documented, and fits our integration needs.\n- **gRPC** is better suited for service-to-service communication rather than client-to-backend integration.\n- **GraphQL** is a viable alternative but has a steeper learning curve and additional tooling overhead that we cannot accommodate at this stage.\n\n## Consequences\n- We will leverage Microsoft’s built-in support for building REST APIs.\n- Given the lightweight nature of the application, we will implement the interface using **Minimal APIs** to reduce boilerplate and simplify development.  \n",
       "date" : "2025-08-11T00:00:00Z",
@@ -89,19 +89,12 @@
       "status" : "Accepted",
       "title" : "Client app needs an easy way to integrate with the backend API"
     }, {
-      "content" : "# 20. Mediatr usage\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 20. Health Checks Implementation in Stayza.API\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nTo ensure operational reliability and support automated monitoring, Stayza.API needs comprehensive health checks that:\n- Confirm the API’s own availability and responsiveness.\n- Verify connectivity and readiness of critical infrastructure dependencies such as PostgreSQL, RabbitMQ, and external services (e.g., Notifications API).\n- Provide actionable status data consumable by monitoring and orchestration systems (e.g., Kubernetes, Prometheus, or external alerting tools).\n- Are lightweight and performant to avoid impacting API performance or scalability.\n\n## Decision\nWe will implement health checks in Stayza.API using the following approach:\n\n- Use ASP.NET Core’s built-in **Health Checks middleware** to expose health endpoints (e.g., `/alive` and `/health`).\n- Include **liveness checks** to confirm that the API process is running and responsive.\n- Include **readiness checks** that verify:\n    - Successful connection to the PostgreSQL database via lightweight queries or connection tests.\n    - Connection and ability to publish/consume messages on RabbitMQ.\n    - Reachability of the Notifications API endpoint (using a lightweight HTTP call or TCP check).\n- Implement custom health check classes for dependencies that are not covered by built-in checks or require specific logic.\n- Configure health check responses to comply with standards (e.g., JSON formatted, HTTP 200 on success, HTTP 503 on failure).\n- Optionally integrate health check results with OpenTelemetry metrics and tracing to enhance observability.\n- Secure health endpoints appropriately, exposing readiness and liveness only to authorized monitoring systems.\n\n## Consequences\n- **Easier:** Provides real-time operational insight into Stayza.API and its dependencies.\n- **Easier:** Enables automated orchestration platforms to perform rolling upgrades and failover based on health status.\n- **Easier:** Early detection of degraded states before impacting users.\n- **Harder:** Requires maintenance of health check implementations as dependencies evolve.\n- **Risk:** Overly complex or slow health checks could impact API performance or lead to false alarms if not carefully designed.  \n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "20",
       "status" : "Accepted",
-      "title" : "Mediatr usage"
-    }, {
-      "content" : "# 21. health monitoring\n\nDate: 2025-08-11\n\n## Status\n\nProposed\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
-      "date" : "2025-08-11T00:00:00Z",
-      "format" : "Markdown",
-      "id" : "21",
-      "status" : "Proposed",
-      "title" : "health monitoring"
+      "title" : "Health Checks Implementation in Stayza.API"
     }, {
       "content" : "# 3. Authentication and authorization\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\n\nThe application requires a secure and reliable way to handle user authentication and authorization.  \nWe need a solution that:\n- Integrates seamlessly with ASP.NET Core.\n- Supports common authentication flows (registration, login, password management).\n- Manages user roles and claims for fine-grained access control.\n- Minimizes custom implementation effort while following best security practices.\n\nAvailable options considered:\n- Custom authentication/authorization logic.\n- Third-party identity providers (Auth0, Okta, etc.).\n- ASP.NET Core Identity with Entity Framework Core.\n\n## Decision\nWe will use **ASP.NET Core Identity** with **Entity Framework Core** for our authentication and authorization setup.\n\nThis approach was chosen because:\n- It is officially supported and maintained by Microsoft.\n- It provides a ready-to-use, extensible identity system with minimal setup.\n- It integrates seamlessly with EF Core for persisting user and role data.\n- It supports modern security features like password hashing, token-based authentication, and role-based access control out-of-the-box.\n\n## Consequences\n- **Easier:** Rapid implementation of a secure and feature-rich identity system.\n- **Easier:** Built-in support for roles, claims, two-factor authentication, and password resets.\n- **Harder:** Some customization may require extending default Identity models and stores.\n- **Risk:** Tightly coupling authentication logic to EF Core may limit flexibility if we switch to a different persistence layer in the future.  \n",
       "date" : "2025-08-11T00:00:00Z",
@@ -138,23 +131,24 @@
       "status" : "Accepted",
       "title" : "Application configuration using appsettings"
     }, {
-      "content" : "# 8. background jobs\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 8. Background job processing with TickerQ\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe application needs to run scheduled background jobs daily to perform maintenance tasks.  \nCurrently, we require two daily jobs:\n- `NotifyUsersAboutExpiringBookReservations`\n- `RemoveExpiredAndCancelledReservations`\n\nRequirements for the background job system include:\n- Lightweight and easy integration with our existing stack.\n- First-party support for Entity Framework Core, which we already use.\n- Simple, attribute-based job configuration.\n- A UI dashboard to monitor jobs with configurable basic authentication.\n- Ability to trigger jobs on demand manually.\n\nExisting popular solutions like Hangfire or Quartz are heavier or require more setup.\n\n## Decision\nWe will use **TickerQ**, a lightweight background job library with native EF Core integration.\n\nKey points of this approach:\n- Jobs are configured by decorating methods in services with an attribute, e.g.,  \n  `[TickerFunction(nameof(NotifyUsersAboutExpiringReservations), \"0 7 * * *\")]`\n- The cron expression controls the schedule (daily at 7 AM in the example).\n- TickerQ provides a built-in UI dashboard secured via configurable basic auth.\n- Supports manual triggering of jobs through the dashboard or API.\n\nThis fits our requirements for simplicity, EF Core integration, and ease of use.\n\n## Consequences\n- **Easier:** Rapid setup and minimal boilerplate for scheduled background jobs.\n- **Easier:** Consistent integration with EF Core data context and transactions.\n- **Easier:** Monitoring and manual job triggering via the built-in dashboard.\n- **Harder:** Limited ecosystem compared to more mature solutions like Hangfire or Quartz, which may affect advanced scenarios.\n- **Risk:** Potential for future limitations if job complexity or scaling requirements grow beyond TickerQ’s capabilities, possibly requiring migration later.  \n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "8",
       "status" : "Accepted",
-      "title" : "background jobs"
+      "title" : "Background job processing with TickerQ"
     }, {
-      "content" : "# 9. ef core usage\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "content" : "# 9. Using EF Core in a DDD + Clean Architecture scenario\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe application follows a Domain-Driven Design (DDD) and Clean Architecture approach, emphasizing:\n- Rich domain models encapsulating business logic.\n- Clear separation of concerns between domain, infrastructure, and application layers.\n- Need for robust persistence aligned with domain concepts.\n\nEF Core is chosen as the ORM for data persistence. We want to align its usage with DDD best practices while leveraging EF Core’s features effectively.\n\n## Decision\nWe will use EF Core with the following practices:\n\n- **Rich domain models:** Entities and value objects encapsulate behavior, not just data.\n- **Entity configurations:** Use `IEntityTypeConfiguration<TEntity>` implementations in the infrastructure layer to configure entity mappings and relationships, keeping domain models persistence-ignorant.\n- **Data seeding:** Seed initial data via EF Core migrations using the `HasData` method in model configurations, ensuring consistent initial state.\n- **Interceptors:** Implement EF Core SaveChanges interceptors to hook into persistence lifecycle, enabling functionalities like : domain event publishing after successful transactions.\n- **Code-first approach:** Design domain models first, then create and apply migrations reflecting model changes.\n- **Repositories:** Implement repositories in the infrastructure layer to abstract EF Core DbContext usage and provide aggregate root access per DDD principles.\n- **Migrations on startup:** Automatically apply pending migrations during application startup in development and test environments to streamline iterative development.\n- **Exiting integrations:** Authn/z and Background jobs will integrate easily with the existing EF Core infrastructure.\n- **Value Object mapping:** Configure EF Core to map Value Objects as owned entity types or via custom conversions as appropriate.\n\n## Consequences\n- **Easier:** Strong alignment between domain models—including Value Objects—and persistence while preserving domain purity.\n- **Easier:** Centralized configuration and seeding improve maintainability and reproducibility of data states.\n- **Easier:** Domain events can be published reliably in SaveChanges interceptors, supporting event-driven architectures.\n- **Easier:** Code-first and migrations provide a smooth iterative workflow for evolving the database schema.\n- **Harder:** Requires discipline to keep domain models persistence-ignorant and avoid anemic models.\n- **Harder:** Careful design needed to avoid performance pitfalls when using rich models with complex relationships.\n- **Risk:** Applying migrations automatically on startup in non-production environments is safe, but care must be taken to avoid unintended schema changes in production.  \n",
       "date" : "2025-08-11T00:00:00Z",
       "format" : "Markdown",
       "id" : "9",
       "status" : "Accepted",
-      "title" : "ef core usage"
+      "title" : "Using EF Core in a DDD + Clean Architecture scenario"
     } ]
   },
   "id" : 1,
-  "lastModifiedDate" : "2025-08-11T17:17:45Z",
+  "lastModifiedAgent" : "structurizr-ui",
+  "lastModifiedDate" : "2025-08-11T18:24:53Z",
   "model" : {
     "people" : [ {
       "id" : "1",
@@ -166,14 +160,14 @@
       "relationships" : [ {
         "description" : "Uses",
         "destinationId" : "3",
-        "id" : "5",
+        "id" : "8",
         "sourceId" : "1",
         "tags" : "Relationship"
       }, {
         "description" : "Uses",
         "destinationId" : "2",
-        "id" : "6",
-        "linkedRelationshipId" : "5",
+        "id" : "9",
+        "linkedRelationshipId" : "8",
         "sourceId" : "1"
       } ],
       "tags" : "Element,Person"
@@ -182,14 +176,14 @@
       "containers" : [ {
         "documentation" : { },
         "id" : "3",
-        "name" : "Web Application",
+        "name" : "Front end app",
         "properties" : {
-          "structurizr.dsl.identifier" : "ss.wa"
+          "structurizr.dsl.identifier" : "ss.fe"
         },
         "relationships" : [ {
-          "description" : "Reads from and writes to",
+          "description" : "Integrates via HTTP",
           "destinationId" : "4",
-          "id" : "7",
+          "id" : "10",
           "sourceId" : "3",
           "tags" : "Relationship"
         } ],
@@ -197,7 +191,50 @@
       }, {
         "documentation" : { },
         "id" : "4",
-        "name" : "Database Schema",
+        "name" : ".NET Api",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ss.api"
+        },
+        "relationships" : [ {
+          "description" : "Reads from and writes to",
+          "destinationId" : "7",
+          "id" : "11",
+          "sourceId" : "4",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Integrates via HTTP",
+          "destinationId" : "5",
+          "id" : "12",
+          "sourceId" : "4",
+          "tags" : "Relationship"
+        }, {
+          "description" : "Readns and writes to",
+          "destinationId" : "6",
+          "id" : "13",
+          "sourceId" : "4",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container"
+      }, {
+        "documentation" : { },
+        "id" : "5",
+        "name" : "Notification System",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ss.ns"
+        },
+        "tags" : "Element,Container"
+      }, {
+        "documentation" : { },
+        "id" : "6",
+        "name" : "RabbitMq message broker",
+        "properties" : {
+          "structurizr.dsl.identifier" : "ss.mb"
+        },
+        "tags" : "Element,Container,Messagebroker"
+      }, {
+        "documentation" : { },
+        "id" : "7",
+        "name" : "Database",
         "properties" : {
           "structurizr.dsl.identifier" : "ss.db"
         },
@@ -206,7 +243,7 @@
       "documentation" : { },
       "id" : "2",
       "location" : "Unspecified",
-      "name" : "Software System",
+      "name" : "Stayza software system",
       "properties" : {
         "structurizr.dsl.identifier" : "ss"
       },
@@ -215,12 +252,13 @@
   },
   "name" : "Name",
   "properties" : {
-    "structurizr.dsl" : "d29ya3NwYWNlICJOYW1lIiAiRGVzY3JpcHRpb24iIHsKCiAgICAhYWRycyBkZWNpc2lvbnMKICAgICFpZGVudGlmaWVycyBoaWVyYXJjaGljYWwKCiAgICBtb2RlbCB7CiAgICAgICAgdSA9IHBlcnNvbiAiVXNlciIKICAgICAgICBzcyA9IHNvZnR3YXJlU3lzdGVtICJTb2Z0d2FyZSBTeXN0ZW0iIHsKICAgICAgICAgICAgd2EgPSBjb250YWluZXIgIldlYiBBcHBsaWNhdGlvbiIKICAgICAgICAgICAgZGIgPSBjb250YWluZXIgIkRhdGFiYXNlIFNjaGVtYSIgewogICAgICAgICAgICAgICAgdGFncyAiRGF0YWJhc2UiCiAgICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIHUgLT4gc3Mud2EgIlVzZXMiCiAgICAgICAgc3Mud2EgLT4gc3MuZGIgIlJlYWRzIGZyb20gYW5kIHdyaXRlcyB0byIKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgc3lzdGVtQ29udGV4dCBzcyAiRGlhZ3JhbTEiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbnRhaW5lciBzcyAiRGlhZ3JhbTIiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIHN0eWxlcyB7CiAgICAgICAgICAgIGVsZW1lbnQgIkVsZW1lbnQiIHsKICAgICAgICAgICAgICAgIGNvbG9yICNmZmZmZmYKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJQZXJzb24iIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgI2JhMWU3NQogICAgICAgICAgICAgICAgc2hhcGUgcGVyc29uCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiU29mdHdhcmUgU3lzdGVtIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICNkOTIzODkKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJDb250YWluZXIiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgI2Y4Mjg5YwogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkRhdGFiYXNlIiB7CiAgICAgICAgICAgICAgICBzaGFwZSBjeWxpbmRlcgogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQoKICAgIGNvbmZpZ3VyYXRpb24gewogICAgICAgIHNjb3BlIHNvZnR3YXJlc3lzdGVtCiAgICB9Cgp9"
+    "structurizr.dsl" : "d29ya3NwYWNlICJOYW1lIiAiRGVzY3JpcHRpb24iIHsKCiAgICAhYWRycyBkZWNpc2lvbnMKICAgICFpZGVudGlmaWVycyBoaWVyYXJjaGljYWwKCiAgICBtb2RlbCB7CiAgICAgICAgdSA9IHBlcnNvbiAiVXNlciIKICAgICAgICBzcyA9IHNvZnR3YXJlU3lzdGVtICJTdGF5emEgc29mdHdhcmUgc3lzdGVtIiB7CiAgICAgICAgICAgIGZlID0gY29udGFpbmVyICJGcm9udCBlbmQgYXBwIgogICAgICAgICAgICBhcGkgPSBjb250YWluZXIgIi5ORVQgQXBpIgogICAgICAgICAgICBucyA9IGNvbnRhaW5lciAiTm90aWZpY2F0aW9uIFN5c3RlbSIKICAgICAgICAgICAgbWIgPSBjb250YWluZXIgIlJhYmJpdE1xIG1lc3NhZ2UgYnJva2VyInsKICAgICAgICAgICAgICAgIHRhZ3MgIk1lc3NhZ2Vicm9rZXIiCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZGIgPSBjb250YWluZXIgIkRhdGFiYXNlIiB7CiAgICAgICAgICAgICAgICB0YWdzICJEYXRhYmFzZSIKICAgICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgdSAtPiBzcy5mZSAiVXNlcyIKICAgICAgICBzcy5mZSAtPiBzcy5hcGkgIkludGVncmF0ZXMgdmlhIEhUVFAiIAogICAgICAgIHNzLmFwaSAtPiBzcy5kYiAiUmVhZHMgZnJvbSBhbmQgd3JpdGVzIHRvIgogICAgICAgIHNzLmFwaSAtPiBzcy5ucyAiSW50ZWdyYXRlcyB2aWEgSFRUUCIKICAgICAgICBzcy5hcGkgLT4gc3MubWIgIlJlYWRucyBhbmQgd3JpdGVzIHRvIgogICAgfQoKICAgIHZpZXdzIHsKICAgICAgICBzeXN0ZW1Db250ZXh0IHNzICJEaWFncmFtMSIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgY29udGFpbmVyIHNzICJEaWFncmFtMiIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgc3R5bGVzIHsKICAgICAgICAgICAgZWxlbWVudCAiRWxlbWVudCIgewogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlBlcnNvbiIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjYmExZTc1CiAgICAgICAgICAgICAgICBzaGFwZSBwZXJzb24KICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJTb2Z0d2FyZSBTeXN0ZW0iIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgI2Q5MjM4OQogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkNvbnRhaW5lciIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjZjgyODljCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRGF0YWJhc2UiIHsKICAgICAgICAgICAgICAgIHNoYXBlIGN5bGluZGVyCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiTWVzc2FnZWJyb2tlciIgewogICAgICAgICAgICAgICAgc2hhcGUgUGlwZQogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQoKICAgIGNvbmZpZ3VyYXRpb24gewogICAgICAgIHNjb3BlIHNvZnR3YXJlc3lzdGVtCiAgICB9Cgp9"
   },
   "views" : {
     "configuration" : {
       "branding" : { },
-      "lastSavedView" : "Diagram2",
+      "lastSavedView" : "Diagram1",
+      "metadataSymbols" : "SquareBrackets",
       "styles" : {
         "elements" : [ {
           "color" : "#ffffff",
@@ -238,13 +276,16 @@
         }, {
           "shape" : "Cylinder",
           "tag" : "Database"
+        }, {
+          "shape" : "Pipe",
+          "tag" : "Messagebroker"
         } ]
       },
       "terminology" : { }
     },
     "containerViews" : [ {
       "automaticLayout" : {
-        "applied" : false,
+        "applied" : true,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -252,32 +293,54 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
+      "dimensions" : {
+        "height" : 2011,
+        "width" : 3070
+      },
       "elements" : [ {
         "id" : "1",
-        "x" : 0,
-        "y" : 0
+        "x" : 200,
+        "y" : 735
       }, {
         "id" : "3",
-        "x" : 0,
-        "y" : 0
+        "x" : 900,
+        "y" : 785
       }, {
         "id" : "4",
-        "x" : 0,
-        "y" : 0
+        "x" : 1650,
+        "y" : 785
+      }, {
+        "id" : "5",
+        "x" : 2400,
+        "y" : 1385
+      }, {
+        "id" : "6",
+        "x" : 2400,
+        "y" : 785
+      }, {
+        "id" : "7",
+        "x" : 2400,
+        "y" : 185
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "Diagram2",
       "order" : 2,
       "relationships" : [ {
-        "id" : "5"
+        "id" : "10"
       }, {
-        "id" : "7"
+        "id" : "11"
+      }, {
+        "id" : "12"
+      }, {
+        "id" : "13"
+      }, {
+        "id" : "8"
       } ],
       "softwareSystemId" : "2"
     } ],
     "systemContextViews" : [ {
       "automaticLayout" : {
-        "applied" : false,
+        "applied" : true,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -285,20 +348,24 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
+      "dimensions" : {
+        "height" : 800,
+        "width" : 1550
+      },
       "elements" : [ {
         "id" : "1",
-        "x" : 0,
-        "y" : 0
+        "x" : 200,
+        "y" : 165
       }, {
         "id" : "2",
-        "x" : 0,
-        "y" : 0
+        "x" : 900,
+        "y" : 215
       } ],
       "enterpriseBoundaryVisible" : true,
       "key" : "Diagram1",
       "order" : 1,
       "relationships" : [ {
-        "id" : "6"
+        "id" : "9"
       } ],
       "softwareSystemId" : "2"
     } ]
