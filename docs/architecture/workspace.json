@@ -3,10 +3,158 @@
     "scope" : "SoftwareSystem"
   },
   "description" : "Description",
-  "documentation" : { },
+  "documentation" : {
+    "decisions" : [ {
+      "content" : "# 1. Problem statement / What needs to be decided\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\nSometimes there are multiple available options and we can decide on the approach.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "1",
+      "status" : "Accepted",
+      "title" : "Problem statement / What needs to be decided"
+    }, {
+      "content" : "# 10. rich and anemic domain\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "10",
+      "status" : "Accepted",
+      "title" : "rich and anemic domain"
+    }, {
+      "content" : "# 11. integration via domain events\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "11",
+      "status" : "Accepted",
+      "title" : "integration via domain events"
+    }, {
+      "content" : "# 12. usage of domain services\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "12",
+      "status" : "Accepted",
+      "title" : "usage of domain services"
+    }, {
+      "content" : "# 13. async communication\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "13",
+      "status" : "Accepted",
+      "title" : "async communication"
+    }, {
+      "content" : "# 14. telementry architecture\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "14",
+      "status" : "Accepted",
+      "title" : "telementry architecture"
+    }, {
+      "content" : "# 15. integration with notification system\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "15",
+      "status" : "Accepted",
+      "title" : "integration with notification system"
+    }, {
+      "content" : "# 16. unit testing\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "16",
+      "status" : "Accepted",
+      "title" : "unit testing"
+    }, {
+      "content" : "# 17. integration testing\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "17",
+      "status" : "Accepted",
+      "title" : "integration testing"
+    }, {
+      "content" : "# 18. subcutaneous testing\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "18",
+      "status" : "Accepted",
+      "title" : "subcutaneous testing"
+    }, {
+      "content" : "# 19. contract testing\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "19",
+      "status" : "Accepted",
+      "title" : "contract testing"
+    }, {
+      "content" : "# 2. Client app needs an easy way to integrate with the backend API\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe frontend application requires a straightforward and reliable way to communicate with the backend API.\n\nPotential integration approaches considered:\n- **REST**\n- **GraphQL**\n- **gRPC**\n\n## Decision\nWe will develop a **REST** interface for the API.\n\nThis approach was chosen because:\n- The development team has strong familiarity with REST, reducing ramp-up time and delivery risk.\n- REST is widely supported, well-documented, and fits our integration needs.\n- **gRPC** is better suited for service-to-service communication rather than client-to-backend integration.\n- **GraphQL** is a viable alternative but has a steeper learning curve and additional tooling overhead that we cannot accommodate at this stage.\n\n## Consequences\n- We will leverage Microsoft’s built-in support for building REST APIs.\n- Given the lightweight nature of the application, we will implement the interface using **Minimal APIs** to reduce boilerplate and simplify development.  \n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "2",
+      "status" : "Accepted",
+      "title" : "Client app needs an easy way to integrate with the backend API"
+    }, {
+      "content" : "# 20. Mediatr usage\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "20",
+      "status" : "Accepted",
+      "title" : "Mediatr usage"
+    }, {
+      "content" : "# 21. health monitoring\n\nDate: 2025-08-11\n\n## Status\n\nProposed\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "21",
+      "status" : "Proposed",
+      "title" : "health monitoring"
+    }, {
+      "content" : "# 3. Authentication and authorization\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\n\nThe application requires a secure and reliable way to handle user authentication and authorization.  \nWe need a solution that:\n- Integrates seamlessly with ASP.NET Core.\n- Supports common authentication flows (registration, login, password management).\n- Manages user roles and claims for fine-grained access control.\n- Minimizes custom implementation effort while following best security practices.\n\nAvailable options considered:\n- Custom authentication/authorization logic.\n- Third-party identity providers (Auth0, Okta, etc.).\n- ASP.NET Core Identity with Entity Framework Core.\n\n## Decision\nWe will use **ASP.NET Core Identity** with **Entity Framework Core** for our authentication and authorization setup.\n\nThis approach was chosen because:\n- It is officially supported and maintained by Microsoft.\n- It provides a ready-to-use, extensible identity system with minimal setup.\n- It integrates seamlessly with EF Core for persisting user and role data.\n- It supports modern security features like password hashing, token-based authentication, and role-based access control out-of-the-box.\n\n## Consequences\n- **Easier:** Rapid implementation of a secure and feature-rich identity system.\n- **Easier:** Built-in support for roles, claims, two-factor authentication, and password resets.\n- **Harder:** Some customization may require extending default Identity models and stores.\n- **Risk:** Tightly coupling authentication logic to EF Core may limit flexibility if we switch to a different persistence layer in the future.  \n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "3",
+      "status" : "Accepted",
+      "title" : "Authentication and authorization"
+    }, {
+      "content" : "# 4. Exception handling in the API\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe API needs a consistent and maintainable strategy for handling exceptions.  \nRequirements:\n- Centralized error handling that works across the entire API.\n- Ability to chain multiple exception-handling middlewares to address different concerns (e.g., domain errors, validation errors, unhandled exceptions).\n- Provide clients with clear and standardized error responses.\n- Log errors for monitoring and diagnostics.\n- Return a correlation or trace identifier to help link API errors to logs/traces.\n\nStandards and references:\n- [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807) Problem Details for HTTP APIs.\n\n## Decision\nWe will implement exception handling using ASP.NET Core’s **`IExceptionHandler`** interface, with multiple middlewares chained together:\n1. Specialized middlewares for known error types (e.g., validation, domain exceptions).\n2. A generic \"catch-all\" middleware at the end of the chain to handle unhandled exceptions.\n\nMiddlewares will:\n- Format responses using **ProblemDetails** according to RFC 7807.\n- Log the exception with relevant context.\n- Where possible include a **traceId** in the ProblemDetails response so the client can report it for debugging.\n\n## Consequences\n- **Easier:** Centralized and consistent error responses across the API.\n- **Easier:** Logging and diagnostics are standardized, making it easier to correlate issues with traces.\n- **Easier:** Adding or adjusting handling for specific exception types without changing unrelated parts of the pipeline.\n- **Harder:** Slight increase in complexity due to multiple middlewares in the chain.\n- **Risk:** If middleware order is incorrect, certain exceptions might bypass intended handlers. This will need to be addressed via careful configuration and testing.  \n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "4",
+      "status" : "Accepted",
+      "title" : "Exception handling in the API"
+    }, {
+      "content" : "# 5. Cross-cutting concerns in the API\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe API needs a consistent, maintainable approach for implementing cross-cutting concerns such as:\n- Activity tracing for distributed diagnostics.\n- Performance monitoring and metrics collection.\n- Request and response logging.\n- Validation of incoming requests.\n\nRequirements:\n- Minimize boilerplate code in controllers and endpoints.\n- Ensure concerns are applied consistently across all API requests.\n- Leverage built-in ASP.NET Core capabilities to reduce custom implementation.\n- Maintain flexibility for future extensions or replacements.\n\n## Decision\nWe will implement cross-cutting concerns using ASP.NET Core’s **built-in middlewares** and **filters**:\n- **Middlewares** will handle concerns that apply to all requests (e.g., activity tracing with `Activity`/OpenTelemetry, request logging, performance timing).\n- **Filters** will handle concerns at the endpoint level (e.g., model validation, authorization checks, custom action filters for specific features).\n\n## Consequences\n- **Easier:** Consistent application of cross-cutting concerns without duplicating logic in controllers.\n- **Easier:** Clear separation between core business logic and infrastructural concerns.\n- **Easier:** Built-in middlewares and filters reduce maintenance overhead and leverage Microsoft-supported patterns.\n- **Harder:** Ordering of middlewares and filters becomes more critical; misconfiguration can lead to missed logs or skipped validations.\n- **Risk:** Overuse of filters/middlewares for heavy operations could introduce performance overhead if not monitored.  \n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "5",
+      "status" : "Accepted",
+      "title" : "Cross-cutting concerns in the API"
+    }, {
+      "content" : "# 6. API versioning and OpenAPI/Swagger integration\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe API will evolve over time, and changes may require breaking compatibility with existing clients.  \nTo manage this, we need a clear strategy for API versioning that:\n- Allows multiple API versions to coexist.\n- Is discoverable by API consumers.\n- Works seamlessly with API documentation tooling (OpenAPI/Swagger).\n- Fits naturally into the .NET 9 Minimal APIs and MVC-based controllers.\n\n## Decision\nWe will use **ASP.NET Core API Versioning** package to implement versioning, with the following approach:\n- Versioning will be applied via **URL segments** (e.g., `/api/v1/resource`) as the primary method.\n- Support for **query string** and **header-based** versioning will be possible for flexibility but not the default.\n- Controllers/endpoints will explicitly specify their version via `[ApiVersion]` attributes or `MapToApiVersion` for Minimal APIs.\n\nFor documentation:\n- We will integrate **Swashbuckle.AspNetCore** (Swagger) with **API versioning** support to generate separate OpenAPI documents per version.\n- Each version’s endpoints will be clearly grouped in Swagger UI with proper labels (e.g., “v1”, “v2”).\n- The OpenAPI spec will be available for each version to allow client code generation and automated testing.\n\n## Consequences\n- **Easier:** Clients can migrate to new API versions at their own pace without breaking existing integrations.\n- **Easier:** Swagger UI provides clear visibility of available versions and endpoints.\n- **Easier:** Integration with OpenAPI allows code generation tools to target specific versions.\n- **Harder:** Maintaining multiple API versions will increase complexity and testing effort.\n- **Risk:** Without a clear deprecation policy, outdated API versions may linger longer than desired, increasing maintenance burden.  \n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "6",
+      "status" : "Accepted",
+      "title" : "API versioning and OpenAPI/Swagger integration"
+    }, {
+      "content" : "# 7. Application configuration using appsettings\n\nDate: 2025-08-11\n\n## Status\nAccepted\n\n## Context\nThe application requires a flexible way to manage configuration settings such as connection strings, feature flags, API keys, and environment-specific values.\n\nWhile there are multiple external configuration sources available (e.g., Spring Cloud Config, Azure App Configuration, AWS/GCP configuration services), adopting these would introduce additional infrastructure complexity and dependencies at this stage.\n\n## Decision\nWe will use the built-in **appsettings.json** files for configuration management.\n\n- Environment-specific configurations will be supported via files like `appsettings.Development.json`, `appsettings.Production.json`, etc.\n- Configuration will be loaded using the standard ASP.NET Core configuration providers.\n- No external or cloud-based configuration services will be used for now.\n\n## Consequences\n- **Easier:** Simple, file-based configuration that is easy to manage and version control.\n- **Easier:** Values provided from appsettings can be over-written by environment variables whenever needed..\n- **Easier:** No additional infrastructure or service dependencies required.\n- **Harder:** Limited dynamic configuration updates without redeploying the app.\n- **Risk:** Scaling to multiple environments or microservices may require revisiting this approach later to support centralized configuration.  \n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "7",
+      "status" : "Accepted",
+      "title" : "Application configuration using appsettings"
+    }, {
+      "content" : "# 8. background jobs\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "8",
+      "status" : "Accepted",
+      "title" : "background jobs"
+    }, {
+      "content" : "# 9. ef core usage\n\nDate: 2025-08-11\n\n## Status\n\nAccepted\n\n## Context\n\nThe issue motivating this decision, and any context that influences or constrains the decision.\n\n## Decision\n\nThe change that we're proposing or have agreed to implement.\n\n## Consequences\n\nWhat becomes easier or more difficult to do and any risks introduced by the change that will need to be mitigated.\n",
+      "date" : "2025-08-11T00:00:00Z",
+      "format" : "Markdown",
+      "id" : "9",
+      "status" : "Accepted",
+      "title" : "ef core usage"
+    } ]
+  },
   "id" : 1,
-  "lastModifiedAgent" : "structurizr-ui",
-  "lastModifiedDate" : "2025-07-23T20:29:14Z",
+  "lastModifiedDate" : "2025-08-11T17:17:45Z",
   "model" : {
     "people" : [ {
       "id" : "1",
@@ -67,13 +215,12 @@
   },
   "name" : "Name",
   "properties" : {
-    "structurizr.dsl" : "d29ya3NwYWNlICJOYW1lIiAiRGVzY3JpcHRpb24iIHsKCiAgICAhaWRlbnRpZmllcnMgaGllcmFyY2hpY2FsCgogICAgbW9kZWwgewogICAgICAgIHUgPSBwZXJzb24gIlVzZXIiCiAgICAgICAgc3MgPSBzb2Z0d2FyZVN5c3RlbSAiU29mdHdhcmUgU3lzdGVtIiB7CiAgICAgICAgICAgIHdhID0gY29udGFpbmVyICJXZWIgQXBwbGljYXRpb24iCiAgICAgICAgICAgIGRiID0gY29udGFpbmVyICJEYXRhYmFzZSBTY2hlbWEiIHsKICAgICAgICAgICAgICAgIHRhZ3MgIkRhdGFiYXNlIgogICAgICAgICAgICB9CiAgICAgICAgfQoKICAgICAgICB1IC0+IHNzLndhICJVc2VzIgogICAgICAgIHNzLndhIC0+IHNzLmRiICJSZWFkcyBmcm9tIGFuZCB3cml0ZXMgdG8iCiAgICB9CgogICAgdmlld3MgewogICAgICAgIHN5c3RlbUNvbnRleHQgc3MgIkRpYWdyYW0xIiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBjb250YWluZXIgc3MgIkRpYWdyYW0yIiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBzdHlsZXMgewogICAgICAgICAgICBlbGVtZW50ICJFbGVtZW50IiB7CiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiUGVyc29uIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICNiYTFlNzUKICAgICAgICAgICAgICAgIHNoYXBlIHBlcnNvbgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlNvZnR3YXJlIFN5c3RlbSIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjZDkyMzg5CiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQ29udGFpbmVyIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICNmODI4OWMKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJEYXRhYmFzZSIgewogICAgICAgICAgICAgICAgc2hhcGUgY3lsaW5kZXIKICAgICAgICAgICAgfQogICAgICAgIH0KICAgIH0KCiAgICBjb25maWd1cmF0aW9uIHsKICAgICAgICBzY29wZSBzb2Z0d2FyZXN5c3RlbQogICAgfQoKfQ=="
+    "structurizr.dsl" : "d29ya3NwYWNlICJOYW1lIiAiRGVzY3JpcHRpb24iIHsKCiAgICAhYWRycyBkZWNpc2lvbnMKICAgICFpZGVudGlmaWVycyBoaWVyYXJjaGljYWwKCiAgICBtb2RlbCB7CiAgICAgICAgdSA9IHBlcnNvbiAiVXNlciIKICAgICAgICBzcyA9IHNvZnR3YXJlU3lzdGVtICJTb2Z0d2FyZSBTeXN0ZW0iIHsKICAgICAgICAgICAgd2EgPSBjb250YWluZXIgIldlYiBBcHBsaWNhdGlvbiIKICAgICAgICAgICAgZGIgPSBjb250YWluZXIgIkRhdGFiYXNlIFNjaGVtYSIgewogICAgICAgICAgICAgICAgdGFncyAiRGF0YWJhc2UiCiAgICAgICAgICAgIH0KICAgICAgICB9CgogICAgICAgIHUgLT4gc3Mud2EgIlVzZXMiCiAgICAgICAgc3Mud2EgLT4gc3MuZGIgIlJlYWRzIGZyb20gYW5kIHdyaXRlcyB0byIKICAgIH0KCiAgICB2aWV3cyB7CiAgICAgICAgc3lzdGVtQ29udGV4dCBzcyAiRGlhZ3JhbTEiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbnRhaW5lciBzcyAiRGlhZ3JhbTIiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIHN0eWxlcyB7CiAgICAgICAgICAgIGVsZW1lbnQgIkVsZW1lbnQiIHsKICAgICAgICAgICAgICAgIGNvbG9yICNmZmZmZmYKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJQZXJzb24iIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgI2JhMWU3NQogICAgICAgICAgICAgICAgc2hhcGUgcGVyc29uCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiU29mdHdhcmUgU3lzdGVtIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICNkOTIzODkKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJDb250YWluZXIiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgI2Y4Mjg5YwogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkRhdGFiYXNlIiB7CiAgICAgICAgICAgICAgICBzaGFwZSBjeWxpbmRlcgogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQoKICAgIGNvbmZpZ3VyYXRpb24gewogICAgICAgIHNjb3BlIHNvZnR3YXJlc3lzdGVtCiAgICB9Cgp9"
   },
   "views" : {
     "configuration" : {
       "branding" : { },
       "lastSavedView" : "Diagram2",
-      "metadataSymbols" : "SquareBrackets",
       "styles" : {
         "elements" : [ {
           "color" : "#ffffff",
@@ -97,7 +244,7 @@
     },
     "containerViews" : [ {
       "automaticLayout" : {
-        "applied" : true,
+        "applied" : false,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -105,22 +252,18 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
-      "dimensions" : {
-        "height" : 841,
-        "width" : 2320
-      },
       "elements" : [ {
         "id" : "1",
-        "x" : 200,
-        "y" : 165
+        "x" : 0,
+        "y" : 0
       }, {
         "id" : "3",
-        "x" : 900,
-        "y" : 215
+        "x" : 0,
+        "y" : 0
       }, {
         "id" : "4",
-        "x" : 1650,
-        "y" : 215
+        "x" : 0,
+        "y" : 0
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "Diagram2",
