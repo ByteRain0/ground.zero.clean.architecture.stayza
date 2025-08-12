@@ -148,142 +148,565 @@
   },
   "id" : 1,
   "lastModifiedAgent" : "structurizr-ui",
-  "lastModifiedDate" : "2025-08-11T18:24:53Z",
+  "lastModifiedDate" : "2025-08-12T20:12:41Z",
   "model" : {
     "people" : [ {
-      "id" : "1",
+      "id" : "72",
       "location" : "Unspecified",
       "name" : "User",
       "properties" : {
-        "structurizr.dsl.identifier" : "u"
+        "structurizr.dsl.identifier" : "user"
       },
       "relationships" : [ {
         "description" : "Uses",
-        "destinationId" : "3",
-        "id" : "8",
-        "sourceId" : "1",
+        "destinationId" : "70",
+        "id" : "73",
+        "sourceId" : "72",
         "tags" : "Relationship"
       }, {
         "description" : "Uses",
-        "destinationId" : "2",
-        "id" : "9",
-        "linkedRelationshipId" : "8",
-        "sourceId" : "1"
+        "destinationId" : "1",
+        "id" : "74",
+        "linkedRelationshipId" : "73",
+        "sourceId" : "72"
       } ],
       "tags" : "Element,Person"
     } ],
     "softwareSystems" : [ {
       "containers" : [ {
+        "description" : "Management dashboard used for local development",
+        "documentation" : { },
+        "id" : "2",
+        "name" : "Aspire Dashboard",
+        "properties" : {
+          "structurizr.dsl.identifier" : "stayza_software_system.aspire_dashboard"
+        },
+        "tags" : "Element,Container,AspireBase"
+      }, {
         "documentation" : { },
         "id" : "3",
-        "name" : "Front end app",
+        "name" : "Telemetry Collector",
         "properties" : {
-          "structurizr.dsl.identifier" : "ss.fe"
+          "structurizr.dsl.identifier" : "stayza_software_system.telemetry_collector"
         },
         "relationships" : [ {
-          "description" : "Integrates via HTTP",
-          "destinationId" : "4",
-          "id" : "10",
+          "description" : "Push telemetry",
+          "destinationId" : "2",
+          "id" : "4",
           "sourceId" : "3",
           "tags" : "Relationship"
         } ],
         "tags" : "Element,Container"
       }, {
         "documentation" : { },
-        "id" : "4",
-        "name" : ".NET Api",
-        "properties" : {
-          "structurizr.dsl.identifier" : "ss.api"
-        },
-        "relationships" : [ {
-          "description" : "Reads from and writes to",
-          "destinationId" : "7",
-          "id" : "11",
-          "sourceId" : "4",
-          "tags" : "Relationship"
-        }, {
-          "description" : "Integrates via HTTP",
-          "destinationId" : "5",
-          "id" : "12",
-          "sourceId" : "4",
-          "tags" : "Relationship"
-        }, {
-          "description" : "Readns and writes to",
-          "destinationId" : "6",
-          "id" : "13",
-          "sourceId" : "4",
-          "tags" : "Relationship"
-        } ],
-        "tags" : "Element,Container"
-      }, {
-        "documentation" : { },
         "id" : "5",
-        "name" : "Notification System",
-        "properties" : {
-          "structurizr.dsl.identifier" : "ss.ns"
-        },
-        "tags" : "Element,Container"
-      }, {
-        "documentation" : { },
-        "id" : "6",
         "name" : "RabbitMq message broker",
         "properties" : {
-          "structurizr.dsl.identifier" : "ss.mb"
+          "structurizr.dsl.identifier" : "stayza_software_system.stayza_message_broker"
         },
         "tags" : "Element,Container,Messagebroker"
       }, {
         "documentation" : { },
-        "id" : "7",
+        "id" : "6",
         "name" : "Database",
         "properties" : {
-          "structurizr.dsl.identifier" : "ss.db"
+          "structurizr.dsl.identifier" : "stayza_software_system.stayza_database"
         },
         "tags" : "Element,Container,Database"
+      }, {
+        "documentation" : { },
+        "id" : "7",
+        "name" : "Notification API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "stayza_software_system.stayza_notification_api"
+        },
+        "tags" : "Element,Container,Service"
+      }, {
+        "components" : [ {
+          "documentation" : { },
+          "group" : "Utilities",
+          "id" : "13",
+          "name" : "Runtime diagnostic config",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.otel"
+          },
+          "relationships" : [ {
+            "destinationId" : "3",
+            "id" : "14",
+            "sourceId" : "13",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,UtilitiesComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Utilities",
+          "id" : "15",
+          "name" : "TickerQ",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.tickerq"
+          },
+          "relationships" : [ {
+            "destinationId" : "6",
+            "id" : "16",
+            "sourceId" : "15",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,UtilitiesComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Utilities",
+          "id" : "17",
+          "name" : "RabbitMq publisher",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.rabbitmq_publisher"
+          },
+          "relationships" : [ {
+            "destinationId" : "5",
+            "id" : "18",
+            "sourceId" : "17",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,UtilitiesComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Utilities",
+          "id" : "19",
+          "name" : "Link generator",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.link_generator"
+          },
+          "tags" : "Element,Component,UtilitiesComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Utilities",
+          "id" : "20",
+          "name" : "Claims identity",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.claims_identity"
+          },
+          "tags" : "Element,Component,UtilitiesComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Book sub-domain",
+          "id" : "21",
+          "name" : "Book Aggregate Root",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.book_aggregate_root"
+          },
+          "tags" : "Element,Component,DomainLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Book sub-domain",
+          "id" : "22",
+          "name" : "Book repository interface",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.book_repository_interface"
+          },
+          "relationships" : [ {
+            "description" : "Create/Update/Delete operations on AR",
+            "destinationId" : "21",
+            "id" : "23",
+            "sourceId" : "22",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,DomainLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Book sub-domain",
+          "id" : "24",
+          "name" : "Book Repository",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.book_repository"
+          },
+          "relationships" : [ {
+            "description" : "Implements",
+            "destinationId" : "22",
+            "id" : "25",
+            "sourceId" : "24",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Store and retrieve data",
+            "destinationId" : "58",
+            "id" : "68",
+            "sourceId" : "24",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,InfrastructureLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Book sub-domain",
+          "id" : "26",
+          "name" : "Book service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.book_service"
+          },
+          "relationships" : [ {
+            "destinationId" : "22",
+            "id" : "27",
+            "sourceId" : "26",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "documentation" : { },
+          "group" : "Book sub-domain",
+          "id" : "28",
+          "name" : "Book endpoints",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.book_endpoints"
+          },
+          "relationships" : [ {
+            "destinationId" : "26",
+            "id" : "29",
+            "sourceId" : "28",
+            "tags" : "Relationship"
+          }, {
+            "destinationId" : "19",
+            "id" : "30",
+            "sourceId" : "28",
+            "tags" : "Relationship"
+          }, {
+            "destinationId" : "20",
+            "id" : "31",
+            "sourceId" : "28",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,ApiLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "32",
+          "name" : "Loan",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.loan_entity"
+          },
+          "tags" : "Element,Component,DomainLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "33",
+          "name" : "Reservation",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.reservation_entity"
+          },
+          "tags" : "Element,Component,DomainLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "34",
+          "name" : "Book copy Aggregate Root",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.book_copy_aggregate_root"
+          },
+          "relationships" : [ {
+            "destinationId" : "32",
+            "id" : "35",
+            "sourceId" : "34",
+            "tags" : "Relationship"
+          }, {
+            "destinationId" : "33",
+            "id" : "36",
+            "sourceId" : "34",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,DomainLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "37",
+          "name" : "Loans repository interface",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.loans_repository_interface"
+          },
+          "relationships" : [ {
+            "destinationId" : "34",
+            "id" : "38",
+            "sourceId" : "37",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,DomainLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "39",
+          "name" : "Loans repository",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.loans_repository"
+          },
+          "relationships" : [ {
+            "description" : "Implement",
+            "destinationId" : "37",
+            "id" : "40",
+            "sourceId" : "39",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Store and retrieve data",
+            "destinationId" : "58",
+            "id" : "69",
+            "sourceId" : "39",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,InfrastructureLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "41",
+          "name" : "IUserNotification service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.user_notifications_service_interface"
+          },
+          "tags" : "Element,Component,DomainLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "42",
+          "name" : "User Notification service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.user_notification_service"
+          },
+          "relationships" : [ {
+            "destinationId" : "41",
+            "id" : "43",
+            "sourceId" : "42",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Send notifications",
+            "destinationId" : "7",
+            "id" : "44",
+            "sourceId" : "42",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,InfrastructureLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "45",
+          "name" : "Loans background jobs",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.loans_background_jobs"
+          },
+          "relationships" : [ {
+            "description" : "Use to fetch/update reservations",
+            "destinationId" : "37",
+            "id" : "46",
+            "sourceId" : "45",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Send user alerts",
+            "destinationId" : "41",
+            "id" : "47",
+            "sourceId" : "45",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "48",
+          "name" : "Book copy returned event handler",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.book_copy_returned_event_handler"
+          },
+          "relationships" : [ {
+            "description" : "Subscribe to events",
+            "destinationId" : "5",
+            "id" : "49",
+            "sourceId" : "48",
+            "tags" : "Relationship"
+          }, {
+            "destinationId" : "37",
+            "id" : "50",
+            "sourceId" : "48",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "51",
+          "name" : "Reservation fufilled event handler",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.reservation_fufilled_event_handler"
+          },
+          "relationships" : [ {
+            "description" : "Subscribe to events",
+            "destinationId" : "5",
+            "id" : "52",
+            "sourceId" : "51",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Notify user",
+            "destinationId" : "41",
+            "id" : "53",
+            "sourceId" : "51",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "54",
+          "name" : "Loans service",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.loans_service"
+          },
+          "relationships" : [ {
+            "destinationId" : "37",
+            "id" : "55",
+            "sourceId" : "54",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component"
+        }, {
+          "documentation" : { },
+          "group" : "Loans sub-domain",
+          "id" : "56",
+          "name" : "Loans endpoints",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.loans_endpoints"
+          },
+          "relationships" : [ {
+            "description" : "Uses",
+            "destinationId" : "54",
+            "id" : "57",
+            "sourceId" : "56",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,ApiLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Persistence setup",
+          "id" : "58",
+          "name" : "EF Core context",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.ef_core_db_context"
+          },
+          "relationships" : [ {
+            "description" : "Store and Retrieve data",
+            "destinationId" : "6",
+            "id" : "59",
+            "sourceId" : "58",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Set up",
+            "destinationId" : "15",
+            "id" : "60",
+            "sourceId" : "58",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,InfrastructureLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Persistence setup",
+          "id" : "61",
+          "name" : "EF Core interceptor",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.ef_core_domain_events_interceptor"
+          },
+          "relationships" : [ {
+            "description" : "Intercept SaveChanges()",
+            "destinationId" : "58",
+            "id" : "62",
+            "sourceId" : "61",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Publish domain events",
+            "destinationId" : "17",
+            "id" : "63",
+            "sourceId" : "61",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,InfrastructureLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Persistence setup",
+          "id" : "64",
+          "name" : "Domain model configurations",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.ef_core_domain_model_configurations"
+          },
+          "relationships" : [ {
+            "destinationId" : "58",
+            "id" : "65",
+            "sourceId" : "64",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,InfrastructureLayerComponent"
+        }, {
+          "documentation" : { },
+          "group" : "Persistence setup",
+          "id" : "66",
+          "name" : "Domain data seed",
+          "properties" : {
+            "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api.ef_core_data_seed"
+          },
+          "relationships" : [ {
+            "destinationId" : "58",
+            "id" : "67",
+            "sourceId" : "66",
+            "tags" : "Relationship"
+          } ],
+          "tags" : "Element,Component,InfrastructureLayerComponent"
+        } ],
+        "documentation" : { },
+        "id" : "8",
+        "name" : "Stayza API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_api"
+        },
+        "relationships" : [ {
+          "destinationId" : "6",
+          "id" : "9",
+          "sourceId" : "8",
+          "tags" : "Relationship"
+        }, {
+          "destinationId" : "5",
+          "id" : "10",
+          "sourceId" : "8",
+          "tags" : "Relationship"
+        }, {
+          "destinationId" : "7",
+          "id" : "11",
+          "sourceId" : "8",
+          "tags" : "Relationship"
+        }, {
+          "destinationId" : "3",
+          "id" : "12",
+          "sourceId" : "8",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container,Service"
+      }, {
+        "documentation" : { },
+        "id" : "70",
+        "name" : "Stayza Web App",
+        "properties" : {
+          "structurizr.dsl.identifier" : "stayza_software_system.stayza_web_app"
+        },
+        "relationships" : [ {
+          "destinationId" : "8",
+          "id" : "71",
+          "sourceId" : "70",
+          "tags" : "Relationship"
+        } ],
+        "tags" : "Element,Container"
       } ],
       "documentation" : { },
-      "id" : "2",
+      "id" : "1",
       "location" : "Unspecified",
       "name" : "Stayza software system",
       "properties" : {
-        "structurizr.dsl.identifier" : "ss"
+        "structurizr.dsl.identifier" : "stayza_software_system"
       },
       "tags" : "Element,Software System"
     } ]
   },
   "name" : "Name",
   "properties" : {
-    "structurizr.dsl" : "d29ya3NwYWNlICJOYW1lIiAiRGVzY3JpcHRpb24iIHsKCiAgICAhYWRycyBkZWNpc2lvbnMKICAgICFpZGVudGlmaWVycyBoaWVyYXJjaGljYWwKCiAgICBtb2RlbCB7CiAgICAgICAgdSA9IHBlcnNvbiAiVXNlciIKICAgICAgICBzcyA9IHNvZnR3YXJlU3lzdGVtICJTdGF5emEgc29mdHdhcmUgc3lzdGVtIiB7CiAgICAgICAgICAgIGZlID0gY29udGFpbmVyICJGcm9udCBlbmQgYXBwIgogICAgICAgICAgICBhcGkgPSBjb250YWluZXIgIi5ORVQgQXBpIgogICAgICAgICAgICBucyA9IGNvbnRhaW5lciAiTm90aWZpY2F0aW9uIFN5c3RlbSIKICAgICAgICAgICAgbWIgPSBjb250YWluZXIgIlJhYmJpdE1xIG1lc3NhZ2UgYnJva2VyInsKICAgICAgICAgICAgICAgIHRhZ3MgIk1lc3NhZ2Vicm9rZXIiCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZGIgPSBjb250YWluZXIgIkRhdGFiYXNlIiB7CiAgICAgICAgICAgICAgICB0YWdzICJEYXRhYmFzZSIKICAgICAgICAgICAgfQogICAgICAgIH0KCiAgICAgICAgdSAtPiBzcy5mZSAiVXNlcyIKICAgICAgICBzcy5mZSAtPiBzcy5hcGkgIkludGVncmF0ZXMgdmlhIEhUVFAiIAogICAgICAgIHNzLmFwaSAtPiBzcy5kYiAiUmVhZHMgZnJvbSBhbmQgd3JpdGVzIHRvIgogICAgICAgIHNzLmFwaSAtPiBzcy5ucyAiSW50ZWdyYXRlcyB2aWEgSFRUUCIKICAgICAgICBzcy5hcGkgLT4gc3MubWIgIlJlYWRucyBhbmQgd3JpdGVzIHRvIgogICAgfQoKICAgIHZpZXdzIHsKICAgICAgICBzeXN0ZW1Db250ZXh0IHNzICJEaWFncmFtMSIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgY29udGFpbmVyIHNzICJEaWFncmFtMiIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KCiAgICAgICAgc3R5bGVzIHsKICAgICAgICAgICAgZWxlbWVudCAiRWxlbWVudCIgewogICAgICAgICAgICAgICAgY29sb3IgI2ZmZmZmZgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlBlcnNvbiIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjYmExZTc1CiAgICAgICAgICAgICAgICBzaGFwZSBwZXJzb24KICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJTb2Z0d2FyZSBTeXN0ZW0iIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgI2Q5MjM4OQogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkNvbnRhaW5lciIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjZjgyODljCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRGF0YWJhc2UiIHsKICAgICAgICAgICAgICAgIHNoYXBlIGN5bGluZGVyCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiTWVzc2FnZWJyb2tlciIgewogICAgICAgICAgICAgICAgc2hhcGUgUGlwZQogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQoKICAgIGNvbmZpZ3VyYXRpb24gewogICAgICAgIHNjb3BlIHNvZnR3YXJlc3lzdGVtCiAgICB9Cgp9"
+    "structurizr.dsl" : "d29ya3NwYWNlICJOYW1lIiAiRGVzY3JpcHRpb24iIHsKCiAgICAhYWRycyBkZWNpc2lvbnMKICAgICFpZGVudGlmaWVycyBoaWVyYXJjaGljYWwKCiAgICBtb2RlbCB7CiAgICAgICAgc3RheXphX3NvZnR3YXJlX3N5c3RlbSA9IHNvZnR3YXJlU3lzdGVtICJTdGF5emEgc29mdHdhcmUgc3lzdGVtIiB7CgogICAgICAgICAgICBhc3BpcmVfZGFzaGJvYXJkID0gY29udGFpbmVyICJBc3BpcmUgRGFzaGJvYXJkIiAiTWFuYWdlbWVudCBkYXNoYm9hcmQgdXNlZCBmb3IgbG9jYWwgZGV2ZWxvcG1lbnQiIHsKICAgICAgICAgICAgICAgIHRhZ3MgIkFzcGlyZUJhc2UiCiAgICAgICAgICAgIH0KICAgICAgICAgICAgCiAgICAgICAgICAgIHRlbGVtZXRyeV9jb2xsZWN0b3IgPSBjb250YWluZXIgIlRlbGVtZXRyeSBDb2xsZWN0b3IiIHsKICAgICAgICAgICAgICAgIC0+IGFzcGlyZV9kYXNoYm9hcmQgIlB1c2ggdGVsZW1ldHJ5IgogICAgICAgICAgICB9CgogICAgICAgICAgICBzdGF5emFfbWVzc2FnZV9icm9rZXIgPSBjb250YWluZXIgIlJhYmJpdE1xIG1lc3NhZ2UgYnJva2VyInsKICAgICAgICAgICAgICAgIHRhZ3MgIk1lc3NhZ2Vicm9rZXIiCiAgICAgICAgICAgIH0KCiAgICAgICAgICAgIHN0YXl6YV9kYXRhYmFzZSA9IGNvbnRhaW5lciAiRGF0YWJhc2UiIHsKICAgICAgICAgICAgICAgIHRhZ3MgIkRhdGFiYXNlIgogICAgICAgICAgICB9CiAgICAgICAgICAgIAogICAgICAgICAgICBzdGF5emFfbm90aWZpY2F0aW9uX2FwaSA9IGNvbnRhaW5lciAiTm90aWZpY2F0aW9uIEFQSSIgewogICAgICAgICAgICAgICAgdGFncyAiU2VydmljZSIKICAgICAgICAgICAgfQogICAgICAgICAgICAKICAgICAgICAgICAgc3RheXphX3dlYl9hcGkgPSBjb250YWluZXIgIlN0YXl6YSBBUEkiIHsKICAgICAgICAgICAgICAgIHRhZ3MgIlNlcnZpY2UiCiAgICAgICAgICAgICAgICAtPiBzdGF5emFfZGF0YWJhc2UKICAgICAgICAgICAgICAgIC0+IHN0YXl6YV9tZXNzYWdlX2Jyb2tlcgogICAgICAgICAgICAgICAgLT4gc3RheXphX25vdGlmaWNhdGlvbl9hcGkKICAgICAgICAgICAgICAgIC0+IHRlbGVtZXRyeV9jb2xsZWN0b3IKICAgICAgICAgICAgICAgIAogICAgICAgICAgICAgICAgZ3JvdXAgIlV0aWxpdGllcyIgewogICAgICAgICAgICAgICAgICAgIG90ZWwgPSBjb21wb25lbnQgIlJ1bnRpbWUgZGlhZ25vc3RpYyBjb25maWciIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyBVdGlsaXRpZXNDb21wb25lbnQKICAgICAgICAgICAgICAgICAgICAgICAgLT4gdGVsZW1ldHJ5X2NvbGxlY3RvcgogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICB0aWNrZXJxID0gY29tcG9uZW50ICJUaWNrZXJRIiB7CiAgICAgICAgICAgICAgICAgICAgICAgIHRhZ3MgVXRpbGl0aWVzQ29tcG9uZW50CiAgICAgICAgICAgICAgICAgICAgICAgIC0+IHN0YXl6YV9kYXRhYmFzZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICByYWJiaXRtcV9wdWJsaXNoZXIgPSBjb21wb25lbnQgIlJhYmJpdE1xIHB1Ymxpc2hlciIgewogICAgICAgICAgICAgICAgICAgICAgICB0YWdzIFV0aWxpdGllc0NvbXBvbmVudAogICAgICAgICAgICAgICAgICAgICAgICAtPiBzdGF5emFfbWVzc2FnZV9icm9rZXIKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgbGlua19nZW5lcmF0b3IgPSBjb21wb25lbnQgIkxpbmsgZ2VuZXJhdG9yIiB7CiAgICAgICAgICAgICAgICAgICAgICAgIHRhZ3MgVXRpbGl0aWVzQ29tcG9uZW50CiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIGNsYWltc19pZGVudGl0eSA9IGNvbXBvbmVudCAiQ2xhaW1zIGlkZW50aXR5IiB7CiAgICAgICAgICAgICAgICAgICAgICAgIHRhZ3MgVXRpbGl0aWVzQ29tcG9uZW50CiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICBncm91cCAiQm9vayBzdWItZG9tYWluIiB7CiAgICAgICAgICAgICAgICAgICAgYm9va19hZ2dyZWdhdGVfcm9vdCA9IGNvbXBvbmVudCAiQm9vayBBZ2dyZWdhdGUgUm9vdCIgewogICAgICAgICAgICAgICAgICAgICAgICB0YWdzICJEb21haW5MYXllckNvbXBvbmVudCIKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgYm9va19yZXBvc2l0b3J5X2ludGVyZmFjZSA9IGNvbXBvbmVudCAiQm9vayByZXBvc2l0b3J5IGludGVyZmFjZSIgewogICAgICAgICAgICAgICAgICAgICAgICB0YWdzICJEb21haW5MYXllckNvbXBvbmVudCIKICAgICAgICAgICAgICAgICAgICAgICAgLT4gYm9va19hZ2dyZWdhdGVfcm9vdCAiQ3JlYXRlL1VwZGF0ZS9EZWxldGUgb3BlcmF0aW9ucyBvbiBBUiIKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgYm9va19yZXBvc2l0b3J5ID0gY29tcG9uZW50ICJCb29rIFJlcG9zaXRvcnkiIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiSW5mcmFzdHJ1Y3R1cmVMYXllckNvbXBvbmVudCIKICAgICAgICAgICAgICAgICAgICAgICAgLT4gYm9va19yZXBvc2l0b3J5X2ludGVyZmFjZSAiSW1wbGVtZW50cyIKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgYm9va19zZXJ2aWNlID0gY29tcG9uZW50ICJCb29rIHNlcnZpY2UiIHsKICAgICAgICAgICAgICAgICAgICAgICAgLT4gYm9va19yZXBvc2l0b3J5X2ludGVyZmFjZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICBib29rX2VuZHBvaW50cyA9IGNvbXBvbmVudCAiQm9vayBlbmRwb2ludHMiIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiQXBpTGF5ZXJDb21wb25lbnQiCiAgICAgICAgICAgICAgICAgICAgICAgIC0+IGJvb2tfc2VydmljZQogICAgICAgICAgICAgICAgICAgICAgICAtPiBsaW5rX2dlbmVyYXRvcgogICAgICAgICAgICAgICAgICAgICAgICAtPiBjbGFpbXNfaWRlbnRpdHkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgIGdyb3VwICJMb2FucyBzdWItZG9tYWluIiB7CiAgICAgICAgICAgICAgICAgICAgbG9hbl9lbnRpdHkgPSBjb21wb25lbnQgIkxvYW4iIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiRG9tYWluTGF5ZXJDb21wb25lbnQiCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIHJlc2VydmF0aW9uX2VudGl0eSA9IGNvbXBvbmVudCAiUmVzZXJ2YXRpb24iIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiRG9tYWluTGF5ZXJDb21wb25lbnQiCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIGJvb2tfY29weV9hZ2dyZWdhdGVfcm9vdCA9IGNvbXBvbmVudCAiQm9vayBjb3B5IEFnZ3JlZ2F0ZSBSb290IiB7CiAgICAgICAgICAgICAgICAgICAgICAgIHRhZ3MgIkRvbWFpbkxheWVyQ29tcG9uZW50IgogICAgICAgICAgICAgICAgICAgICAgICAtPiBsb2FuX2VudGl0eQogICAgICAgICAgICAgICAgICAgICAgICAtPiByZXNlcnZhdGlvbl9lbnRpdHkKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgbG9hbnNfcmVwb3NpdG9yeV9pbnRlcmZhY2UgPSBjb21wb25lbnQgIkxvYW5zIHJlcG9zaXRvcnkgaW50ZXJmYWNlIiB7CiAgICAgICAgICAgICAgICAgICAgICAgIHRhZ3MgIkRvbWFpbkxheWVyQ29tcG9uZW50IgogICAgICAgICAgICAgICAgICAgICAgICAtPiBib29rX2NvcHlfYWdncmVnYXRlX3Jvb3QKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgbG9hbnNfcmVwb3NpdG9yeSA9IGNvbXBvbmVudCAiTG9hbnMgcmVwb3NpdG9yeSIgewogICAgICAgICAgICAgICAgICAgICAgICB0YWdzICJJbmZyYXN0cnVjdHVyZUxheWVyQ29tcG9uZW50IgogICAgICAgICAgICAgICAgICAgICAgICAtPiBsb2Fuc19yZXBvc2l0b3J5X2ludGVyZmFjZSAiSW1wbGVtZW50IgogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICB1c2VyX25vdGlmaWNhdGlvbnNfc2VydmljZV9pbnRlcmZhY2UgPSBjb21wb25lbnQgIklVc2VyTm90aWZpY2F0aW9uIHNlcnZpY2UiIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiRG9tYWluTGF5ZXJDb21wb25lbnQiCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIHVzZXJfbm90aWZpY2F0aW9uX3NlcnZpY2UgPSBjb21wb25lbnQgIlVzZXIgTm90aWZpY2F0aW9uIHNlcnZpY2UiIHsKICAgICAgICAgICAgICAgICAgICAgICAgdGFncyAiSW5mcmFzdHJ1Y3R1cmVMYXllckNvbXBvbmVudCIKICAgICAgICAgICAgICAgICAgICAgICAgLT4gdXNlcl9ub3RpZmljYXRpb25zX3NlcnZpY2VfaW50ZXJmYWNlCiAgICAgICAgICAgICAgICAgICAgICAgIC0+IHN0YXl6YV9ub3RpZmljYXRpb25fYXBpICJTZW5kIG5vdGlmaWNhdGlvbnMiCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIGxvYW5zX2JhY2tncm91bmRfam9icyA9IGNvbXBvbmVudCAiTG9hbnMgYmFja2dyb3VuZCBqb2JzIiB7CiAgICAgICAgICAgICAgICAgICAgICAgIC0+IGxvYW5zX3JlcG9zaXRvcnlfaW50ZXJmYWNlICJVc2UgdG8gZmV0Y2gvdXBkYXRlIHJlc2VydmF0aW9ucyIKICAgICAgICAgICAgICAgICAgICAgICAgLT4gdXNlcl9ub3RpZmljYXRpb25zX3NlcnZpY2VfaW50ZXJmYWNlICJTZW5kIHVzZXIgYWxlcnRzIgogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICBib29rX2NvcHlfcmV0dXJuZWRfZXZlbnRfaGFuZGxlciA9IGNvbXBvbmVudCAiQm9vayBjb3B5IHJldHVybmVkIGV2ZW50IGhhbmRsZXIiIHsKICAgICAgICAgICAgICAgICAgICAgICAgLT4gc3RheXphX21lc3NhZ2VfYnJva2VyICJTdWJzY3JpYmUgdG8gZXZlbnRzIgogICAgICAgICAgICAgICAgICAgICAgICAtPiBsb2Fuc19yZXBvc2l0b3J5X2ludGVyZmFjZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICByZXNlcnZhdGlvbl9mdWZpbGxlZF9ldmVudF9oYW5kbGVyID0gY29tcG9uZW50ICJSZXNlcnZhdGlvbiBmdWZpbGxlZCBldmVudCBoYW5kbGVyIiB7CiAgICAgICAgICAgICAgICAgICAgICAgIC0+IHN0YXl6YV9tZXNzYWdlX2Jyb2tlciAiU3Vic2NyaWJlIHRvIGV2ZW50cyIKICAgICAgICAgICAgICAgICAgICAgICAgLT4gdXNlcl9ub3RpZmljYXRpb25zX3NlcnZpY2VfaW50ZXJmYWNlICJOb3RpZnkgdXNlciIKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgbG9hbnNfc2VydmljZSA9IGNvbXBvbmVudCAiTG9hbnMgc2VydmljZSIgewogICAgICAgICAgICAgICAgICAgICAgICAtPiBsb2Fuc19yZXBvc2l0b3J5X2ludGVyZmFjZQogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICBsb2Fuc19lbmRwb2ludHMgPSBjb21wb25lbnQgIkxvYW5zIGVuZHBvaW50cyIgewogICAgICAgICAgICAgICAgICAgICAgICB0YWdzICJBcGlMYXllckNvbXBvbmVudCIKICAgICAgICAgICAgICAgICAgICAgICAgLT4gbG9hbnNfc2VydmljZSAiVXNlcyIKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgIGdyb3VwICJVc2VycyBzdWItZG9tYWluIiB7CiAgICAgICAgICAgICAgICAgICAgIyBPbWl0dGVkIGZvciBicmV2aXR5LgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICBncm91cCAiUGVyc2lzdGVuY2Ugc2V0dXAiIHsKICAgICAgICAgICAgICAgICAgICBlZl9jb3JlX2RiX2NvbnRleHQgPSBjb21wb25lbnQgIkVGIENvcmUgY29udGV4dCIgewogICAgICAgICAgICAgICAgICAgICAgICB0YWdzICJJbmZyYXN0cnVjdHVyZUxheWVyQ29tcG9uZW50IgogICAgICAgICAgICAgICAgICAgICAgICAtPiBzdGF5emFfZGF0YWJhc2UgIlN0b3JlIGFuZCBSZXRyaWV2ZSBkYXRhIgogICAgICAgICAgICAgICAgICAgICAgICAtPiB0aWNrZXJxICJTZXQgdXAiCiAgICAgICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgICAgIGVmX2NvcmVfZG9tYWluX2V2ZW50c19pbnRlcmNlcHRvciA9IGNvbXBvbmVudCAiRUYgQ29yZSBpbnRlcmNlcHRvciJ7CiAgICAgICAgICAgICAgICAgICAgICAgIHRhZ3MgIkluZnJhc3RydWN0dXJlTGF5ZXJDb21wb25lbnQiCiAgICAgICAgICAgICAgICAgICAgICAgIC0+IGVmX2NvcmVfZGJfY29udGV4dCAiSW50ZXJjZXB0IFNhdmVDaGFuZ2VzKCkiCiAgICAgICAgICAgICAgICAgICAgICAgIC0+IHJhYmJpdG1xX3B1Ymxpc2hlciAiUHVibGlzaCBkb21haW4gZXZlbnRzIgogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICBlZl9jb3JlX2RvbWFpbl9tb2RlbF9jb25maWd1cmF0aW9ucyA9IGNvbXBvbmVudCAiRG9tYWluIG1vZGVsIGNvbmZpZ3VyYXRpb25zIiB7CiAgICAgICAgICAgICAgICAgICAgICAgIHRhZ3MgIkluZnJhc3RydWN0dXJlTGF5ZXJDb21wb25lbnQiCiAgICAgICAgICAgICAgICAgICAgICAgIC0+IGVmX2NvcmVfZGJfY29udGV4dAogICAgICAgICAgICAgICAgICAgIH0KICAgICAgICAgICAgICAgICAgICBlZl9jb3JlX2RhdGFfc2VlZCA9IGNvbXBvbmVudCAiRG9tYWluIGRhdGEgc2VlZCIgewogICAgICAgICAgICAgICAgICAgICAgICB0YWdzICJJbmZyYXN0cnVjdHVyZUxheWVyQ29tcG9uZW50IgogICAgICAgICAgICAgICAgICAgICAgICAtPiBlZl9jb3JlX2RiX2NvbnRleHQKICAgICAgICAgICAgICAgICAgICB9CiAgICAgICAgICAgICAgICAgICAgYm9va19yZXBvc2l0b3J5IC0+IGVmX2NvcmVfZGJfY29udGV4dCAiU3RvcmUgYW5kIHJldHJpZXZlIGRhdGEiCiAgICAgICAgICAgICAgICAgICAgbG9hbnNfcmVwb3NpdG9yeSAtPiBlZl9jb3JlX2RiX2NvbnRleHQgIlN0b3JlIGFuZCByZXRyaWV2ZSBkYXRhIgogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAKICAgICAgICAgICAgICAgIAogICAgICAgICAgICB9CiAgICAgICAgICAgIAogICAgICAgICAgICBzdGF5emFfd2ViX2FwcCA9IGNvbnRhaW5lciAiU3RheXphIFdlYiBBcHAiIHsKICAgICAgICAgICAgICAgIC0+IHN0YXl6YV93ZWJfYXBpCiAgICAgICAgICAgIH0KCgogICAgICAgIH0KCiAgICAgICAgdXNlciA9IHBlcnNvbiAiVXNlciIgewogICAgICAgICAgICAtPiBzdGF5emFfc29mdHdhcmVfc3lzdGVtLnN0YXl6YV93ZWJfYXBwICJVc2VzIgogICAgICAgIH0KCiAgICB9CgogICAgdmlld3MgewogICAgICAgIHN5c3RlbUNvbnRleHQgc3RheXphX3NvZnR3YXJlX3N5c3RlbSAiRGlhZ3JhbTEiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CgogICAgICAgIGNvbnRhaW5lciBzdGF5emFfc29mdHdhcmVfc3lzdGVtICJzb2Z0d2FyZV9zeXN0ZW1fdmlldyIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KICAgICAgICBjb21wb25lbnQgc3RheXphX3NvZnR3YXJlX3N5c3RlbS5zdGF5emFfd2ViX2FwaSAiYXBpX2NvbXBvbmVudF92aWV3IiB7CiAgICAgICAgICAgIGluY2x1ZGUgKgogICAgICAgICAgICBhdXRvbGF5b3V0IGxyCiAgICAgICAgfQoKICAgICAgICBzdHlsZXMgewogICAgICAgICAgICBlbGVtZW50ICJFbGVtZW50IiB7CiAgICAgICAgICAgICAgICBjb2xvciAjZmZmZmZmCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiUGVyc29uIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICMwNDhjMDQKICAgICAgICAgICAgICAgIHNoYXBlIHBlcnNvbgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlNvZnR3YXJlIFN5c3RlbSIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjMDQ3ODA0CiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQ29udGFpbmVyIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICM1NWFhNTUKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJDb21wb25lbnQiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzU1YWE1NQogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIlV0aWxpdGllc0NvbXBvbmVudCJ7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICM0NDQ1NDMKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJEb21haW5MYXllckNvbXBvbmVudCIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjYWI5YTAzCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQXBwbGljYXRpb25MYXllckNvbXBvbmVudCIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjMzk1NzAzCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiSW5mcmFzdHJ1Y3R1cmVMYXllckNvbXBvbmVudCIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjNTcwMzFjCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQXBpTGF5ZXJDb21wb25lbnQiewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjMDQ2OTg3CiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiQXNwaXJlQmFzZSIgewogICAgICAgICAgICAgICAgYmFja2dyb3VuZCAjNzI0MmY1CiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRGF0YWJhc2UiIHsKICAgICAgICAgICAgICAgIHNoYXBlIGN5bGluZGVyCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiTWVzc2FnZWJyb2tlciIgewogICAgICAgICAgICAgICAgc2hhcGUgUGlwZQogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIldlYkJyb3dzZXIiIHsKICAgICAgICAgICAgICAgIHNoYXBlIFdpbmRvdwogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIk1vYmlsZUFwcCIgewogICAgICAgICAgICAgICAgc2hhcGUgTW9iaWxlRGV2aWNlUG9ydHJhaXQKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJTZXJ2aWNlIiB7CiAgICAgICAgICAgICAgICBzaGFwZSBoZXhhZ29uCiAgICAgICAgICAgIH0KICAgICAgICAgICAgZWxlbWVudCAiRmlsZVN0b3JhZ2UiIHsKICAgICAgICAgICAgICAgIHNoYXBlIGZvbGRlcgogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkV4dGVybmFsQWN0b3IiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgIzk5OTk5OQogICAgICAgICAgICB9CiAgICAgICAgICAgIGVsZW1lbnQgIkV4dGVybmFsU3lzdGVtIiB7CiAgICAgICAgICAgICAgICBiYWNrZ3JvdW5kICM5OTk5OTkKICAgICAgICAgICAgfQogICAgICAgICAgICBlbGVtZW50ICJPYnNlcnZhYmlsaXR5QkUiIHsKICAgICAgICAgICAgICAgIGJhY2tncm91bmQgI2ViYzkzNAogICAgICAgICAgICB9CiAgICAgICAgfQogICAgfQoKICAgIGNvbmZpZ3VyYXRpb24gewogICAgICAgIHNjb3BlIHNvZnR3YXJlc3lzdGVtCiAgICB9Cgp9"
   },
   "views" : {
-    "configuration" : {
-      "branding" : { },
-      "lastSavedView" : "Diagram1",
-      "metadataSymbols" : "SquareBrackets",
-      "styles" : {
-        "elements" : [ {
-          "color" : "#ffffff",
-          "tag" : "Element"
-        }, {
-          "background" : "#ba1e75",
-          "shape" : "Person",
-          "tag" : "Person"
-        }, {
-          "background" : "#d92389",
-          "tag" : "Software System"
-        }, {
-          "background" : "#f8289c",
-          "tag" : "Container"
-        }, {
-          "shape" : "Cylinder",
-          "tag" : "Database"
-        }, {
-          "shape" : "Pipe",
-          "tag" : "Messagebroker"
-        } ]
-      },
-      "terminology" : { }
-    },
-    "containerViews" : [ {
+    "componentViews" : [ {
       "automaticLayout" : {
         "applied" : true,
         "edgeSeparation" : 0,
@@ -293,37 +716,404 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
+      "containerId" : "8",
       "dimensions" : {
-        "height" : 2011,
-        "width" : 3070
+        "height" : 10809,
+        "width" : 3930
       },
       "elements" : [ {
-        "id" : "1",
-        "x" : 200,
-        "y" : 735
-      }, {
         "id" : "3",
-        "x" : 900,
-        "y" : 785
-      }, {
-        "id" : "4",
-        "x" : 1650,
-        "y" : 785
+        "x" : 3239,
+        "y" : 165
       }, {
         "id" : "5",
-        "x" : 2400,
-        "y" : 1385
+        "x" : 3239,
+        "y" : 9819
       }, {
         "id" : "6",
-        "x" : 2400,
-        "y" : 785
+        "x" : 3239,
+        "y" : 9219
       }, {
         "id" : "7",
-        "x" : 2400,
-        "y" : 185
+        "x" : 1739,
+        "y" : 10124
+      }, {
+        "id" : "13",
+        "x" : 2489,
+        "y" : 6207
+      }, {
+        "id" : "15",
+        "x" : 2489,
+        "y" : 8007
+      }, {
+        "id" : "17",
+        "x" : 2489,
+        "y" : 8607
+      }, {
+        "id" : "19",
+        "x" : 2489,
+        "y" : 6807
+      }, {
+        "id" : "20",
+        "x" : 2489,
+        "y" : 7407
+      }, {
+        "id" : "21",
+        "x" : 2489,
+        "y" : 1078
+      }, {
+        "id" : "22",
+        "x" : 1739,
+        "y" : 1078
+      }, {
+        "id" : "24",
+        "x" : 989,
+        "y" : 1378
+      }, {
+        "id" : "26",
+        "x" : 989,
+        "y" : 778
+      }, {
+        "id" : "28",
+        "x" : 239,
+        "y" : 1378
+      }, {
+        "id" : "32",
+        "x" : 3239,
+        "y" : 3194
+      }, {
+        "id" : "33",
+        "x" : 3239,
+        "y" : 3794
+      }, {
+        "id" : "34",
+        "x" : 2489,
+        "y" : 3494
+      }, {
+        "id" : "37",
+        "x" : 1739,
+        "y" : 3494
+      }, {
+        "id" : "39",
+        "x" : 989,
+        "y" : 3794
+      }, {
+        "id" : "41",
+        "x" : 1739,
+        "y" : 4994
+      }, {
+        "id" : "42",
+        "x" : 989,
+        "y" : 4994
+      }, {
+        "id" : "45",
+        "x" : 989,
+        "y" : 3194
+      }, {
+        "id" : "48",
+        "x" : 989,
+        "y" : 4394
+      }, {
+        "id" : "51",
+        "x" : 989,
+        "y" : 5594
+      }, {
+        "id" : "54",
+        "x" : 989,
+        "y" : 2594
+      }, {
+        "id" : "56",
+        "x" : 239,
+        "y" : 2594
+      }, {
+        "id" : "58",
+        "x" : 1739,
+        "y" : 8007
+      }, {
+        "id" : "61",
+        "x" : 989,
+        "y" : 8607
+      }, {
+        "id" : "64",
+        "x" : 989,
+        "y" : 8007
+      }, {
+        "id" : "66",
+        "x" : 989,
+        "y" : 7407
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "api_component_view",
+      "order" : 3,
+      "relationships" : [ {
+        "id" : "14",
+        "vertices" : [ {
+          "x" : 3043,
+          "y" : 6074
+        }, {
+          "x" : 3239,
+          "y" : 2415
+        } ]
+      }, {
+        "id" : "16",
+        "vertices" : [ {
+          "x" : 3043,
+          "y" : 8457
+        } ]
+      }, {
+        "id" : "18",
+        "vertices" : [ {
+          "x" : 3239,
+          "y" : 9669
+        } ]
+      }, {
+        "id" : "23"
+      }, {
+        "id" : "25"
+      }, {
+        "id" : "27"
+      }, {
+        "id" : "29"
+      }, {
+        "id" : "30",
+        "vertices" : [ {
+          "x" : 885,
+          "y" : 1828
+        }, {
+          "x" : 1439,
+          "y" : 2211
+        }, {
+          "x" : 1739,
+          "y" : 6074
+        }, {
+          "x" : 2293,
+          "y" : 6336
+        }, {
+          "x" : 2385,
+          "y" : 6657
+        } ]
+      }, {
+        "id" : "31",
+        "vertices" : [ {
+          "x" : 885,
+          "y" : 2269
+        }, {
+          "x" : 1439,
+          "y" : 2415
+        }, {
+          "x" : 1739,
+          "y" : 6394
+        }, {
+          "x" : 2385,
+          "y" : 7257
+        } ]
+      }, {
+        "id" : "35"
+      }, {
+        "id" : "36"
+      }, {
+        "id" : "38"
+      }, {
+        "id" : "40"
+      }, {
+        "id" : "43"
+      }, {
+        "id" : "44",
+        "vertices" : [ {
+          "x" : 1439,
+          "y" : 5444
+        }, {
+          "x" : 1739,
+          "y" : 9899
+        } ]
+      }, {
+        "id" : "46"
+      }, {
+        "id" : "47",
+        "vertices" : [ {
+          "x" : 1439,
+          "y" : 3644
+        } ]
+      }, {
+        "id" : "49",
+        "vertices" : [ {
+          "x" : 1439,
+          "y" : 4844
+        }, {
+          "x" : 1739,
+          "y" : 9086
+        } ]
+      }, {
+        "id" : "50"
+      }, {
+        "id" : "52",
+        "vertices" : [ {
+          "x" : 1439,
+          "y" : 7228
+        }, {
+          "x" : 1739,
+          "y" : 10574
+        }, {
+          "x" : 2293,
+          "y" : 10574
+        }, {
+          "x" : 3043,
+          "y" : 10199
+        } ]
+      }, {
+        "id" : "53"
+      }, {
+        "id" : "55"
+      }, {
+        "id" : "57"
+      }, {
+        "id" : "59",
+        "vertices" : [ {
+          "x" : 2385,
+          "y" : 9086
+        } ]
+      }, {
+        "id" : "60"
+      }, {
+        "id" : "62"
+      }, {
+        "id" : "63"
+      }, {
+        "id" : "65"
+      }, {
+        "id" : "67"
+      }, {
+        "id" : "68",
+        "vertices" : [ {
+          "x" : 1439,
+          "y" : 2415
+        }, {
+          "x" : 1739,
+          "y" : 6074
+        } ]
+      }, {
+        "id" : "69",
+        "vertices" : [ {
+          "x" : 1439,
+          "y" : 4244
+        } ]
+      } ]
+    } ],
+    "configuration" : {
+      "branding" : { },
+      "lastSavedView" : "api_component_view",
+      "metadataSymbols" : "SquareBrackets",
+      "styles" : {
+        "elements" : [ {
+          "color" : "#ffffff",
+          "tag" : "Element"
+        }, {
+          "background" : "#048c04",
+          "shape" : "Person",
+          "tag" : "Person"
+        }, {
+          "background" : "#047804",
+          "tag" : "Software System"
+        }, {
+          "background" : "#55aa55",
+          "tag" : "Container"
+        }, {
+          "background" : "#55aa55",
+          "tag" : "Component"
+        }, {
+          "background" : "#444543",
+          "tag" : "UtilitiesComponent"
+        }, {
+          "background" : "#ab9a03",
+          "tag" : "DomainLayerComponent"
+        }, {
+          "background" : "#395703",
+          "tag" : "ApplicationLayerComponent"
+        }, {
+          "background" : "#57031c",
+          "tag" : "InfrastructureLayerComponent"
+        }, {
+          "background" : "#046987",
+          "tag" : "ApiLayerComponent"
+        }, {
+          "background" : "#7242f5",
+          "tag" : "AspireBase"
+        }, {
+          "shape" : "Cylinder",
+          "tag" : "Database"
+        }, {
+          "shape" : "Pipe",
+          "tag" : "Messagebroker"
+        }, {
+          "shape" : "Window",
+          "tag" : "WebBrowser"
+        }, {
+          "shape" : "MobileDevicePortrait",
+          "tag" : "MobileApp"
+        }, {
+          "shape" : "Hexagon",
+          "tag" : "Service"
+        }, {
+          "shape" : "Folder",
+          "tag" : "FileStorage"
+        }, {
+          "background" : "#999999",
+          "tag" : "ExternalActor"
+        }, {
+          "background" : "#999999",
+          "tag" : "ExternalSystem"
+        }, {
+          "background" : "#ebc934",
+          "tag" : "ObservabilityBE"
+        } ]
+      },
+      "terminology" : { }
+    },
+    "containerViews" : [ {
+      "automaticLayout" : {
+        "applied" : false,
+        "edgeSeparation" : 0,
+        "implementation" : "Graphviz",
+        "nodeSeparation" : 300,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 300,
+        "vertices" : false
+      },
+      "elements" : [ {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "70",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "72",
+        "x" : 0,
+        "y" : 0
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
-      "key" : "Diagram2",
+      "key" : "software_system_view",
       "order" : 2,
       "relationships" : [ {
         "id" : "10"
@@ -332,15 +1122,19 @@
       }, {
         "id" : "12"
       }, {
-        "id" : "13"
+        "id" : "4"
       }, {
-        "id" : "8"
+        "id" : "71"
+      }, {
+        "id" : "73"
+      }, {
+        "id" : "9"
       } ],
-      "softwareSystemId" : "2"
+      "softwareSystemId" : "1"
     } ],
     "systemContextViews" : [ {
       "automaticLayout" : {
-        "applied" : true,
+        "applied" : false,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -348,26 +1142,22 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
-      "dimensions" : {
-        "height" : 800,
-        "width" : 1550
-      },
       "elements" : [ {
         "id" : "1",
-        "x" : 200,
-        "y" : 165
+        "x" : 0,
+        "y" : 0
       }, {
-        "id" : "2",
-        "x" : 900,
-        "y" : 215
+        "id" : "72",
+        "x" : 0,
+        "y" : 0
       } ],
       "enterpriseBoundaryVisible" : true,
       "key" : "Diagram1",
       "order" : 1,
       "relationships" : [ {
-        "id" : "9"
+        "id" : "74"
       } ],
-      "softwareSystemId" : "2"
+      "softwareSystemId" : "1"
     } ]
   }
 }
