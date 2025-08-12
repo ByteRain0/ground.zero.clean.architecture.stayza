@@ -148,7 +148,7 @@
   },
   "id" : 1,
   "lastModifiedAgent" : "structurizr-ui",
-  "lastModifiedDate" : "2025-08-12T20:12:41Z",
+  "lastModifiedDate" : "2025-08-12T20:15:06Z",
   "model" : {
     "people" : [ {
       "id" : "72",
@@ -1001,7 +1001,7 @@
     } ],
     "configuration" : {
       "branding" : { },
-      "lastSavedView" : "api_component_view",
+      "lastSavedView" : "software_system_view",
       "metadataSymbols" : "SquareBrackets",
       "styles" : {
         "elements" : [ {
@@ -1071,7 +1071,7 @@
     },
     "containerViews" : [ {
       "automaticLayout" : {
-        "applied" : false,
+        "applied" : true,
         "edgeSeparation" : 0,
         "implementation" : "Graphviz",
         "nodeSeparation" : 300,
@@ -1079,38 +1079,42 @@
         "rankSeparation" : 300,
         "vertices" : false
       },
+      "dimensions" : {
+        "height" : 2611,
+        "width" : 3820
+      },
       "elements" : [ {
         "id" : "2",
-        "x" : 0,
-        "y" : 0
+        "x" : 3150,
+        "y" : 1985
       }, {
         "id" : "3",
-        "x" : 0,
-        "y" : 0
+        "x" : 2400,
+        "y" : 1985
       }, {
         "id" : "5",
-        "x" : 0,
-        "y" : 0
+        "x" : 2400,
+        "y" : 1385
       }, {
         "id" : "6",
-        "x" : 0,
-        "y" : 0
+        "x" : 2400,
+        "y" : 785
       }, {
         "id" : "7",
-        "x" : 0,
-        "y" : 0
+        "x" : 2400,
+        "y" : 185
       }, {
         "id" : "8",
-        "x" : 0,
-        "y" : 0
+        "x" : 1650,
+        "y" : 1085
       }, {
         "id" : "70",
-        "x" : 0,
-        "y" : 0
+        "x" : 900,
+        "y" : 1085
       }, {
         "id" : "72",
-        "x" : 0,
-        "y" : 0
+        "x" : 200,
+        "y" : 1035
       } ],
       "externalSoftwareSystemBoundariesVisible" : false,
       "key" : "software_system_view",
