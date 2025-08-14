@@ -47,7 +47,6 @@ internal class LoansRepository(
         
         applicationDbContext.Update(bookCopy);
         await applicationDbContext.SaveChangesAsync();
-
         return bookCopy;
     }
 
@@ -93,6 +92,29 @@ internal class LoansRepository(
         
         // An example of a human focused log entry that can bring value.
         logger.LogInformation("A total of {deletedReservationsCount} expired reservations have been deleted.",
+            countOfAffectedEntries);
+    }
+
+    public Task<List<Reservation>> GetExpiredReservations(DateTimeOffset after) =>
+        applicationDbContext
+            .Reservations
+            .Where(x => x.Status == ReservationStatus.Pending)
+            .Where(x => x.ExpiresAt < after)
+            .ToListAsync();
+
+    public async Task RemoveCancelledReservation()
+    {
+        using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
+        
+        var countOfAffectedEntries = await applicationDbContext
+            .Reservations
+            .Where(x => x.Status == ReservationStatus.Cancelled)
+            .ExecuteDeleteAsync();
+
+        dbActivity?.SetTag("affectedEntriesCount", countOfAffectedEntries);
+        
+        // An example of a human focused log entry that can bring value.
+        logger.LogInformation("A total of {deletedReservationsCount} cancelled have been deleted.",
             countOfAffectedEntries);
     }
 

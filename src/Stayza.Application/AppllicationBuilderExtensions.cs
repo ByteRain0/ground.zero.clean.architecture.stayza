@@ -14,7 +14,7 @@ public static class AppllicationBuilderExtensions
             .AddScoped<LoansService>()
             .AddScoped<BooksService>();
 
-        builder.Services.AddSingleton<LoansBackgroundJobs>();
+        builder.Services.AddScoped<LoansBackgroundJobs>();
 
         builder.Services.AddValidatorsFromAssembly(typeof(LoansService).Assembly);
 

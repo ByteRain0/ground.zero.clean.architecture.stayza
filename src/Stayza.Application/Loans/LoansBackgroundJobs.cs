@@ -1,4 +1,3 @@
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Stayza.Domain.Loans;
 using TickerQ.Utilities.Base;
@@ -6,18 +5,16 @@ using TickerQ.Utilities.Base;
 namespace Stayza.Application.Loans;
 
 public class LoansBackgroundJobs(
-    IServiceScopeFactory serviceScopeFactory,
+    ILogger<LoansBackgroundJobs> logger, 
+    ILoansRepository loansRepository, 
+    IUserNotificationService userNotificationService, 
     TimeProvider timeProvider)
 {
     [TickerFunction(nameof(NotifyUsersAboutExpiringReservations), "0 7 * * *")]
     public async Task NotifyUsersAboutExpiringReservations()
     {
-        using var scope = serviceScopeFactory.CreateScope();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<LoansBackgroundJobs>>();
-        var repository = scope.ServiceProvider.GetRequiredService<ILoansRepository>();
-        var userNotificationService = scope.ServiceProvider.GetRequiredService<IUserNotificationService>();
-
-        var reservationsToExpire = await repository.GetReservationThatShouldExpire(
+        
+        var reservationsToExpire = await loansRepository.GetReservationThatShouldExpire(
             after: timeProvider.GetUtcNow().AddDays(1),
             cancellationToken: CancellationToken.None);
 
@@ -36,24 +33,44 @@ public class LoansBackgroundJobs(
             }
         }
     }
-
-    [TickerFunction(nameof(RemoveExpiredAndCancelledReservations), "0 7 * * *")]
-    public async Task RemoveExpiredAndCancelledReservations()
+    
+    [TickerFunction(nameof(RemoveCancelledReservations), "0 5 * * *")]
+    public async Task CancelExpiredReservations()
     {
-        using var scope = serviceScopeFactory.CreateScope();
-        var repository = scope.ServiceProvider.GetRequiredService<ILoansRepository>();
-        var logger = scope.ServiceProvider.GetRequiredService<ILogger<LoansBackgroundJobs>>();
+        var expiredReservations = await loansRepository.GetExpiredReservations(after: timeProvider.GetUtcNow());
 
+        foreach (var reservation in expiredReservations)
+        {
+            try
+            {
+                var bookCopy = await loansRepository.GetBookCopyById(
+                    id: reservation.BookCopyId,
+                    cancellationToken: CancellationToken.None);
+
+                bookCopy.CancelReservation(
+                    reservationId: reservation.Id,
+                    reason: "EXPIRED");
+
+                await loansRepository.UpdateBookCopy(bookCopy);
+            }
+            catch (Exception e)
+            {
+                // HW: add additional information to the spans :) to make it easier to debug later on.
+                logger.LogError(e, "Failed cancelling expired reservation.");
+            }
+        }
+    }
+    
+    [TickerFunction(nameof(RemoveCancelledReservations), "0 7 * * *")]
+    public async Task RemoveCancelledReservations()
+    {
         try
         {
-            // One option is splitting this jobs in 2 parts
-            // first that cancells the expired reservations and publishes the respective domain events
-            // second that cleans up the expired reservations
-            await repository.RemoveExpiredAndCancelledReservations(after: timeProvider.GetUtcNow());
+            await loansRepository.RemoveCancelledReservation();
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Failed removing expired and cancelled reservations");
+            logger.LogError(e, "Failed removing cancelled reservations");
             throw;
         }
     }

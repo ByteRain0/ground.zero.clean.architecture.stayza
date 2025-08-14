@@ -11,11 +11,11 @@ using Stayza.Tests.Subcutaneous.Base.TestConstants;
 
 namespace Stayza.Tests.Subcutaneous.BackgroundJobs;
 
-public class RemoveExpiredReservationsShould : IClassFixture<ApiFactory>
+public class CancelExpiredReservationsShould : IClassFixture<ApiFactory>
 {
     private readonly ApiFactory _apiFactory;
 
-    public RemoveExpiredReservationsShould(ApiFactory apiFactory)
+    public CancelExpiredReservationsShould(ApiFactory apiFactory)
     {
         _apiFactory = apiFactory;
     }
@@ -24,35 +24,34 @@ public class RemoveExpiredReservationsShould : IClassFixture<ApiFactory>
     // - cancelled reservations are also deleted
     // - reservations that are not expired are un-affected.
     [Fact]
-    public async Task Remove_expired_reservations()
+    public async Task Cancel_expired_reservations()
     {
         // Arrange
         using var servicesScope = _apiFactory.Services.CreateScope();
-        var dbContext = servicesScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+        var repository = servicesScope.ServiceProvider.GetRequiredService<IBooksRepository>();
         var timeProvider = servicesScope.ServiceProvider.GetRequiredService<TimeProvider>();
-        var sut = servicesScope.ServiceProvider.GetRequiredService<LoansBackgroundJobs>();
         
         var book = new Book(
             title: Constants.Book.Title,
             author: Constants.Book.Author,
             isbn: Constants.Book.ISBN,
             id: Constants.Book.Id);
-        book.AddCopy(Constants.BookCopy.BookCopyId);
-        
-        await dbContext.Books.AddAsync(book);
-        await dbContext.Reservations.AddAsync(new Reservation(
+        var copy = book.AddCopy(Constants.BookCopy.BookCopyId);
+        copy.Reserve(
             userId: TestUserSeeder.TestUser1Id,
-            reservedAt: timeProvider.GetUtcNow().AddDays(-60),
-            bookCopyId: Constants.BookCopy.BookCopyId,
-            id: Guid.NewGuid()));
-
-        await dbContext.SaveChangesAsync();
+            utcNow: timeProvider.GetUtcNow().AddDays(-60));
+        
+        await repository.AddBook(book);
+        var sut = servicesScope.ServiceProvider.GetRequiredService<LoansBackgroundJobs>();
         
         // Act
-        await sut.RemoveExpiredAndCancelledReservations();
+        await sut.CancelExpiredReservations();
         
         // Assert
+        var dbContext = servicesScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var remainingReservations = await dbContext.Reservations.ToListAsync();
-        remainingReservations.Count.ShouldBe(0);
+        
+        remainingReservations.First().Status.ShouldBe(ReservationStatus.Cancelled);
     }
 }

@@ -28,6 +28,10 @@ public interface ILoansRepository
     /// <returns></returns>
     Task RemoveExpiredAndCancelledReservations(DateTimeOffset after);
 
+    Task<List<Reservation>> GetExpiredReservations(DateTimeOffset after);
+    
+    Task RemoveCancelledReservation();
+
     Task<Loan> GetLoanById(Guid id, CancellationToken cancellationToken);
 
     Task<PagedList<Loan>> GetLoans(
