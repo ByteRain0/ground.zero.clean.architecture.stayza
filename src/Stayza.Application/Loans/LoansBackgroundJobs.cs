@@ -46,6 +46,9 @@ public class LoansBackgroundJobs(
 
         try
         {
+            // One option is splitting this jobs in 2 parts
+            // first that cancells the expired reservations and publishes the respective domain events
+            // second that cleans up the expired reservations
             await repository.RemoveExpiredAndCancelledReservations(after: timeProvider.GetUtcNow());
         }
         catch (Exception e)

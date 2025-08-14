@@ -162,6 +162,8 @@ public class BookCopy : AggregateRoot
         Guid reservationId,
         DateTimeOffset utcNow)
     {
+        // Here should be the logic placed to fufill the next pending reservation
+        // pending -> not cancelled not expired
         Guard.Against.Null(_reservations);
 
         var reservation = _reservations.SingleOrDefault(x => x.Id == reservationId);
