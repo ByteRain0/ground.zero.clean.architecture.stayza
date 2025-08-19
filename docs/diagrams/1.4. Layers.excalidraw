@@ -54,7 +54,7 @@
       "version": 1754,
       "versionNonce": 1092735008,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1755031386117,
       "link": null,
       "locked": false,
@@ -560,7 +560,7 @@
       "version": 191,
       "versionNonce": 1751601184,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1755030656950,
       "link": null,
       "locked": false,
@@ -679,8 +679,8 @@
     {
       "id": "Vzp9wHd_Is1fy13ntYznl",
       "type": "rectangle",
-      "x": 360.38956403685853,
-      "y": 99.25677890294969,
+      "x": 355.86541630958584,
+      "y": 104.83206299385881,
       "width": 158.14956712942643,
       "height": 81.5484685452957,
       "angle": 0,
@@ -698,8 +698,8 @@
         "type": 3
       },
       "seed": 1449867744,
-      "version": 576,
-      "versionNonce": 266513888,
+      "version": 588,
+      "versionNonce": 684226254,
       "isDeleted": false,
       "boundElements": [
         {
@@ -707,15 +707,15 @@
           "id": "NUTXQiNEtfErc4prcwLQd"
         }
       ],
-      "updated": 1755030700136,
+      "updated": 1755540779007,
       "link": null,
       "locked": false
     },
     {
       "id": "NUTXQiNEtfErc4prcwLQd",
       "type": "text",
-      "x": 384.4643476015718,
-      "y": 115.03101317559754,
+      "x": 379.9401998742991,
+      "y": 120.60629726650666,
       "width": 110,
       "height": 50,
       "angle": 0,
@@ -731,11 +731,11 @@
       "index": "am",
       "roundness": null,
       "seed": 1017708000,
-      "version": 521,
-      "versionNonce": 1058140640,
+      "version": 533,
+      "versionNonce": 1718381838,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1755030700136,
+      "updated": 1755540779007,
       "link": null,
       "locked": false,
       "text": "Background\nJobs",
@@ -751,8 +751,8 @@
     {
       "id": "8zemcUFWI91TvtlgmNPdN",
       "type": "rectangle",
-      "x": 351.148731793888,
-      "y": 110.24491241074088,
+      "x": 346.6245840666153,
+      "y": 115.82019650165,
       "width": 158.14956712942643,
       "height": 81.5484685452957,
       "angle": 0,
@@ -770,11 +770,11 @@
         "type": 3
       },
       "seed": 512639456,
-      "version": 512,
-      "versionNonce": 1337505248,
+      "version": 524,
+      "versionNonce": 817339214,
       "isDeleted": false,
       "boundElements": [],
-      "updated": 1755030700136,
+      "updated": 1755540779007,
       "link": null,
       "locked": false
     },
@@ -1185,7 +1185,7 @@
       "version": 66,
       "versionNonce": 2089565216,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1755032368309,
       "link": null,
       "locked": false,
@@ -2717,7 +2717,7 @@
       "version": 80,
       "versionNonce": 1532584992,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1755031089136,
       "link": null,
       "locked": false,
@@ -2871,7 +2871,7 @@
       "version": 238,
       "versionNonce": 1792298016,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1755031174442,
       "link": null,
       "locked": false,
@@ -2938,7 +2938,7 @@
       "version": 134,
       "versionNonce": 1742266848,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1755031169584,
       "link": null,
       "locked": false,
@@ -3099,7 +3099,7 @@
       "version": 89,
       "versionNonce": 2132558304,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1755031410695,
       "link": null,
       "locked": false,
@@ -3136,7 +3136,7 @@
       "version": 296,
       "versionNonce": 1200199136,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1755032008503,
       "link": null,
       "locked": false,
@@ -3173,7 +3173,7 @@
       "version": 256,
       "versionNonce": 1736738272,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1755031655991,
       "link": null,
       "locked": false
@@ -3201,7 +3201,7 @@
       "version": 420,
       "versionNonce": 759039456,
       "isDeleted": false,
-      "boundElements": null,
+      "boundElements": [],
       "updated": 1755032194354,
       "link": null,
       "locked": false,
@@ -4550,7 +4550,7 @@
         ],
         [
           14.395797784434041,
-          -2.1882370874809727
+          -2.18823708748097
         ],
         [
           14.954954791340981,
@@ -4653,8 +4653,8 @@
           6.409339478680641
         ],
         [
-          7.878631638067282,
-          7.117161165062784
+          7.878631638067283,
+          7.117161165062785
         ],
         [
           6.891914559478316,
@@ -5229,7 +5229,7 @@
       "strokeColor": "#000000",
       "backgroundColor": "#fff",
       "width": 10.212953721859035,
-      "height": 0.7125750359360986,
+      "height": 0.7125750359360985,
       "seed": 1147851232,
       "groupIds": [
         "Z7DhXhPPp7f-_D7mbI1vo"
@@ -5335,7 +5335,7 @@
       "strokeColor": "#000000",
       "backgroundColor": "#fff",
       "width": 10.598154624793047,
-      "height": 0.9385640016392567,
+      "height": 0.9385640016392566,
       "seed": 327670240,
       "groupIds": [
         "Z7DhXhPPp7f-_D7mbI1vo"
@@ -5392,7 +5392,7 @@
       "strokeColor": "#000000",
       "backgroundColor": "#fff",
       "width": 11.929103023066348,
-      "height": 0.6379598489270848,
+      "height": 0.6379598489270847,
       "seed": 1831968224,
       "groupIds": [
         "Z7DhXhPPp7f-_D7mbI1vo"
@@ -5453,7 +5453,7 @@
       "strokeColor": "#000000",
       "backgroundColor": "#fff",
       "width": 10.289434288543276,
-      "height": 0.5428254854906115,
+      "height": 0.5428254854906116,
       "seed": 1963123168,
       "groupIds": [
         "Z7DhXhPPp7f-_D7mbI1vo"
@@ -5506,7 +5506,7 @@
       "strokeColor": "#000000",
       "backgroundColor": "#fff",
       "width": 10.289434288543276,
-      "height": 0.5428254854906115,
+      "height": 0.5428254854906116,
       "seed": 2047583712,
       "groupIds": [
         "Z7DhXhPPp7f-_D7mbI1vo"
