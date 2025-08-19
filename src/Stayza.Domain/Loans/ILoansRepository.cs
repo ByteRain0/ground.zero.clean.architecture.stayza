@@ -8,12 +8,6 @@ public interface ILoansRepository
 
     Task<BookCopy> UpdateBookCopy(BookCopy bookCopy);
 
-    /// <summary>
-    /// Used as a cron job to cycle through loans that are overdue and notify users about return policies. 
-    /// </summary>
-    /// <param name="endTimeOffset"></param>
-    /// <param name="cancellationToken"></param>
-    /// <returns></returns>
     Task<List<Loan>> GetLoansThatAreOverdueAfter(
         DateTimeOffset endTimeOffset,
         CancellationToken cancellationToken);
@@ -22,10 +16,6 @@ public interface ILoansRepository
         DateTimeOffset after,
         CancellationToken cancellationToken);
 
-    /// <summary>
-    /// Remove reservations based on already set status.
-    /// </summary>
-    /// <returns></returns>
     Task RemoveExpiredAndCancelledReservations(DateTimeOffset after);
 
     Task<List<Reservation>> GetExpiredReservations(DateTimeOffset after);

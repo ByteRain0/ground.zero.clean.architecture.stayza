@@ -6,7 +6,7 @@ namespace Stayza.Domain.Users;
 /// </summary>
 public class EntitlementService
 {
-    public bool CanUserBorrow(User user)
+    public bool CanUserLoan(User user)
     {
         var maxActiveLoans = user.UserType switch
         {

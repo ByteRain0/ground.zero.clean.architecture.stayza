@@ -27,10 +27,10 @@ public class User : IdentityUser
     }
 
     /// <summary>
-    /// Introduce a hard limit.
+    /// Homework: Introduce a hard limit to the humber of books a user can loan..
     /// If after reservation is made over limit cancell reservation.
     /// </summary>
     /// <param name="service"></param>
     /// <returns></returns>
-    public bool CanBorrow(EntitlementService service) => service.CanUserBorrow(this);
+    public bool CanLoan(EntitlementService service) => service.CanUserLoan(this);
 }
