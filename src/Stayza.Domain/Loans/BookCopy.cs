@@ -48,7 +48,6 @@ public class BookCopy : AggregateRoot
         _reservations = new();
     }
 
-    //TODO: HW - based on this example set up the rest of the methods with telemetry data.
     public Reservation Reserve(
         string userId,
         DateTimeOffset utcNow)
@@ -97,7 +96,6 @@ public class BookCopy : AggregateRoot
         return reservation;
     }
 
-    // HW: add OTel activities to better understand how the app behaves.
     public Loan StartLoan(
         string userId,
         DateTimeOffset utcNow)

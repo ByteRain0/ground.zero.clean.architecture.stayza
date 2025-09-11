@@ -16,19 +16,19 @@ public class FulfilReservationShould
         var reservation = bookCopy.Reserve(
             userId: Constants.Users.Id,
             utcNow: Constants.Time.TestUtcNow);
-        
+
         // Act
         bookCopy.FulfillReservation(
             reservationId: reservation.Id,
             utcNow: Constants.Time.TestUtcNow);
-        
+
         // Assert
         bookCopy.ActiveReservation.ShouldNotBeNull();
         bookCopy.ActiveReservation.ExpiresAt.ShouldBe(Constants.Time.TestUtcNow.AddDays(3));
         bookCopy.ActiveReservation.UserId.ShouldBe(Constants.Users.Id);
         bookCopy.ActiveReservation.BookCopyId.ShouldBe(bookCopy.Id);
     }
-    
+
     [Fact]
     public void Add_a_reservation_fulfilled_domain_event()
     {
@@ -37,16 +37,28 @@ public class FulfilReservationShould
         var reservation = bookCopy.Reserve(
             userId: Constants.Users.Id,
             utcNow: Constants.Time.TestUtcNow);
-        
+
         // Act
         bookCopy.FulfillReservation(
             reservationId: reservation.Id,
             utcNow: Constants.Time.TestUtcNow);
-        
+
         // Assert
-        bookCopy.DomainEvents.Count(x => 
+        bookCopy.DomainEvents.Count(x =>
             x.GetType().Name == nameof(ReservationFulfilledEvent)).ShouldBe(1);
         (bookCopy.DomainEvents.First() as ReservationFulfilledEvent)!.UserId.ShouldBe(Constants.Users.Id);
         (bookCopy.DomainEvents.First() as ReservationFulfilledEvent)!.BookCopyId.ShouldBe(bookCopy.Id);
+    }
+
+    [Fact]
+    public void Fail_if_reservation_is_cancelled()
+    {
+        // HW: add a test here.
+    }
+
+    [Fact]
+    public void Fail_if_reservation_does_not_exist()
+    {
+        // HW: add a test here.
     }
 }

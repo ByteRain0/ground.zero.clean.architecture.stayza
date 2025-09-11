@@ -17,6 +17,9 @@ public class Book : AggregateRoot
     [JsonInclude]
     public string ISBN { get; private set; }
 
+    /// <summary>
+    /// Book copies object referenced for easier db structure.
+    /// </summary>
     private readonly HashSet<BookCopy> _copies = new();
 
     [Obsolete("Used only by ef core")]
