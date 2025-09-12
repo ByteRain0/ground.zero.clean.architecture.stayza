@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Stayza.Application.Books;
 using Stayza.Application.Loans;
+using Stayza.Domain.Users;
 
 namespace Stayza.Application;
 
@@ -14,6 +15,8 @@ public static class AppllicationBuilderExtensions
             .AddScoped<LoansService>()
             .AddScoped<BooksService>();
 
+        builder.Services.AddScoped<IEntitlementService, EntitlementService>();
+        
         builder.Services.AddScoped<LoansBackgroundJobs>();
 
         builder.Services.AddValidatorsFromAssembly(typeof(LoansService).Assembly);

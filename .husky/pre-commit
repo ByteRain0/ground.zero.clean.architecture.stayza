@@ -1,0 +1,6 @@
+cd tests/Stayza.Tests.Unit
+
+if ! dotnet test --nologo > /dev/null 2>&1; then
+    echo "[Warning] : Unit tests failed. Commit aborted"
+    exit 1
+fi

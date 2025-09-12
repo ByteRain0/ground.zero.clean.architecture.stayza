@@ -18,6 +18,7 @@
     <PackageVersion Include="OpenTelemetry.Instrumentation.EntityFrameworkCore" Version="1.11.0-beta.1" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Http" Version="$(OTelVersion)" />
     <PackageVersion Include="OpenTelemetry.Instrumentation.Runtime" Version="$(OTelVersion)" />
+    <PackageVersion Include="Microsoft.Extensions.Logging.Abstractions" Version="9.0.7" />
     <!-- EF Core -->
     <PackageVersion Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="9.0.7" />
     <PackageVersion Include="Microsoft.EntityFrameworkCore" Version="$(EntityframeworkVersion)" />
@@ -51,6 +52,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageVersion>
     <PackageVersion Include="PracticalOtel.xUnit.OpenTelemetry" Version="0.9.1-alpha" />
+    <PackageVersion Include="NSubstitute" Version="5.3.0" />
     <!-- Validation -->
     <PackageVersion Include="O9d.AspNet.FluentValidation" Version="0.1.1" />
     <PackageVersion Include="Ardalis.GuardClauses" Version="5.0.0" />

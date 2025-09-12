@@ -32,5 +32,5 @@ public class User : IdentityUser
     /// </summary>
     /// <param name="service"></param>
     /// <returns></returns>
-    public bool CanLoan(EntitlementService service) => service.CanUserLoan(this);
+    public bool CanLoan(IEntitlementService service) => service.CanUserLoan(this);
 }

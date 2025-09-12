@@ -1,21 +1,12 @@
-using Microsoft.Extensions.Logging;
+using Stayza.Core.Telemetry.LoggingAdapter;
 
 namespace Stayza.Domain.Users;
 
-public interface IEntitlementService
+public class EntitlementServiceV2 : IEntitlementService
 {
-    bool CanUserLoan(User user);
-}
+    private readonly ILoggerAdapter<EntitlementServiceV2> _logger;
 
-/// <summary>
-/// A DS is a service that contains only business logic.
-/// Prefer keeping domain logic in the domain models where possible.
-/// </summary>
-public class EntitlementService : IEntitlementService
-{
-    private readonly ILogger<EntitlementService> _logger;
-
-    public EntitlementService(ILogger<EntitlementService> logger)
+    public EntitlementServiceV2(ILoggerAdapter<EntitlementServiceV2> logger)
     {
         _logger = logger;
     }

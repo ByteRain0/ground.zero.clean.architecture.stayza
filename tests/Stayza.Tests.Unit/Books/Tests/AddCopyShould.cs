@@ -27,7 +27,8 @@ public class AddCopyShould
         var book = TestBooksFactory.CreateBook();
         book.AddCopy(Constants.BookCopy.BookCopyId);
         
-        // Act
-        Assert.Throws<InvalidOperationException>(() => book.AddCopy(Constants.BookCopy.BookCopyId));
+        // Act & Assert
+        Assert.Throws<InvalidOperationException>(
+            () => book.AddCopy(Constants.BookCopy.BookCopyId));
     }
 }
