@@ -1,5 +1,4 @@
 using Shouldly;
-using Stayza.Domain.Loans;
 using Stayza.Domain.Loans.Events;
 using Stayza.Tests.Unit.Utils;
 using Stayza.Tests.Unit.Utils.TestConstants;
