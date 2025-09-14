@@ -1,5 +1,5 @@
 using Shouldly;
-using Stayza.Domain.Loans;
+using Stayza.Core.Exceptions;
 using Stayza.Domain.Loans.Events;
 using Stayza.Tests.Unit.Utils;
 using Stayza.Tests.Unit.Utils.TestConstants;
@@ -54,11 +54,35 @@ public class FulfilReservationShould
     public void Fail_if_reservation_is_cancelled()
     {
         // HW: add a test here.
+        // Arrange
+        var bookCopy = TestBooksFactory.CreateBookCopy();
+        var reservation = bookCopy.Reserve(
+            userId: Constants.Users.Id,
+            utcNow: Constants.Time.TestUtcNow);
+
+        // Act
+        bookCopy.CancelReservation(
+            reservationId: reservation.Id,
+            reason: "EXPIRED");
+
+        // Assert
+        Assert.Throws<EntityNotFoundException>(
+            () => bookCopy.StartLoan(
+                userId: Constants.Users.Id,
+                utcNow: Constants.Time.TestUtcNow));
     }
 
     [Fact]
     public void Fail_if_reservation_does_not_exist()
     {
         // HW: add a test here.
+        // Arrange
+        var bookCopy = TestBooksFactory.CreateBookCopy();
+        
+        // Act & Assert
+        Assert.Throws<EntityNotFoundException>(
+            () => bookCopy.CancelReservation(
+                reservationId: Constants.BookCopy.BookCopyId,
+                reason: "EXPIRED"));
     }
 }
