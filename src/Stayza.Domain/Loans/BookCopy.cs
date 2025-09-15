@@ -53,7 +53,7 @@ public class BookCopy : AggregateRoot
         DateTimeOffset utcNow)
     {
         using var reserveActivity = RunTimeDiagnosticConfig.Source.StartActivity("Reserve book copy");
-
+        
         reserveActivity?
             .SetBookCopyId(Id)
             .SetUserId(userId)
