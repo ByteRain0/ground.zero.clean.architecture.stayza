@@ -138,10 +138,10 @@ public class BookCopy : AggregateRoot
         string userId,
         DateTimeOffset utcNow)
     {
-        Guard.Against.Null(CurrentLoan);
-
         if (!IsLoaned)
             throw new InvalidOperationException("Copy is not loaned.");
+        
+        Guard.Against.Null(CurrentLoan);
 
         if (CurrentLoan.UserId != userId)
             throw new InvalidOperationException("Cannot return not owned book");
