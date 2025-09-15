@@ -27,7 +27,7 @@ public class ReturnBookCopyShould
     [Fact]
     public void Fail_if_book_copy_was_loaned_by_a_different_user()
     {
-        // Assert
+        // Arrange 
         var bookCopy = TestBooksFactory.CreateBookCopy();
 
         bookCopy.Reserve(
@@ -69,6 +69,8 @@ public class ReturnBookCopyShould
         loan.IsReturned.ShouldBeTrue();
         loan.ReturnDate.ShouldBe(utcNow);
 
+        bookCopy.DomainEvents.OfType<BookReturnedEvent>().Count().ShouldBe(1);
+        
         var returnEvent = bookCopy.DomainEvents
             .OfType<BookReturnedEvent>()
             .Single();
