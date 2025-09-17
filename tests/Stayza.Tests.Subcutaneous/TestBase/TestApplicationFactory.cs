@@ -9,15 +9,18 @@ using Stayza.Infrastructure.Persistence;
 using Stayza.Infrastructure.Persistence.Interceptors;
 using Stayza.Infrastructure.Persistence.Repositories;
 using Stayza.Tests.Subcutaneous.Stubs;
+using Testcontainers.PostgreSql;
 
 namespace Stayza.Tests.Subcutaneous.TestBase;
 
 public class TestApplicationFactory 
-    : IAsyncDisposable
+    : IAsyncLifetime
 {
     private readonly ServiceProvider _serviceProvider;
     private readonly IServiceScope _scope;
-
+    private readonly PostgreSqlContainer _postgreSqlContainer = new PostgreSqlBuilder()
+        .Build();
+    
     public TestApplicationFactory()
     {
         var services = new ServiceCollection();
@@ -34,10 +37,8 @@ public class TestApplicationFactory
         
         // Infrastructure
         services.AddScoped<IBooksRepository, BooksRepository>();
-        services.AddDbContext<ApplicationDbContext>(options =>
-        {
-            options.UseInMemoryDatabase("TestDb_" + Guid.NewGuid());
-        });
+        services.AddDbContext<ApplicationDbContext>(opts => 
+            opts.UseNpgsql(_postgreSqlContainer.GetConnectionString()));
         services.AddSingleton<PublishDomainEventsInterceptor>();
         services.AddScoped<IMessageProducer, MessagePublisherStub>();
         
@@ -50,9 +51,15 @@ public class TestApplicationFactory
         return _scope.ServiceProvider.GetRequiredService<TService>();
     }
 
-    public ValueTask DisposeAsync()
+    public async Task InitializeAsync()
     {
+        await _postgreSqlContainer.StartAsync();
+    }
+
+    public async Task DisposeAsync()
+    {
+        await _postgreSqlContainer.StopAsync();
         _scope.Dispose();
-        return _serviceProvider.DisposeAsync();
+        await _serviceProvider.DisposeAsync();
     }
 }
