@@ -12,7 +12,8 @@ public class User : IdentityUser
 
     public HashSet<Reservation> Reservations { get; private set; } = new();
     
-    public HashSet<Loan> ExistingLoans { get; private set; } = new();
+    // TODO: return back the private setter once lesson is over.
+    public HashSet<Loan> ExistingLoans { get; set; } = new();
     
     
     [Obsolete("Used only by ef core")]

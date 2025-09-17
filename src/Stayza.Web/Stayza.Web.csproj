@@ -5,12 +5,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Content Include="..\..\.dockerignore">
-        <Link>.dockerignore</Link>
-      </Content>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\Stayza.Application\Stayza.Application.csproj" />
       <ProjectReference Include="..\Stayza.Infrastructure\Stayza.Infrastructure.csproj" />
     </ItemGroup>
