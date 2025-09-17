@@ -39,31 +39,49 @@ public class BookServiceShould
     }
 
     [Fact]
-    public async Task Get_book_by_isbn()
+    public async Task Get_book_by_id()
     {
         // Arrange
-        await _sut.AddBook(new AddBookCommand(
+        var testFactory = new TestApplicationFactory();
+        var sut = testFactory.GetService<BooksService>();
+        
+        var book = await sut.AddBook(new AddBookCommand(
             Title: Constants.Book.Title,
             Author: Constants.Book.Author,
             ISBN: Constants.Book.ISBN));
         
         // Act
-        var bookFromDb = await _sut.GetBookByIsbn(Constants.Book.ISBN, new CancellationToken());
+
+        var getBook = await sut.GetBookById(book.Id, CancellationToken.None);
         
         // Assert
-        bookFromDb.Title.ShouldBe(Constants.Book.Title);
-        bookFromDb.Author.ShouldBe(Constants.Book.Author);
-        bookFromDb.ISBN.ShouldBe(Constants.Book.ISBN);
+        getBook.Id.ShouldBe(book.Id);
+        getBook.ISBN.ShouldBe(book.ISBN);
+        getBook.Title.ShouldBe(book.Title);
+        getBook.Author.ShouldBe(book.Author);
     }
-
-    public async Task InitializeAsync()
+    
+    
+    [Fact]
+    public async Task Get_book_by_isbn()
     {
-        await _dbContext.Database.EnsureCreatedAsync();
-    }
+        // Arrange
+        var testFactory = new TestApplicationFactory();
+        var sut = testFactory.GetService<BooksService>();
+        
+        var book = await sut.AddBook(new AddBookCommand(
+            Title: Constants.Book.Title,
+            Author: Constants.Book.Author,
+            ISBN: Constants.Book.ISBN));
+        
+        // Act
 
-    public async Task DisposeAsync()
-    {
-        // Cleanup / Teardown
-        await _dbContext.Books.ExecuteDeleteAsync();
+        var getBook = await sut.GetBookByIsbn(book.ISBN, CancellationToken.None);
+        
+        // Assert
+        getBook.Id.ShouldBe(book.Id);
+        getBook.ISBN.ShouldBe(book.ISBN);
+        getBook.Title.ShouldBe(book.Title);
+        getBook.Author.ShouldBe(book.Author);
     }
 }
