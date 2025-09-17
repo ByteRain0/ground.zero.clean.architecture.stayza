@@ -1,7 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Stayza.Application.Books.Specifications;
 using Stayza.Core.Exceptions;
 using Stayza.Core.Telemetry;
 using Stayza.Domain.Books;
+using Stayza.Infrastructure.Persistence.Extensions;
 
 namespace Stayza.Infrastructure.Persistence.Repositories;
 
@@ -74,9 +76,12 @@ public class BooksRepository(ApplicationDbContext applicationDbContext) : IBooks
         dbActivity?
             .SetBookIsbn(isbn);
 
-        var book = await applicationDbContext.Books
-            .Include(x => x.Copies)
-            .FirstOrDefaultAsync(x => x.ISBN == isbn, cancellationToken);
+        // Example of thing you can add to the Application Layer in case you want to re-use queries across handlers.
+        var book = await SpecificationQueryBuilder
+            .BuildSpecificationQuery(
+                source: applicationDbContext.Books,
+                specification: new BookByIsbnSpecification(isbn))
+            .FirstOrDefaultAsync(cancellationToken);
 
         if (book is null)
         {

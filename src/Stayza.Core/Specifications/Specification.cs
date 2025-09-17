@@ -8,9 +8,9 @@ public abstract class Specification<T> where T : class
     {
         Criteria = criteria;
     }
-
+    
     public Expression<Func<T, bool>> Criteria { get; }
-
+    
     public List<Expression<Func<T, object>>> Include { get; } = new();
 
     public Expression<Func<T, object>>? OrderBy { get; private set; }

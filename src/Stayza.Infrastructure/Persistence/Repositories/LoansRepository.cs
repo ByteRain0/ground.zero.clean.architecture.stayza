@@ -49,21 +49,7 @@ internal class LoansRepository(
         await applicationDbContext.SaveChangesAsync();
         return bookCopy;
     }
-
-    public async Task<List<Loan>> GetLoansThatAreOverdueAfter(
-        DateTimeOffset endTimeOffset,
-        CancellationToken cancellationToken)
-    {
-        using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
-        dbActivity?.SetTag("endTimeOffset", endTimeOffset);
-        
-        return await applicationDbContext.Loans
-            .Where(x => x.IsReturned == false)
-            .Where(x => x.TimeRange.End < endTimeOffset)
-            .ToListAsync(cancellationToken: cancellationToken);
-    }
-
-
+    
     public Task<List<Reservation>> GetReservationThatShouldExpire(
         DateTimeOffset after,
         CancellationToken cancellationToken)
@@ -75,24 +61,6 @@ internal class LoansRepository(
             .Where(x => x.Status == ReservationStatus.Pending)
             .Where(x => x.ExpiresAt > after)
             .ToListAsync(cancellationToken: cancellationToken);
-    }
-
-
-    public async Task RemoveExpiredAndCancelledReservations(DateTimeOffset after)
-    {
-        using var dbActivity = RunTimeDiagnosticConfig.Source.StartActivity();
-        dbActivity?.SetTag("afterOffset", after);
-        
-        var countOfAffectedEntries = await applicationDbContext
-            .Reservations
-            .Where(x => x.ExpiresAt < after || x.Status == ReservationStatus.Cancelled)
-            .ExecuteDeleteAsync();
-
-        dbActivity?.SetTag("affectedEntriesCount", countOfAffectedEntries);
-        
-        // An example of a human focused log entry that can bring value.
-        logger.LogInformation("A total of {deletedReservationsCount} expired reservations have been deleted.",
-            countOfAffectedEntries);
     }
 
     public Task<List<Reservation>> GetExpiredReservations(DateTimeOffset after) =>

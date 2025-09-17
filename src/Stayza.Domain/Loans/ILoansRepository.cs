@@ -8,16 +8,10 @@ public interface ILoansRepository
 
     Task<BookCopy> UpdateBookCopy(BookCopy bookCopy);
 
-    Task<List<Loan>> GetLoansThatAreOverdueAfter(
-        DateTimeOffset endTimeOffset,
-        CancellationToken cancellationToken);
-
     Task<List<Reservation>> GetReservationThatShouldExpire(
         DateTimeOffset after,
         CancellationToken cancellationToken);
-
-    Task RemoveExpiredAndCancelledReservations(DateTimeOffset after);
-
+    
     Task<List<Reservation>> GetExpiredReservations(DateTimeOffset after);
     
     Task RemoveCancelledReservation();
