@@ -1,0 +1,13 @@
+version: '3'
+
+services:
+  spring-cloud-config-server:
+    container_name: configurator
+    image: hyness/spring-cloud-config-server
+    environment:
+      SPRING_CLOUD_CONFIG_SERVER_GIT_URI: "https://github.com/ByteRain0/TutorialSetUps.CentralizedConfig_ConfigRepo"
+      #For private repository access use the following setup:
+      #SPRING_CLOUD_CONFIG_SERVER_GIT_USERNAME: "your-github-username"
+      #SPRING_CLOUD_CONFIG_SERVER_GIT_PASSWORD: "your-github-access-token"
+    ports:
+      - "8888:8888"

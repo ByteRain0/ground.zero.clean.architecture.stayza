@@ -1,0 +1,7 @@
+version: "3.9"
+
+services:
+  notifications_api:
+    environment:
+      NEW_ENV_VARIABLE: "MyCustomValue"
+      REDIS_CONNECTION_STRING: "redis:6379"

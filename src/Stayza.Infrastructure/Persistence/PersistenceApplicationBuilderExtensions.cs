@@ -5,6 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Stayza.Domain.Books;
 using Stayza.Domain.Loans;
+using Stayza.Infrastructure.Persistence.BackgroundJobs;
 using Stayza.Infrastructure.Persistence.Interceptors;
 using Stayza.Infrastructure.Persistence.Repositories;
 using TickerQ.Dashboard.DependencyInjection;
@@ -24,6 +25,9 @@ public static class PersistenceApplicationBuilderExtensions
             
         builder.Services.AddTickerQ(options =>
         {
+            // options.SetMaxConcurrency(4); // Max Concurrency for job execution
+            // options.SetExceptionHandler<TickerExceptionHandler>(); // Exception handler for tickerq
+            
             options.SetInstanceIdentifier("TickerQ");
             options.AddOperationalStore<ApplicationDbContext>(efOpt =>
             {
@@ -32,7 +36,7 @@ public static class PersistenceApplicationBuilderExtensions
             });
 
             options.AddDashboard("/jobs");
-            options.AddDashboardBasicAuth();
+            options.AddDashboardBasicAuth(); // Appsettings predefined
         });
 
         builder.Services

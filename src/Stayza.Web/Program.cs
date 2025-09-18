@@ -1,6 +1,7 @@
 using Stayza.Application;
 using Stayza.Domain.Users;
 using Stayza.Infrastructure;
+using Stayza.Infrastructure.ExternalConfigurations;
 using Stayza.Infrastructure.Persistence;
 using Stayza.Infrastructure.Persistence.DataSeed;
 using Stayza.Infrastructure.Telemetry;
@@ -15,6 +16,8 @@ using TickerQ.DependencyInjection;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddBaseTelemetryConfiguration();
+
+builder.AddExternalConfiguration();
 
 builder
     .AddApplication()

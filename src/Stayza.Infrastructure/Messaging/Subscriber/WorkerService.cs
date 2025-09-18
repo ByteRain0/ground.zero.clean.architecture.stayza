@@ -18,7 +18,7 @@ public class WorkerService : BackgroundService
     }
     protected override Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        _logger.LogDebug("Registering RabbitMQ listeners");
+        _logger.LogInformation("Registering RabbitMQ listeners");
         _rabbitMqReceiver.RegisterListeners();
         return Task.CompletedTask;
     }
