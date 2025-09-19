@@ -55,12 +55,83 @@ public class BookServiceShould
         var getBook = await sut.GetBookById(book.Id, CancellationToken.None);
         
         // Assert
-        getBook.Id.ShouldBe(book.Id);
-        getBook.ISBN.ShouldBe(book.ISBN);
-        getBook.Title.ShouldBe(book.Title);
-        getBook.Author.ShouldBe(book.Author);
+        bookFromDb.Title.ShouldBe(Constants.Book.Title);
+        bookFromDb.Author.ShouldBe(Constants.Book.Author);
+        bookFromDb.ISBN.ShouldBe(Constants.Book.ISBN);
+    }
+
+    [Fact]
+    public async Task Retire_should_retire_all_book_copies()
+    {
+        // Arrange
+        var book = await _sut.AddBook(new AddBookCommand(
+            Title: Constants.Book.Title,
+            Author: Constants.Book.Author,
+            ISBN: Constants.Book.ISBN));
+
+        await _sut.AddBookCopy(new AddBookCopyCommand(book.Id));
+        await _sut.AddBookCopy(new AddBookCopyCommand(book.Id));
+
+        // Act
+
+        await _sut.Retire(new RetireBookCommand(book.Id));
+
+        // Assert
+        var bookFromDb = await _sut.GetBookById(book.Id, CancellationToken.None);
+        bookFromDb.Copies.ShouldAllBe(x => x.IsRetired);
+    }
+
+    [Fact]
+    public async Task RemoveBookCopy_should_remove_book_copy()
+    {
+        // Arrange
+        var book = await _sut.AddBook(new AddBookCommand(
+            Title: Constants.Book.Title,
+            Author: Constants.Book.Author,
+            ISBN: Constants.Book.ISBN));
+        
+        var bookCopy = await _sut.AddBookCopy(new AddBookCopyCommand(book.Id));
+
+        // Act
+
+        await _sut.RemoveBookCopy(new RemoveBookCopyCommand(
+            BookId: book.Id,
+            BookCopyId: bookCopy.Id));
+
+        // Assert
+        var bookFromDb = await _sut.GetBookById(book.Id, CancellationToken.None);
+        bookFromDb.Copies.FirstOrDefault(x => x.Id == bookCopy.Id).ShouldBeNull();
+    }
+
+    [Fact]
+    public async Task AddBookCopy_should_add_one_book_copy()
+    {
+        // Arrange
+        var book = await _sut.AddBook(new AddBookCommand(
+            Title: Constants.Book.Title,
+            Author: Constants.Book.Author,
+            ISBN: Constants.Book.ISBN));
+        
+        // Act
+        var bookCopy = await _sut.AddBookCopy(new AddBookCopyCommand(book.Id));
+
+        // Assert
+        var bookFromDb = await _sut.GetBookById(book.Id, CancellationToken.None);
+        bookFromDb.Copies.SingleOrDefault(x => x.Id == bookCopy.Id).ShouldNotBeNull();
+    }
+
+    public async Task InitializeAsync()
+    {
+        await _dbContext.Database.EnsureCreatedAsync();
+    }
+
+    public async Task DisposeAsync()
+    {
+        // Cleanup / Teardown
+        await _dbContext.Books.ExecuteDeleteAsync();
     }
     
+    //AddBookCopy
     
     [Fact]
     public async Task Get_book_by_isbn()
