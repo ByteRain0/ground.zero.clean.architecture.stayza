@@ -8,7 +8,6 @@ using Stayza.Infrastructure.Persistence;
 using Stayza.Infrastructure.Persistence.DataSeed;
 using Stayza.Tests.Subcutaneous.Base;
 using Stayza.Tests.Subcutaneous.Base.TestConstants;
-using Stayza.Tests.Subcutaneous.TestBase;
 
 namespace Stayza.Tests.Subcutaneous.BackgroundJobs;
 
@@ -38,12 +37,19 @@ public class CancelExpiredReservationsShould : IClassFixture<ApiFactory>
             author: Constants.Book.Author,
             isbn: Constants.Book.ISBN,
             id: Constants.Book.Id);
+        
         var copy = book.AddCopy(Constants.BookCopy.BookCopyId);
-        copy.Reserve(
+        
+        var reservation1 = copy.Reserve(
             userId: TestUserSeeder.TestUser1Id,
             utcNow: timeProvider.GetUtcNow().AddDays(-60));
         
+        var reservation2 = copy.Reserve(
+            userId: TestUserSeeder.TestUser2Id,
+            utcNow: timeProvider.GetUtcNow().AddDays(1));
+        
         await repository.AddBook(book);
+        
         var sut = servicesScope.ServiceProvider.GetRequiredService<LoansBackgroundJobs>();
         
         // Act
@@ -52,5 +58,11 @@ public class CancelExpiredReservationsShould : IClassFixture<ApiFactory>
         // Assert
         var dbContext = servicesScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         var remainingReservations = await dbContext.Reservations.ToListAsync();
+        
+        remainingReservations.First(x => x.Id == reservation1.Id)
+            .Status.ShouldBe(ReservationStatus.Cancelled);
+        
+        remainingReservations.First(x => x.Id == reservation2.Id)
+            .Status.ShouldNotBe(ReservationStatus.Cancelled);
     }
 }
