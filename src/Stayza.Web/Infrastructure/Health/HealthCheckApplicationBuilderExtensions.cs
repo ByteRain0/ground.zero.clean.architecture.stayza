@@ -26,8 +26,11 @@ public static class HealthCheckApplicationBuilderExtensions
             .AddUrlGroup(
                 uri: new Uri($"{builder.Configuration["Notifications:BaseUrl"]!}/health"),
                 name: "notification-api",
-                failureStatus: HealthStatus.Degraded
-            );
+                failureStatus: HealthStatus.Unhealthy
+            )
+            .AddCheck<CustomHealthCheck>(
+                name: "custom_check",
+                failureStatus: HealthStatus.Unhealthy);
         
         return builder;
     }
