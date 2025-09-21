@@ -54,6 +54,7 @@ public static class OpenTelemetryApplicationBuilderExtensions
                     .AddNpgsql()
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
+                    .AddRedisInstrumentation()
                     //.AddEntityFrameworkCoreInstrumentation()
                     .AddOtlpExporter(options =>
                     {

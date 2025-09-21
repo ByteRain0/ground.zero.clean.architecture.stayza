@@ -2,6 +2,7 @@ using Microsoft.FeatureManagement;
 using Stayza.Application;
 using Stayza.Domain.Users;
 using Stayza.Infrastructure;
+using Stayza.Infrastructure.Cache;
 using Stayza.Infrastructure.ExternalConfigurations;
 using Stayza.Infrastructure.FeatureManagement;
 using Stayza.Infrastructure.Persistence;
@@ -27,7 +28,8 @@ builder
     .AddWebExceptionHandlers()
     .AddConfiguredSwagger()
     .AddDefaultHealthChecks()
-    .AddCustomFeatureManagement();
+    .AddCustomFeatureManagement()
+    .AddInfrastructureCache();
 
 builder.Services.AddScoped<SessionAccessorService>();
 

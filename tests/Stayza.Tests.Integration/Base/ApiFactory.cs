@@ -1,16 +1,9 @@
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using DotNet.Testcontainers.Builders;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
-using OpenTelemetry;
-using OpenTelemetry.Context.Propagation;
 using Respawn;
-using Stayza.Infrastructure.Persistence;
 using Stayza.Web;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
@@ -50,8 +43,10 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
     
     protected override IHost CreateHost(IHostBuilder builder)
     {
-        // Way easier to just wire it in here :P
         Environment.SetEnvironmentVariable("OpenTelemetrySettings__Enabled", "false");
+        // Homework: Add a redis container and set it up to test cache.
+        Environment.SetEnvironmentVariable("Cache__Enabled", "false");
+        Environment.SetEnvironmentVariable("ExternalConfigurationOptions__Enabled", "false");
         Environment.SetEnvironmentVariable("ConnectionStrings__Default", _postgreSqlContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("RabbitMQSettings__ConnectionString", _rabbitMqContainer.GetConnectionString());
         Environment.SetEnvironmentVariable("RabbitMQSettings__ExchangeName", ExchangeName);
