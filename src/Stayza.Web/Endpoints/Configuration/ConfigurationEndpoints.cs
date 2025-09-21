@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.FeatureManagement;
 using Stayza.Infrastructure.ExternalConfigurations;
 using Stayza.Web.Infrastructure.Endpoints;
 
@@ -8,7 +10,20 @@ internal class ConfigurationEndpoints : IEndpointsDefinition
 {
     public static void ConfigureEndpoints(IEndpointRouteBuilder app)
     {
-        app.MapGet("api/v1/configurations", (IOptionsSnapshot<AppConfiguration> options)
-            => Results.Ok(options.Value));
+        app.MapGet("api/v1/configurations", async (
+                [FromServices] IOptionsSnapshot<AppConfiguration> options,
+                [FromServices] IVariantFeatureManager featureManager
+            )
+            =>
+        {
+            var test = await featureManager.IsEnabledAsync("UserTypeFiltering");
+            
+            if (await featureManager.IsEnabledAsync("AllowConfigurationsRetrieval"))
+            {
+                return Results.Ok(options.Value);
+            }
+
+            return Results.Forbid();
+        });
     }
 }

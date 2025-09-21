@@ -9,7 +9,7 @@ public static class RoutingKeys
     public static string BookCopyEvents = $"{EventsTopicBase}.[bookCopyId]";
     
     public static string BookCopyLoanedTopic = $"{BookCopyEvents}.loaned";
-
+    
     public static string BookCopyReturnedTopic = $"{BookCopyEvents}.[loanId].returned";
 
     public static string BookCopyLoanOverdueTopic = $"{BookCopyEvents}.[loanId].overdue";

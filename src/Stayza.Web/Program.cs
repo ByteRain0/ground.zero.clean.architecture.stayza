@@ -1,7 +1,9 @@
+using Microsoft.FeatureManagement;
 using Stayza.Application;
 using Stayza.Domain.Users;
 using Stayza.Infrastructure;
 using Stayza.Infrastructure.ExternalConfigurations;
+using Stayza.Infrastructure.FeatureManagement;
 using Stayza.Infrastructure.Persistence;
 using Stayza.Infrastructure.Persistence.DataSeed;
 using Stayza.Infrastructure.Telemetry;
@@ -24,7 +26,8 @@ builder
     .AddInfrastructure()
     .AddWebExceptionHandlers()
     .AddConfiguredSwagger()
-    .AddDefaultHealthChecks();
+    .AddDefaultHealthChecks()
+    .AddCustomFeatureManagement();
 
 builder.Services.AddScoped<SessionAccessorService>();
 
@@ -40,9 +43,9 @@ if (app.Environment.IsDevelopment())
 }
 
 app
-    .UseMiddleware<ActivityTracingMiddleware>()
-    .UseMiddleware<LoggingMiddleware>()
-    .UseMiddleware<PerformanceMonitoringMiddleware>();
+    .UseMiddlewareForFeature<ActivityTracingMiddleware>("ActivityTracingMiddleware")
+    .UseMiddlewareForFeature<LoggingMiddleware>("LoggingMiddleware")
+    .UseMiddlewareForFeature<PerformanceMonitoringMiddleware>("PerformanceMonitoringMiddleware");
 
 app.UseTickerQ();
 

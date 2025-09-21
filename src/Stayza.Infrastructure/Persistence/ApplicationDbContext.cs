@@ -46,7 +46,7 @@ public class ApplicationDbContext : IdentityDbContext<User>
         // in case you want to have a case_insensitive string comparison and not having .ToLower() everytime.
         //builder.HasCollation("case_insensitive", locale: "en-u-ks-primary", provider: "icu", deterministic: false);
     }
-
+    
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         optionsBuilder.AddInterceptors(_publishDomainEventsInterceptor);
