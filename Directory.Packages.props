@@ -4,7 +4,7 @@
     <CentralPackageTransitivePinningEnabled>true</CentralPackageTransitivePinningEnabled>
     <OTelVersion>1.11.0</OTelVersion>
     <EntityframeworkVersion>9.0.7</EntityframeworkVersion>
-    <TickerQ>2.4.4</TickerQ>
+    <TickerQ>2.5.3</TickerQ>
   </PropertyGroup>
   <ItemGroup>
     <!-- Open Telemetry -->
