@@ -42,17 +42,14 @@ public class BookServiceShould
     public async Task Get_book_by_id()
     {
         // Arrange
-        var testFactory = new TestApplicationFactory();
-        var sut = testFactory.GetService<BooksService>();
-        
-        var book = await sut.AddBook(new AddBookCommand(
+        var book = await _sut.AddBook(new AddBookCommand(
             Title: Constants.Book.Title,
             Author: Constants.Book.Author,
             ISBN: Constants.Book.ISBN));
         
         // Act
 
-        var getBook = await sut.GetBookById(book.Id, CancellationToken.None);
+        var bookFromDb = await _sut.GetBookById(book.Id, CancellationToken.None);
         
         // Assert
         bookFromDb.Title.ShouldBe(Constants.Book.Title);
@@ -137,17 +134,14 @@ public class BookServiceShould
     public async Task Get_book_by_isbn()
     {
         // Arrange
-        var testFactory = new TestApplicationFactory();
-        var sut = testFactory.GetService<BooksService>();
-        
-        var book = await sut.AddBook(new AddBookCommand(
+        var book = await _sut.AddBook(new AddBookCommand(
             Title: Constants.Book.Title,
             Author: Constants.Book.Author,
             ISBN: Constants.Book.ISBN));
         
         // Act
 
-        var getBook = await sut.GetBookByIsbn(book.ISBN, CancellationToken.None);
+        var getBook = await _sut.GetBookByIsbn(book.ISBN, CancellationToken.None);
         
         // Assert
         getBook.Id.ShouldBe(book.Id);
