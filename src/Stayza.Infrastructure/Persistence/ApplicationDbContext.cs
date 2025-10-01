@@ -39,7 +39,10 @@ public class ApplicationDbContext : IdentityDbContext<User>
         
         builder.HasDefaultSchema("library");
         builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
-        builder.ApplyConfigurationsFromAssembly(typeof(TimeTickerConfigurations).Assembly);
+        builder.ApplyConfiguration(new TimeTickerConfigurations());
+        builder.ApplyConfiguration(new CronTickerConfigurations());
+        builder.ApplyConfiguration(new CronTickerOccurrenceConfigurations());
+        
         builder.SeedBooks();
         builder.SeedBookCopies();
         

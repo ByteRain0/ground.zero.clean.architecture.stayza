@@ -12,7 +12,7 @@ using Xunit.Abstractions;
 
 namespace Stayza.Tests.Integration.Loans.Tests;
 
-[Collection("IntegrationTests")]
+//[Collection("IntegrationTests")]
 public class LoanBookCopyEndpointShould : 
     IClassFixture<ApiFactory>, 
     IAsyncLifetime
@@ -65,7 +65,7 @@ public class LoanBookCopyEndpointShould :
         using var actActivity = OtelTestFramework.Source.StartActivity("Act phase");
         _stayzaWebClient.InjectTraceContext(actActivity!);
         
-        var consumeEvents = await _messageConsumer.BindAndConsumeAsyncV2(
+        var consumeEvents = await _messageConsumer.BindAndConsumeAsync(
             exchangeName: _testSpecificExchangeName,
             routingKey: RoutingKeys
                 .BookCopyLoanedTopic

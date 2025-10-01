@@ -22,7 +22,7 @@ internal class BooksEndpoints : IEndpointsDefinition
         var group = app.MapGroup("api/v{version:apiVersion}/books/")
             .WithTags("books")
             .WithValidationFilter()
-            .RequireAuthorization()
+            //.RequireAuthorization()
             .WithApiVersionSet(versionSet)
             .MapToApiVersion(1.0)
             .ProducesProblem(statusCode: 400)

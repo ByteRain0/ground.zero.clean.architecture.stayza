@@ -65,12 +65,21 @@ public class RabbitMqReceiver
 
     public void Dispose()
     {
-        if (_channel == null)
+        try
         {
-            Console.WriteLine("Warning: Channel was already disposed or not initialized");
-            return;
+            if (_channel == null)
+            {
+                Console.WriteLine("Warning: Channel was already disposed or not initialized");
+                return;
+            }
+            _channel.Dispose();
         }
-        _channel.Dispose();
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Critical: Error encountered disposing of rabbitmq receiver exceptions : {ex.StackTrace}");
+        }
+        
+
     }
 
     public void RegisterListeners()

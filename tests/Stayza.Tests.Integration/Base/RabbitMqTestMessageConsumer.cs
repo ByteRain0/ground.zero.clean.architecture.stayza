@@ -16,7 +16,7 @@ public class RabbitMqTestMessageConsumer
         };
     }
 
-    public async Task<Task<bool>> BindAndConsumeAsyncV2(
+    public async Task<Task<bool>> BindAndConsumeAsync(
         string exchangeName,
         string routingKey,
         TimeSpan timeout,
@@ -50,8 +50,6 @@ public class RabbitMqTestMessageConsumer
                 queue: queueName,
                 autoAck: true,
                 consumer: consumer);
-
-            // await Task.Delay(TimeSpan.FromSeconds(60));
             
             var timeoutTask = Task.Delay(timeout);
             var completedTask = await Task.WhenAny(messageReceived.Task, timeoutTask);

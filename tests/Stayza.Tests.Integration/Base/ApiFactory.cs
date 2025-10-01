@@ -1,9 +1,12 @@
 using DotNet.Testcontainers.Builders;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
 using Respawn;
+using Stayza.Infrastructure.Persistence;
 using Stayza.Web;
 using Testcontainers.PostgreSql;
 using Testcontainers.RabbitMq;
@@ -36,8 +39,26 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         builder.ConfigureServices(services =>
-        {
-            // over-write DI services if needed.
+        { 
+            // var descriptor = services.SingleOrDefault(
+            //     d => d.ServiceType ==
+            //          typeof(DbContextOptions<ApplicationDbContext>));
+            //
+            // if (descriptor != null)
+            // {
+            //     services.Remove(descriptor);
+            // }
+            //
+            // services.AddDbContext<ApplicationDbContext>(opts => opts.UseNpgsql(_postgreSqlContainer.GetConnectionString()));
+
+            // services.RemoveAll<RabbitMQSettings>();
+            // services.AddSingleton(new RabbitMQSettings
+            // {
+            //     ConnectionString = _rabbitMqContainer.GetConnectionString(),
+            //     ExchangeName = "test_notifications_exchange",
+            //     ExchangeType = "topic"
+            // });
+
         });
     }
     

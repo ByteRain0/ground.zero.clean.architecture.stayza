@@ -9,7 +9,7 @@ using Stayza.Tests.Integration.Base.TestConstants;
 
 namespace Stayza.Tests.Integration.Loans.Tests;
 
-[Collection("IntegrationTests")]
+//[Collection("IntegrationTests")]
 public class ReturningBookShould : 
     IClassFixture<ApiFactory>,
     IAsyncLifetime

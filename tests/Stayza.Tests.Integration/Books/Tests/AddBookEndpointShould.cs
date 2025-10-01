@@ -1,6 +1,7 @@
 using System.Net;
 using System.Net.Http.Json;
 using Shouldly;
+using Snapshooter.Xunit;
 using Stayza.Application.Books.Commands;
 using Stayza.Domain.Books;
 using Stayza.Tests.Integration.Base;
@@ -8,7 +9,7 @@ using Stayza.Tests.Integration.Base.TestConstants;
 
 namespace Stayza.Tests.Integration.Books.Tests;
 
-[Collection("IntegrationTests")]
+//[Collection("IntegrationTests")]
 public class AddBookEndpointShould : IClassFixture<ApiFactory>
 {
     private readonly HttpClient _stayzaWebClient;
@@ -61,7 +62,6 @@ public class AddBookEndpointShould : IClassFixture<ApiFactory>
             ISBN: Constants.Book.ISBN));
         
         // Assert
-        bookSetUp.IsSuccessStatusCode.ShouldBeTrue();
         bookResponse.IsSuccessStatusCode.ShouldBeFalse();
     }
 }

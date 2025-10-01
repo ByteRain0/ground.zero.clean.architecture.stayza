@@ -67,8 +67,8 @@ internal class LoansEndpoints : IEndpointsDefinition
         loansGroup.MapGet("/personal", GetLoansByUserId)
             .Produces(statusCode: 404)
             .Produces<PagedList<Loan>>(statusCode: 200, ApplicationJson)
-            .WithName("LoansByUserId");
-        //.CacheOutput("GetLoansByUserId");
+            .WithName("LoansByUserId")
+            .CacheOutput("GetLoansByUserId");
     }
 
     private static async Task<IResult> ReserveBookCopy(

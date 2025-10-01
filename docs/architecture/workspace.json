@@ -148,7 +148,7 @@
   },
   "id" : 1,
   "lastModifiedAgent" : "structurizr-ui",
-  "lastModifiedDate" : "2025-09-15T17:16:47Z",
+  "lastModifiedDate" : "2025-09-22T17:25:40Z",
   "model" : {
     "people" : [ {
       "id" : "72",
@@ -1001,7 +1001,7 @@
     } ],
     "configuration" : {
       "branding" : { },
-      "lastSavedView" : "software_system_view",
+      "lastSavedView" : "api_component_view",
       "metadataSymbols" : "SquareBrackets",
       "styles" : {
         "elements" : [ {
