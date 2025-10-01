@@ -3,9 +3,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
 using Npgsql;
+using RabbitMQ.Client;
 using Respawn;
+using Stayza.Infrastructure.Messaging;
 using Stayza.Infrastructure.Persistence;
 using Stayza.Web;
 using Testcontainers.PostgreSql;
@@ -30,9 +33,7 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
     
     public RabbitMqTestMessageConsumer MessageConsumer;
     
-    public HttpClient HttpClient = default!;
-
-    public string ExchangeName = "test_exchange";
+    public string ExchangeName = "test_notifications_exchange";
     
     public NotificationsApiServer NotificationsApi { get; } = new();
     
@@ -40,37 +41,43 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
     {
         builder.ConfigureServices(services =>
         { 
-            // var descriptor = services.SingleOrDefault(
-            //     d => d.ServiceType ==
-            //          typeof(DbContextOptions<ApplicationDbContext>));
-            //
-            // if (descriptor != null)
-            // {
-            //     services.Remove(descriptor);
-            // }
-            //
-            // services.AddDbContext<ApplicationDbContext>(opts => opts.UseNpgsql(_postgreSqlContainer.GetConnectionString()));
+            // Overwrite the DBContext setup
+            var descriptor = services.SingleOrDefault(
+                d => d.ServiceType ==
+                     typeof(DbContextOptions<ApplicationDbContext>));
+            
+            if (descriptor != null)
+            {
+                services.Remove(descriptor);
+            }
+            
+            services.AddDbContext<ApplicationDbContext>(opts => 
+                opts.UseNpgsql(_postgreSqlContainer.GetConnectionString()));
 
-            // services.RemoveAll<RabbitMQSettings>();
-            // services.AddSingleton(new RabbitMQSettings
-            // {
-            //     ConnectionString = _rabbitMqContainer.GetConnectionString(),
-            //     ExchangeName = "test_notifications_exchange",
-            //     ExchangeType = "topic"
-            // });
-
+            // Overwrite the RabbitMq setup
+            services.RemoveAll<IConnectionFactory>();
+            services.RemoveAll<RabbitMQSettings>();
+            services.AddSingleton(new RabbitMQSettings
+            {
+                ConnectionString = _rabbitMqContainer.GetConnectionString(),
+                ExchangeName = ExchangeName,
+                ExchangeType = "topic"
+            });
+            var connectionStringToRabbitMq = _rabbitMqContainer.GetConnectionString();
+            services.AddSingleton<IConnectionFactory>(_ => new ConnectionFactory
+            {
+                DispatchConsumersAsync = true,
+                Uri = new Uri(connectionStringToRabbitMq)
+            });            
         });
     }
     
+    // Homework: Add a redis container and set it up to test cache.
     protected override IHost CreateHost(IHostBuilder builder)
     {
         Environment.SetEnvironmentVariable("OpenTelemetrySettings__Enabled", "false");
-        // Homework: Add a redis container and set it up to test cache.
         Environment.SetEnvironmentVariable("Cache__Enabled", "false");
         Environment.SetEnvironmentVariable("ExternalConfigurationOptions__Enabled", "false");
-        Environment.SetEnvironmentVariable("ConnectionStrings__Default", _postgreSqlContainer.GetConnectionString());
-        Environment.SetEnvironmentVariable("RabbitMQSettings__ConnectionString", _rabbitMqContainer.GetConnectionString());
-        Environment.SetEnvironmentVariable("RabbitMQSettings__ExchangeName", ExchangeName);
         Environment.SetEnvironmentVariable("Notifications__BaseUrl", NotificationsApi.Url);
         return base.CreateHost(builder);
     }
@@ -81,9 +88,6 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         await _postgreSqlContainer.StartAsync();
         await _rabbitMqContainer.StartAsync();
         MessageConsumer = new RabbitMqTestMessageConsumer(_rabbitMqContainer.GetConnectionString());
-        // Create a single client to be reused and at the same time trigger migration.
-        HttpClient = CreateClient();
-        await InitializeDbRespawner();
     }
 
     public async Task DisposeAsync()
@@ -100,7 +104,7 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         await _respawner.ResetAsync(conn);
     }
     
-    private async Task InitializeDbRespawner()
+    public async Task InitializeDbRespawner()
     {
         _dbConnection = new NpgsqlConnection(_postgreSqlContainer.GetConnectionString());
         await _dbConnection.OpenAsync();

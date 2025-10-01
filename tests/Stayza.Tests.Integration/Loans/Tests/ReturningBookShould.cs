@@ -9,7 +9,6 @@ using Stayza.Tests.Integration.Base.TestConstants;
 
 namespace Stayza.Tests.Integration.Loans.Tests;
 
-//[Collection("IntegrationTests")]
 public class ReturningBookShould : 
     IClassFixture<ApiFactory>,
     IAsyncLifetime
@@ -17,13 +16,16 @@ public class ReturningBookShould :
     private readonly HttpClient _stayzaWebClient;
     
     private Func<Task> _resetDatabase;
+    
+    private Func<Task> _createDatabaseSnapshot;
 
     private NotificationsApiServer _notificationsApiServer;
     
     public ReturningBookShould(ApiFactory factory)
     {
-        _stayzaWebClient = factory.HttpClient;
+        _stayzaWebClient = factory.CreateClient();
         _resetDatabase = factory.ResetDatabaseAsync;
+        _createDatabaseSnapshot = factory.InitializeDbRespawner;
         _notificationsApiServer = factory.NotificationsApi;
     }
     
@@ -78,7 +80,7 @@ public class ReturningBookShould :
             .ShouldBeTrue();
     }
 
-    public Task InitializeAsync() => Task.CompletedTask;
+    public Task InitializeAsync() => _createDatabaseSnapshot();
 
     public Task DisposeAsync() => _resetDatabase();
 }

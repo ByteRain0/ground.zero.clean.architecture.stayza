@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Net.Http.Json;
 using Shouldly;
 using Stayza.Application.Books.Commands;
@@ -8,13 +7,11 @@ using Stayza.Domain.Loans;
 using Stayza.Infrastructure.Persistence.DataSeed;
 using Stayza.Tests.Integration.Base;
 using Stayza.Tests.Integration.Base.TestConstants;
-using Xunit.Abstractions;
 
 namespace Stayza.Tests.Integration.Loans.Tests;
 
-//[Collection("IntegrationTests")]
-public class LoanBookCopyEndpointShould : 
-    IClassFixture<ApiFactory>, 
+public class LoanBookCopyEndpointShould :
+    IClassFixture<ApiFactory>,
     IAsyncLifetime
 {
     private readonly HttpClient _stayzaWebClient;
@@ -22,16 +19,18 @@ public class LoanBookCopyEndpointShould :
     private readonly RabbitMqTestMessageConsumer _messageConsumer;
     
     private Func<Task> _resetDatabase;
+    
+    private Func<Task> _createDbSnapshot;
 
     private readonly string _testSpecificExchangeName;
 
-    public LoanBookCopyEndpointShould(
-        ApiFactory factory)
+    public LoanBookCopyEndpointShould(ApiFactory factory)
     {
-        _stayzaWebClient = factory.HttpClient;
+        _stayzaWebClient = factory.CreateClient();
         _testSpecificExchangeName = factory.ExchangeName;
         _messageConsumer = factory.MessageConsumer;
         _resetDatabase = factory.ResetDatabaseAsync;
+        _createDbSnapshot = factory.InitializeDbRespawner;
     }
 
     [Fact]
@@ -88,7 +87,7 @@ public class LoanBookCopyEndpointShould :
         (await consumeEvents).ShouldBeTrue();
     }
 
-    public Task InitializeAsync() => Task.CompletedTask;
+    public Task InitializeAsync() => _createDbSnapshot();
 
     public Task DisposeAsync() => _resetDatabase();
 }
