@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Stayza.Application.Books;
+using Stayza.Core.Entity;
 using Stayza.Core.Messaging;
 using Stayza.Core.Telemetry.LoggingAdapter;
 using Stayza.Domain.Books;

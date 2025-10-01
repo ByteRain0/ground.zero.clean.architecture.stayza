@@ -36,6 +36,7 @@ public class Book : AggregateRoot
         Title = title;
         Author = author;
         ISBN = isbn;
+        AddDomainEvent(new NewBookAddedEvent());
     }
 
     public IReadOnlyCollection<BookCopy> Copies => _copies.ToList().AsReadOnly();

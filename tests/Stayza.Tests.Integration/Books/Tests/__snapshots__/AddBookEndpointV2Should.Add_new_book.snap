@@ -1,0 +1,8 @@
+﻿{
+  "Title": "Testing clean architecture",
+  "Author": "Jhon Doe",
+  "ISBN": "1234567890",
+  "Copies": [],
+  "DomainEvents": [],
+  "Id": "05902844-7279-420c-a059-fc1e89acf273"
+}
