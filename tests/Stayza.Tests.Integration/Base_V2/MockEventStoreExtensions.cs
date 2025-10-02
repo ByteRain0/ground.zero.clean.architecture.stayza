@@ -1,16 +1,14 @@
 using System.Text.Json;
 using Shouldly;
-using Stayza.Core.Messaging;
+using Stayza.Tests.Integration.Mocks;
 
-namespace Stayza.Tests.Integration.Mocks;
+namespace Stayza.Tests.Integration.Base_V2;
 
-public class MockEventsStore
+public static class MockEventStoreExtensions
 {
-    public List<Message> DomainEvents { get; set; } = [];
-    
-    public TEvent GetEvent<TEvent>() where TEvent : class
+    public static TEvent GetPublishedEvent<TEvent>(this MockEventsStore eventsStore) where TEvent : class
     {
-        var evt = DomainEvents
+        var evt = eventsStore.DomainEvents
             .SingleOrDefault(e => e.Header.EventCode == typeof(TEvent).Name);
 
         evt.ShouldNotBeNull($"Expected event {typeof(TEvent).Name} to be published.");
@@ -19,5 +17,5 @@ public class MockEventsStore
         deserialized.ShouldNotBeNull($"Event body should be deserializable to {typeof(TEvent).Name}.");
 
         return deserialized;
-    }
+    }    
 }
