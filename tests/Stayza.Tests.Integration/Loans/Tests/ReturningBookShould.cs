@@ -29,6 +29,43 @@ public class ReturningBookShould :
         _createDatabaseSnapshot = factory.InitializeDbRespawner;
         _notificationsApiServer = factory.NotificationsApi;
     }
+
+    [Fact]
+    public async Task Notify_user_when_book_copy_was_loaned()
+    {
+        // Arrange
+        await _notificationsApiServer.SetUpNotificationResponse(true);
+        await _stayzaWebClient.AuthenticateTestUser1();
+        
+        // Set up a test book
+        var bookResponse = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", new AddBookCommand(
+            Title: Constants.Book.Title,
+            Author: Constants.Book.Author,
+            ISBN: Constants.Book.ISBN));
+        var book = await bookResponse.Content.ReadFromJsonAsync<Book>();
+
+        // Set up a book copy
+        var bookCopyResponse = await _stayzaWebClient.PostAsync($"api/v1/books/{book!.Id}/copies", default);
+        var bookCopy = await bookCopyResponse.Content.ReadFromJsonAsync<BookCopy>();
+        
+        // Reserve a book before loaning for user 1
+        await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy!.Id}/reservations", default);
+        
+        // Act
+        var returnResponse = await _stayzaWebClient.PostAsync($"api/v1/book-copies/{bookCopy.Id}/loans", default);
+        var loan = await returnResponse.Content.ReadFromJsonAsync<Loan>();
+        
+        loan!.BookCopyId.ShouldBe(bookCopy.Id);
+        loan.UserId.ShouldBe(TestUserSeeder.TestUser1Id);
+        loan.IsReturned.ShouldBeFalse();
+        
+        await Task.Delay(TimeSpan.FromSeconds(10)); // Add about 10 seconds delay for the call to the notifications api to be made.
+        
+        (await _notificationsApiServer.CheckThatNotificationHasBeenReceived(
+                userId: TestUserSeeder.TestUser1Id,
+                notificationType:"BookLoanedEvent"))
+            .ShouldBeTrue();
+    }
     
     // Example of test that run integration with external api.
     // This is run as a form of black box testing where we test from external user flow.
