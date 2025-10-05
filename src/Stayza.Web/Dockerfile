@@ -7,6 +7,8 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
+COPY ["Directory.Build.props", "Directory.Build.props"]
+COPY ["Directory.Packages.props", "Directory.Packages.props"]
 COPY ["src/Stayza.Web/Stayza.Web.csproj", "src/Stayza.Web/"]
 COPY ["src/Stayza.Application/Stayza.Application.csproj", "src/Stayza.Application/"]
 COPY ["src/Stayza.Domain/Stayza.Domain.csproj", "src/Stayza.Domain/"]

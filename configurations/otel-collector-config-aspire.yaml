@@ -150,6 +150,15 @@ exporters:
     endpoint: "aspire-dashboard:18889"
     tls:
       insecure: true
+  file/rotation_with_custom_settings:
+    path: ./foo
+    rotation:
+      max_megabytes: 10
+      max_days: 3
+      max_backups: 3
+      localtime: true
+    format: proto
+    compression: zstd
 
 service:
   pipelines:
@@ -173,4 +182,4 @@ service:
       processors:
         - batch
         - transform/environment
-      exporters: [otlp/aspire]
+      exporters: [otlp/aspire, file/rotation_with_custom_settings]

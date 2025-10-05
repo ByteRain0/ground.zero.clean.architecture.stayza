@@ -79,6 +79,7 @@
       - "5210:80"
       - "5211:443"
     environment:
+      ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:443;http://+:80
       Notifications__Url: http://notifications_api:80
       ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
@@ -87,6 +88,7 @@
       RabbitMQSettings__ConnectionString: "amqp://guest1:guest1@rabbitmq:5672/"
       ExternalConfigurationOptions__Enabled: false
       ConnectionStrings__Default: "Host=postgres;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword"
+      Cache__ConnectionString: "redis:6379"
     volumes:
       - ~/.aspnet/https:/https:ro
   

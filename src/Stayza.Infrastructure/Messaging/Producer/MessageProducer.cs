@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using Stayza.Core.Messaging;
@@ -47,7 +48,8 @@ public class MessageProducer : IMessageProducer
                 basicProperties: properties,
                 body: body);
             
-            _logger.LogInformation("Published message with key {Key} {Message}", key, message);
+            //TODO: can either add the message body as prop to the activity to witch the log binds.
+            _logger.LogInformation("Published message with key {Key} {Message}", key, JsonSerializer.Serialize(message));
         }
         catch (Exception e)
         {

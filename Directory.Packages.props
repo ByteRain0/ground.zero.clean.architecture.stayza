@@ -8,6 +8,8 @@
   </PropertyGroup>
   <ItemGroup>
     <!-- Open Telemetry -->
+    <PackageVersion Include="Ductus.FluentDocker" Version="2.85.0" />
+    <PackageVersion Include="Microsoft.Playwright" Version="1.55.0" />
     <PackageVersion Include="Npgsql.OpenTelemetry" Version="9.0.2" />
     <PackageVersion Include="OpenTelemetry" Version="$(OTelVersion)" />
     <PackageVersion Include="OpenTelemetry.Api" Version="1.11.1" />
