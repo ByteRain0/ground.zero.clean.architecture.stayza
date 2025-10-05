@@ -59,7 +59,19 @@
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
     volumes:
       - ~/.aspnet/https:/https:ro
-        
+  
+  migration_service:
+    container_name: migration_service
+    image: migration_service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: ./src/Stayza.MigrationService/Dockerfile
+    environment:
+      ConnectionStrings__Default: "Host=postgres;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword"
+  
   stayza_api:
     container_name: stayza_api
     image: stayza_api
@@ -72,6 +84,8 @@
         condition: service_healthy
       notifications_api:
         condition: service_started
+      migration_service:
+        condition: service_completed_successfully
     build:
       context: .
       dockerfile: ./src/Stayza.Web/Dockerfile
@@ -79,7 +93,7 @@
       - "5210:80"
       - "5211:443"
     environment:
-      ASPNETCORE_ENVIRONMENT: Development
+      #ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:443;http://+:80
       Notifications__Url: http://notifications_api:80
       ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
