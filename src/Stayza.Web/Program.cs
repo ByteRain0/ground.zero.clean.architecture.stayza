@@ -40,9 +40,9 @@ app.UseExceptionHandler();
 if (app.Environment.IsDevelopment())
 {
     app.ApplyDbMigrations();
-    await app.SeedTestUsers();
     app.MapOpenApi();
 }
+await app.SeedTestUsers();
 
 app
     .UseMiddlewareForFeature<ActivityTracingMiddleware>("ActivityTracingMiddleware")

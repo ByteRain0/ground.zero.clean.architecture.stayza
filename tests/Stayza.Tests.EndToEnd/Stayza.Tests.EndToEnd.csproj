@@ -17,5 +17,10 @@
   <ItemGroup>
     <Using Include="Xunit" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Stayza.Infrastructure\Stayza.Infrastructure.csproj" />
+    <ProjectReference Include="..\Stayza.Tests.Core\Stayza.Tests.Core.csproj" />
+  </ItemGroup>
 
 </Project>

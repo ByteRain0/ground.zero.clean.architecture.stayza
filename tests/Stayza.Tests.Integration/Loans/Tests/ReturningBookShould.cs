@@ -4,6 +4,7 @@ using Stayza.Application.Books.Commands;
 using Stayza.Domain.Books;
 using Stayza.Domain.Loans;
 using Stayza.Infrastructure.Persistence.DataSeed;
+using Stayza.Tests.Core;
 using Stayza.Tests.Integration.Base;
 using Stayza.Tests.Integration.Base.TestConstants;
 

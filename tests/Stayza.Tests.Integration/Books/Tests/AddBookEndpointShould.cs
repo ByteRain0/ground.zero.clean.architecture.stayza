@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http.Json;
 using Shouldly;
-using Snapshooter.Xunit;
 using Stayza.Application.Books.Commands;
 using Stayza.Domain.Books;
+using Stayza.Tests.Core;
 using Stayza.Tests.Integration.Base;
 using Stayza.Tests.Integration.Base.TestConstants;
 

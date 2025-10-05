@@ -14,7 +14,7 @@ public class DbMigrator(
         using var scope = serviceProvider.CreateScope();
         var logger = scope.ServiceProvider.GetRequiredService<ILogger<DbMigrator>>();
 
-        logger.LogInformation("Migrating anime database ...");
+        logger.LogInformation("Migrating database ...");
         using var applicationDbContextMigration = MigrationServiceRunTimeDiagnosticConfig.Source.StartActivity("Applying application Db context migrations", ActivityKind.Client);
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
         try

@@ -1,6 +1,9 @@
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Services;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Playwright;
+using Npgsql;
+using Stayza.Infrastructure.Persistence;
 
 namespace Stayza.Tests.EndToEnd;
 
@@ -22,25 +25,52 @@ public class TestBase : IAsyncLifetime
         .FromFile(ServicesDockerComposeFilePath)
         .FromFile(ObservabilityDockerComposeFilePath)
         .RemoveOrphans()
+        .WaitForHttp("web-app", WebAppUrl)
         .Build();
-
-    public const string WebApiUrl = "https://localhost:5211";
-
+    
+    public const string WebAppUrl = "https://localhost:6211";
+    
+    public const string WebApiUrl = "http://localhost:5210";
+    
     private IPlaywright _playwright;
 
-    public IBrowserContext _browser;
+    public IBrowserContext _browser { get; private set; }
 
-    private const string DatabaseConnectionString = "";
+    private const string DatabaseConnectionString = "Host=localhost;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword;";
 
+    public readonly DbContextOptionsBuilder<ApplicationDbContext> DatabaseOptions = 
+        new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseNpgsql(new NpgsqlConnection(DatabaseConnectionString));
+
+    public HttpClient HttpClient;
 
     public async Task InitializeAsync()
     {
-        _dockerComposeServices.Start();
+        _dockerComposeServices.Start(); // Run the docker compose file to spin up the containers
+        
+        _playwright = await Playwright.CreateAsync(); // Create an instance of Playwright
+        IBrowser browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions()
+        {
+            SlowMo = 1000, // Slows down Playwright operations by the specified amount of milliseconds. Useful so that you can see what is going on.
+            Headless = false // By default the browser will be headless -- we can't see the window or what's going on, to prevent that we set it to false.
+        });
+
+        // Creating a new instance of Browser will allow us to run it in isolation preventing issues related to data sharing like cookies, preferences etc.
+        _browser = await browser.NewContextAsync(new BrowserNewContextOptions()
+        {
+            IgnoreHTTPSErrors = true 
+        });
+
+        HttpClient = new HttpClient();
+        HttpClient.BaseAddress = new Uri(WebApiUrl);
+        
     }
     
     
     public async Task DisposeAsync()
     {
+        await _browser.DisposeAsync();
+        _playwright.Dispose();
         _dockerComposeServices.Dispose();
     }
 

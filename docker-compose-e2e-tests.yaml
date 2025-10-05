@@ -59,7 +59,7 @@
       ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
     volumes:
       - ~/.aspnet/https:/https:ro
-  
+      
   migration_service:
     container_name: migration_service
     image: migration_service
@@ -71,6 +71,7 @@
       dockerfile: ./src/Stayza.MigrationService/Dockerfile
     environment:
       ConnectionStrings__Default: "Host=postgres;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword"
+      OpenTelemetrySettings__TracesEndpoint: "http://otel-collector:4317"
   
   stayza_api:
     container_name: stayza_api
@@ -93,7 +94,6 @@
       - "5210:80"
       - "5211:443"
     environment:
-      #ASPNETCORE_ENVIRONMENT: Development
       ASPNETCORE_URLS: https://+:443;http://+:80
       Notifications__Url: http://notifications_api:80
       ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
@@ -105,6 +105,27 @@
       Cache__ConnectionString: "redis:6379"
     volumes:
       - ~/.aspnet/https:/https:ro
+      
+  stayza_app:
+    container_name: stayza_app
+    image: stayza_app
+    depends_on:
+      stayza_api:
+        condition: service_started
+    build:
+      context: .
+      dockerfile: ./src/Stayza.App/Dockerfile
+    ports:
+      - "6210:80"
+      - "6211:443"
+    environment:
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+      OpenTelemetrySettings__TracesEndpoint: "http://otel-collector:4317"
+      BackEnd__Url: "http://stayza_api:80"
+    volumes:
+      - ~/.aspnet/https:/https:ro  
   
 volumes:
   postgres_data:

@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Stayza.Domain\Stayza.Domain.csproj" />
     <ProjectReference Include="..\..\src\Stayza.Web\Stayza.Web.csproj" />
+    <ProjectReference Include="..\Stayza.Tests.Core\Stayza.Tests.Core.csproj" />
   </ItemGroup>
 
   <ItemGroup>

@@ -57,7 +57,7 @@ processors:
                     string_attribute:
                       {
                         key: service.name,
-                        values: [ dotnet-api ],
+                        values: [ dotnet-api, dotnet-web-app ],
                       },
                   },
                   {
@@ -81,7 +81,7 @@ processors:
             },
         },
         {
-          # Rule: Sample all errors from dotnet-api
+          # Rule: Sample all errors from dotnet-api, dotnet-web-app
           name: sample-all-errors,
           type: and,
           and:
@@ -95,7 +95,7 @@ processors:
                     string_attribute:
                       {
                         key: service.name,
-                        values: [ dotnet-api],
+                        values: [ dotnet-api, dotnet-web-app],
                       },
                   },
                   {
@@ -120,7 +120,7 @@ processors:
                     string_attribute:
                       {
                         key: service.name,
-                        values: [ dotnet-api ],
+                        values: [ dotnet-api, dotnet-web-app ],
                       },
                   },
                   {
