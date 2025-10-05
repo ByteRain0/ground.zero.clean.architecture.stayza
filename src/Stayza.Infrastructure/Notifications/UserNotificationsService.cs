@@ -12,7 +12,7 @@ public class UserNotificationsService(
     {
         var request = await httpClient.PostAsJsonAsync(
             requestUri: "api/v1/notifications", 
-            value: new Notification()
+            value: new Notification
             {
                 UserId = userId,
                 Type = eventType

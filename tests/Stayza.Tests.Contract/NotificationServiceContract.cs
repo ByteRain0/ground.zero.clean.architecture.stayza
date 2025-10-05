@@ -57,7 +57,7 @@ public class NotificationServiceContract
         // Act / Assert
         await _pactBuilder.VerifyAsync(async ctx =>
         {
-            var client = new UserNotificationsService(new HttpClient()
+            var client = new UserNotificationsService(new HttpClient
             {
                 BaseAddress = ctx.MockServerUri
             });

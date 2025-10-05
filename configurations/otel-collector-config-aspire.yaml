@@ -143,7 +143,6 @@ processors:
         }
       ]
 
-
 exporters:
   debug:
     verbosity: detailed

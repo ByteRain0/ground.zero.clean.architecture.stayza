@@ -72,7 +72,6 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
         });
     }
     
-    // Homework: Add a redis container and set it up to test cache.
     protected override IHost CreateHost(IHostBuilder builder)
     {
         Environment.SetEnvironmentVariable("OpenTelemetrySettings__Enabled", "false");

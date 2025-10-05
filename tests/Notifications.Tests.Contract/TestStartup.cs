@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Notifications.Web;
@@ -20,5 +21,10 @@ public class TestStartup : Startup
     {
         base.ConfigureServices(services);
         services.AddScoped<IHelloService, MockHelloService>();
+    }
+
+    public override void Configure(IApplicationBuilder app)
+    {
+        base.Configure(app);
     }
 }

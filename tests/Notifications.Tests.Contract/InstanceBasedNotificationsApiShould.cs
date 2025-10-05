@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.Hosting;
 using Notifications.Web.Infrastructure.Startup;
 using PactNet.Output.Xunit;
 using PactNet.Verifier;
@@ -7,10 +6,12 @@ using Xunit.Abstractions;
 
 namespace Notifications.Tests.Contract;
 
-public class InstanceBasedNotificationsApiShould : IDisposable
+public class InstanceBasedNotificationsApiShould : IAsyncDisposable
 {
     private ITestOutputHelper _outputHelper { get; }
-    private IHost _api { get; }
+    private WebApplication _api { get; }
+
+    private static string _localhostAddress = "http://localhost:5010";
     
     public InstanceBasedNotificationsApiShould(ITestOutputHelper outputHelper)
     {
@@ -18,6 +19,8 @@ public class InstanceBasedNotificationsApiShould : IDisposable
         _api = WebApplication
             .CreateBuilder()
             .Build<TestStartup>();
+        
+        _api.Urls.Add(_localhostAddress);
     }
 
     [Fact]
@@ -31,20 +34,20 @@ public class InstanceBasedNotificationsApiShould : IDisposable
             Outputters = new[]
             {
                 new XunitOutput(_outputHelper),
-            },
+            }
         };
 
         // Act / Assert
         using var pactVerifier = new PactVerifier("Notifications.API", config);
 
         pactVerifier
-            .WithHttpEndpoint(new Uri("http://localhost:5000"))
+            .WithHttpEndpoint(new Uri(_localhostAddress))
             .WithFileSource(new FileInfo("../../../../Notification-API-Pacts/Stayza.API-Notifications.API.json"))
             .Verify();
     }
 
-    public void Dispose()
+    public async ValueTask DisposeAsync()
     {
-        _api.Dispose();
+        await _api.DisposeAsync();
     }
 }

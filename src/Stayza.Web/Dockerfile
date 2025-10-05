@@ -1,0 +1,27 @@
+﻿FROM mcr.microsoft.com/dotnet/aspnet:9.0 AS base
+USER $APP_UID
+WORKDIR /app
+EXPOSE 8080
+EXPOSE 8081
+
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
+ARG BUILD_CONFIGURATION=Release
+WORKDIR /src
+COPY ["src/Stayza.Web/Stayza.Web.csproj", "src/Stayza.Web/"]
+COPY ["src/Stayza.Application/Stayza.Application.csproj", "src/Stayza.Application/"]
+COPY ["src/Stayza.Domain/Stayza.Domain.csproj", "src/Stayza.Domain/"]
+COPY ["src/Stayza.Core/Stayza.Core.csproj", "src/Stayza.Core/"]
+COPY ["src/Stayza.Infrastructure/Stayza.Infrastructure.csproj", "src/Stayza.Infrastructure/"]
+RUN dotnet restore "src/Stayza.Web/Stayza.Web.csproj"
+COPY . .
+WORKDIR "/src/src/Stayza.Web"
+RUN dotnet build "Stayza.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
+
+FROM build AS publish
+ARG BUILD_CONFIGURATION=Release
+RUN dotnet publish "Stayza.Web.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
+
+FROM base AS final
+WORKDIR /app
+COPY --from=publish /app/publish .
+ENTRYPOINT ["dotnet", "Stayza.Web.dll"]

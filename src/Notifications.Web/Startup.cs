@@ -18,7 +18,6 @@ public class Startup : BaseStartup
     {
         services.AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), tags: new[] { "live" });
-
         
         services.AddScoped<IHelloService, RealHelloService>();
     }

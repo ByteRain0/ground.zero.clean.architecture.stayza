@@ -11,14 +11,14 @@ public class NotificationsApiServer : IAsyncDisposable
         .WithAutoRemove(true)
         .WithCleanUp(true)
         .Build();
-    
+
     public string Url => _notificationsApi.GetPublicUrl();
 
     public async Task StartAsync()
     {
         await _notificationsApi.StartAsync();
     }
-    
+
     public async Task SetUpNotificationResponse(bool successful)
     {
         var mappingBuilder = _notificationsApi
@@ -34,11 +34,11 @@ public class NotificationsApiServer : IAsyncDisposable
 
         await mappingBuilder.BuildAndPostAsync();
     }
-    
+
     public async Task<bool> CheckThatNotificationHasBeenReceived(
         string userId,
         string notificationType)
-    {        
+    {
         var adminClient = _notificationsApi.CreateWireMockAdminClient();
         var receivedRequests = await adminClient.GetRequestsAsync();
 
@@ -55,9 +55,8 @@ public class NotificationsApiServer : IAsyncDisposable
 
                 var notification =
                     JsonSerializer.Deserialize<UserNotificationsService.Notification>(receivedRequest.Request.Body);
-                
-                existingNotifications.Add(notification);
 
+                existingNotifications.Add(notification);
             }
             catch (Exception e)
             {
@@ -65,10 +64,10 @@ public class NotificationsApiServer : IAsyncDisposable
             }
         }
 
-        return existingNotifications.Any(x => 
+        return existingNotifications.Any(x =>
             x.UserId == userId && x.Type == notificationType);
     }
-    
+
     public async ValueTask DisposeAsync()
     {
         await _notificationsApi.DisposeAsync();

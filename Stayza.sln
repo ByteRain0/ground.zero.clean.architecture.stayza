@@ -26,6 +26,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "utils", "utils", "{F65BBF37
 		README.md = README.md
 		configurations\otel-collector-config-aspire.yaml = configurations\otel-collector-config-aspire.yaml
 		docker-compose-local-observability.yaml = docker-compose-local-observability.yaml
+		docker-compose-e2e-tests.yaml = docker-compose-e2e-tests.yaml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Stayza.Tests.Unit", "tests\Stayza.Tests.Unit\Stayza.Tests.Unit.csproj", "{5BC6FB9B-6F23-4FCF-9277-B80CBFDF1F1C}"

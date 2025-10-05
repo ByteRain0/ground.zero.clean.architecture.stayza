@@ -13,6 +13,7 @@
     <PackageReference Include="Snapshooter.Xunit" />
     <PackageReference Include="Testcontainers.PostgreSql" />
     <PackageReference Include="Testcontainers.RabbitMq" />
+    <PackageReference Include="WireMock.Net" />
     <PackageReference Include="WireMock.Net.Testcontainers" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
