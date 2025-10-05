@@ -41,33 +41,35 @@ public static class HealthCheckApplicationBuilderExtensions
         // See https://aka.ms/dotnet/aspire/healthchecks for details before enabling these endpoints in non-development environments.
         if (app.Environment.IsDevelopment())
         {
-            // All health checks must pass for app to be considered ready to accept traffic after starting
-            // All health checks must pass for readiness
-            app.MapHealthChecks("/health", new HealthCheckOptions
-            {
-                ResponseWriter = async (context, report) =>
-                {
-                    context.Response.ContentType = "application/json";
-                    var result = JsonSerializer.Serialize(new
-                    {
-                        status = report.Status.ToString(),
-                        details = report.Entries.Select(e => new
-                        {
-                            key = e.Key,
-                            status = e.Value.Status.ToString(),
-                            description = e.Value.Description
-                        })
-                    });
-                    await context.Response.WriteAsync(result);
-                }
-            });
-
-            // Only "live" tag for liveness probe
-            app.MapHealthChecks("/alive", new HealthCheckOptions
-            {
-                Predicate = r => r.Tags.Contains("live")
-            });
+            // NOTE.
         }
+        
+        // All health checks must pass for app to be considered ready to accept traffic after starting
+        // All health checks must pass for readiness
+        app.MapHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = async (context, report) =>
+            {
+                context.Response.ContentType = "application/json";
+                var result = JsonSerializer.Serialize(new
+                {
+                    status = report.Status.ToString(),
+                    details = report.Entries.Select(e => new
+                    {
+                        key = e.Key,
+                        status = e.Value.Status.ToString(),
+                        description = e.Value.Description
+                    })
+                });
+                await context.Response.WriteAsync(result);
+            }
+        });
+
+        // Only "live" tag for liveness probe
+        app.MapHealthChecks("/alive", new HealthCheckOptions
+        {
+            Predicate = r => r.Tags.Contains("live")
+        });
 
         return app;
     }
