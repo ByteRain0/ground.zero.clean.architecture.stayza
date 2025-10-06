@@ -19,6 +19,7 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Stayza.Core\Stayza.Core.csproj" />
     <ProjectReference Include="..\..\src\Stayza.Infrastructure\Stayza.Infrastructure.csproj" />
     <ProjectReference Include="..\Stayza.Tests.Core\Stayza.Tests.Core.csproj" />
   </ItemGroup>

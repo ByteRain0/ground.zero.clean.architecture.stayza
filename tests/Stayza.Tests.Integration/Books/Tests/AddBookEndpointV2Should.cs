@@ -4,6 +4,7 @@ using Shouldly;
 using Snapshooter.Xunit;
 using Stayza.Application.Books.Commands;
 using Stayza.Domain.Books;
+using Stayza.Tests.Core;
 using Stayza.Tests.Integration.Base_V2;
 using Stayza.Tests.Integration.Base;
 using Stayza.Tests.Integration.Base.TestConstants;

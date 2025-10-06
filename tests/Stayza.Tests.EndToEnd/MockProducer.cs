@@ -1,4 +1,5 @@
 using Stayza.Core.Messaging;
+using Message = Stayza.Core.Messaging.Message;
 
 namespace Stayza.Tests.EndToEnd;
 
