@@ -1,0 +1,164 @@
+﻿services:
+  postgres:
+    container_name: database
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U myuser -d mydatabase" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+   
+  rabbitmq:
+    container_name: rabbitmq
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672" # RabbitMQ default port
+      - "15672:15672" # Management plugin port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest1
+      RABBITMQ_DEFAULT_PASS: guest1
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s #adjust inside the runners
+      timeout: 30s
+      retries: 3  
+    
+  redis:
+    container_name: redis
+    image: "redis:latest"
+    ports:
+      - "6379:6379" # Redis default port
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+      start_period: 5s
+  
+  notifications_api:
+    container_name: notifications_api
+    image: notifications_api
+    build:
+      context: .
+      dockerfile: ./src/Notifications.Web/Dockerfile
+    ports:
+      - "1000:80"
+      - "1001:443"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - ~/.aspnet/https:/https:ro
+      
+  migration_service:
+    container_name: migration_service
+    image: migration_service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: ./src/Stayza.MigrationService/Dockerfile
+    environment:
+      ConnectionStrings__Default: "Host=postgres;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword"
+      OpenTelemetrySettings__TracesEndpoint: "http://otel-collector:4317"
+  
+  stayza_api:
+    container_name: stayza_api
+    image: stayza_api
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      notifications_api:
+        condition: service_healthy
+      migration_service:
+        condition: service_completed_successfully
+    build:
+      context: .
+      dockerfile: ./src/Stayza.Web/Dockerfile
+    ports:
+      - "5210:80"
+      - "5211:443"
+    environment:
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      Notifications__BaseUrl: http://notifications_api:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+      OpenTelemetrySettings__TracesEndpoint: "http://otel-collector:4317"
+      RabbitMQSettings__ConnectionString: "amqp://guest1:guest1@rabbitmq:5672/"
+      ExternalConfigurationOptions__Enabled: false
+      ConnectionStrings__Default: "Host=postgres;Port=5432;Database=mydatabase;Username=myuser;Password=mypassword"
+      Cache__ConnectionString: "redis:6379"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:80/health" ]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    volumes:
+      - ~/.aspnet/https:/https:ro
+      
+  stayza_app:
+    container_name: stayza_app
+    image: stayza_app
+    depends_on:
+      stayza_api:
+        condition: service_healthy
+    build:
+      context: .
+      dockerfile: ./src/Stayza.App/Dockerfile
+    ports:
+      - "6210:80"
+      - "6211:443"
+    environment:
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+      OpenTelemetrySettings__TracesEndpoint: "http://otel-collector:4317"
+      BackEnd__Url: "http://stayza_api:80"
+    volumes:
+      - ~/.aspnet/https:/https:ro
+  
+  api_gateway:
+    container_name: api_gateway
+    depends_on:
+      - notifications_api
+      - stayza_api
+    image: yarp_gateway
+    build:
+      context: .
+      dockerfile: ./src/Stayza.Gateway/Dockerfile
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
+      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+    volumes:
+      - ~/.aspnet/https:/https:ro
+    ports:
+      - "4000:80"
+      - "4001:443"
+
+volumes:
+  postgres_data:
+  pgadmin_data:
