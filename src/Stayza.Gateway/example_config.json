@@ -1,0 +1,61 @@
+{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft.AspNetCore": "Warning"
+    }
+  },
+  "AllowedHosts": "*",
+  "ReverseProxy": {
+    "Clusters": {
+      "stayza-cluster": {
+        "Destinations": {
+          "stayza": {
+            "Address": "http://stayza_api"
+          }
+        }
+      },
+      "notifications-cluster": {
+        "LoadBalancingPolicy": "TenantBased",
+//        "LoadBalancingPolicy": "Random",
+//        "LoadBalancingPolicy": "RoundRobin",
+//        "LoadBalancingPolicy": "LeastRequests",
+        "Destinations": {
+          "notifications_api_1": {
+            "Address": "http://notifications_api"
+          }
+          //          ,"notifications_api_2": {
+          //            "Address": "http://notifications_api_2"
+          //          }
+        }
+      }
+    },
+    "Routes": {
+      "books-route": {
+        "ClusterId": "stayza-cluster",
+        "RateLimiterPolicy": "fixedWindowPolicy",
+        "Match": {
+          "Path": "/api/v1/books/{**catch-all}"
+        }
+      },
+      "loans-route": {
+        "ClusterId": "stayza-cluster",
+        "Match": {
+          "Path": "/api/v1/loans/{**catch-all}"
+        }
+      },
+      "notifications-route": {
+        "ClusterId": "notifications-cluster",
+        "Match": {
+          "Path": "/api/v1/notifications/{**catch-all}"
+        }
+      },
+      "greetings-route": {
+        "ClusterId": "notifications-cluster",
+        "Match": {
+          "Path": "/api/v1/hello"
+        }
+      }
+    }
+  }
+}
