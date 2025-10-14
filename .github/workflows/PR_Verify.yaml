@@ -39,7 +39,7 @@ jobs:
       # --- PLAYWRIGHT SETUP ---
         -   name: Install Playwright browsers
             run: |
-                cd tests/Stayza.Tests.E2E
+                cd tests/Stayza.Tests.EndToEnd
                 pwsh bin/Debug/net*/playwright.ps1 install --with-deps
                 # Alternatively, if your E2E project targets .NET 8, you can also use:
                 # run: dotnet playwright install --with-deps
