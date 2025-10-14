@@ -56,7 +56,7 @@ jobs:
                 path-to-gitversion: packages/GitVersion.CommandLine/tools/GitVersion.exe
 
         -   name: Echo version
-            run: echo ${{ steps.gitversion.outputs.MajorMinorPatch }}
+            run: echo ${{ steps.gitversion.outputs.SemVer }}
 
         # Alternative way to determine a semantic version if you run it in GitLab or other platforms.
         -   name: Determine semantic version
