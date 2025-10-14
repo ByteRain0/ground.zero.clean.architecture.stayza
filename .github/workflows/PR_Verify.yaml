@@ -49,21 +49,18 @@ jobs:
         -   name: Add .NET tools to PATH
             run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-        -   name: Install gitVersion
-            uses: gittools/actions/gitversion/setup@v3.1.11
+        -   name: GitVersion
+            id: gitversion
+            uses: nmcc/actions-gitversion@v1
             with:
-                versionSpec: '6.0.x'
-
-        -   name: Determine version
-            id: version_step # step id used as reference for output values
-            uses: gittools/actions/gitversion/execute@v3.1.11
+                path-to-gitversion: packages/GitVersion.CommandLine/tools/GitVersion.exe
 
         -   name: Echo version
-            run: echo ${{ steps.version_step.outputs.MajorMinorPatch }}.${{ steps.version_step.outputs.CommitsSinceVersionSource }}
+            run: echo ${{ steps.gitversion.outputs.MajorMinorPatch }}
 
         # Alternative way to determine a semantic version if you run it in GitLab or other platforms.
         -   name: Determine semantic version
-            id: gitversion
+            id: gitversion_own
             run: |
                 dotnet tool restore
                 echo "Running GitVersion..."
