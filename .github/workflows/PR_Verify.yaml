@@ -49,24 +49,18 @@ jobs:
         -   name: Add .NET tools to PATH
             run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-        -   name: GitVersion
-            id: gitversion
-            uses: nmcc/actions-gitversion@v1
-            with:
-                path-to-gitversion: packages/GitVersion.CommandLine/tools/GitVersion.exe
-
-        -   name: Echo version
-            run: echo ${{ steps.gitversion.outputs.SemVer }}
-
         # Alternative way to determine a semantic version if you run it in GitLab or other platforms.
         -   name: Determine semantic version
-            id: gitversion_own
+            id: version_step
             run: |
                 dotnet tool restore
                 echo "Running GitVersion..."
                 dotnet dotnet-gitversion
                 SEMVER=$(dotnet dotnet-gitversion /showvariable SemVer)
                 echo "Semantic version: $SEMVER"
+
+        -   name: Echo version
+            run: echo ${{ steps.version_step.outputs.MajorMinorPatch }}.${{ steps.version_step.outputs.CommitsSinceVersionSource }}
 
         -   name: Combine coverage reports
             run: |

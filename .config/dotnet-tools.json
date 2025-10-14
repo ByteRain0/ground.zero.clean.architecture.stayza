@@ -8,14 +8,13 @@
         "reportgenerator"
       ],
       "rollForward": false
+    },
+    "gitversion.tool": {
+      "version": "5.10.1",
+      "commands": [
+        "dotnet-gitversion"
+      ],
+      "rollForward": false
     }
-    // ,
-    // "gitversion.tool": {
-    //   "version": "5.10.1",
-    //   "commands": [
-    //     "dotnet-gitversion"
-    //   ],
-    //   "rollForward": false
-    // }
   }
 }
