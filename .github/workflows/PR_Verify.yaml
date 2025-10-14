@@ -52,10 +52,9 @@ jobs:
             run: |
                 dotnet tool restore
                 echo "Running GitVersion..."
-                dotnet gitversion /output json > gitversion.json
-                echo "Semantic version:"
-                cat gitversion.json | jq -r '.SemVer'
-                echo "semver=$semver" >> $GITHUB_OUTPUT
+                SEMVER=$(dotnet dotnet-gitversion | jq -r '.SemVer')
+                echo "Semantic version: $SEMVER"
+                echo "semver=$SEMVER" >> $GITHUB_OUTPUT
 
         -   name: Example usage of semantic version
             run: echo "Current semantic version is ${{ steps.gitversion.outputs.semver }}"
