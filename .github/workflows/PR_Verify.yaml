@@ -35,6 +35,9 @@ jobs:
         # -   name: Run contract tests
         #     run: dotnet test tests/Stayza.Tests.Contract/Stayza.Tests.Contract.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
+        -   name: Install playwright
+            run: dotnet playwright install --with-deps
+
         -   name: Run e2e tests
             run: dotnet test tests/Stayza.Tests.EndToEnd/Stayza.Tests.EndToEnd.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
