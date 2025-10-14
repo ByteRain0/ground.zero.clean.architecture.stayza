@@ -1,0 +1,35 @@
+name: "PR Verify - performance"
+on:
+    pull_request: 
+        branches: [ "main" ]
+jobs:
+    build:
+        name: E2E tests
+        runs-on: ubuntu-latest
+        steps:
+        
+        -   name: Checkout code
+            uses: actions/checkout@v4
+            with:
+                fetch-depth: 0
+        
+        -   name: Set up QEMU
+            uses: docker/setup-qemu-action@v3
+
+        -   name: Set up Docker Buildx
+            uses: docker/setup-buildx-action@v3
+
+        -   name: Install k6
+            uses: grafana/setup-k6-action@v1
+
+        -   name: Run performance tests
+            run: |
+                docker compose -f docker-compose-e2e-tests.yaml up -d
+                docker compose -f docker-compose-local-observability.yaml up -d
+                k6 run tests/Stayza.Tests.Performance/tests/create_book_performance.js
+            env:
+                BASE_API_URL: http://localhost:5000  #example on how to set envs.
+
+        -   name: Tear down Docker environment
+            if: always()  # ensures cleanup even if tests fail
+            run: docker compose down
