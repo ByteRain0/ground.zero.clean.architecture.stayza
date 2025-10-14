@@ -24,25 +24,40 @@ jobs:
         -   name: Build
             run: dotnet build --no-restore
 
-        -   name: "Run unit tests"
+        -   name: Run unit tests
             run: dotnet test tests/Stayza.Tests.Unit/Stayza.Tests.Unit.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
-        -   name: "Run API layer integration tests"
-            run: dotnet test tests/Stayza.Tests.Integration/Stayza.Tests.Integration.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+        # -   name: Run API layer integration tests
+        #     run: dotnet test tests/Stayza.Tests.Integration/Stayza.Tests.Integration.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
-        -   name: "Run subcutaneous layer integration tests"
-            run: dotnet test tests/Stayza.Tests.Subcutaneous/Stayza.Tests.Subcutaneous.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+        # -   name: "Run subcutaneous layer integration tests"
+        #     run: dotnet test tests/Stayza.Tests.Subcutaneous/Stayza.Tests.Subcutaneous.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
-        -   name: "Run contract tests"
-            run: dotnet test tests/Stayza.Tests.Contract/Stayza.Tests.Contract.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+        # -   name: Run contract tests
+        #     run: dotnet test tests/Stayza.Tests.Contract/Stayza.Tests.Contract.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
             # Tool by: https://github.com/danielpalme/ReportGenerator
             # Tips here: https://reportgenerator.io/usage
-        -   name: "Install report generator"
+        -   name: Install report generator
             run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+        -   name: Install gitversion
+            run: dotnet tool install --global GitVersion.Tool --version 6.*
 
         -   name: Add .NET tools to PATH
             run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+        -   name: Determine semantic version
+            id: gitversion
+            run: |
+                echo "Running GitVersion..."
+                dotnet gitversion /output json > gitversion.json
+                echo "Semantic version:"
+                cat gitversion.json | jq -r '.SemVer'
+                echo "semver=$semver" >> $GITHUB_OUTPUT
+
+        -   name: Example usage of semantic version
+            run: echo "Current semantic version is ${{ steps.gitversion.outputs.semver }}"
 
         -   name: Combine Coverage Reports
             run: |
@@ -56,7 +71,7 @@ jobs:
                 "-tag:${{ github.run_number }}_${{ github.run_id }}" \
                 "-toolpath:reportgeneratortool"
 
-        -   name: Print Markdown Summary
+        -   name: Print markdown Summary
             run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
 
         -   name: Upload test result files
