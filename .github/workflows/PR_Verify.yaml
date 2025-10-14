@@ -11,6 +11,8 @@ jobs:
 
         -   name: Checkout code
             uses: actions/checkout@v4
+            with:
+                fetch-depth: 0
 
         -   name: Setup .NET
             uses: actions/setup-dotnet@v4
@@ -60,14 +62,14 @@ jobs:
             run: echo ${{ steps.version_step.outputs.MajorMinorPatch }}.${{ steps.version_step.outputs.CommitsSinceVersionSource }}
 
         # Alternative way to determine a semantic version if you run it in GitLab or other platforms.
-        # -   name: Determine semantic version
-        #     id: gitversion
-        #     run: |
-        #         dotnet tool restore
-        #         echo "Running GitVersion..."
-        #         dotnet dotnet-gitversion
-        #         SEMVER=$(dotnet dotnet-gitversion /showvariable SemVer)
-        #         echo "Semantic version: $SEMVER"
+        -   name: Determine semantic version
+            id: gitversion
+            run: |
+                dotnet tool restore
+                echo "Running GitVersion..."
+                dotnet dotnet-gitversion
+                SEMVER=$(dotnet dotnet-gitversion /showvariable SemVer)
+                echo "Semantic version: $SEMVER"
 
         -   name: Combine coverage reports
             run: |
