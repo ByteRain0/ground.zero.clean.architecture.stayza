@@ -52,7 +52,7 @@ jobs:
             run: |
                 dotnet tool restore
                 echo "Running GitVersion..."
-                SEMVER=$(dotnet dotnet-gitversion | jq -r '.SemVer')
+                SEMVER=$(dotnet dotnet-gitversion /showvariable SemVer)
                 echo "Semantic version: $SEMVER"
                 echo "semver=$SEMVER" >> $GITHUB_OUTPUT
 
