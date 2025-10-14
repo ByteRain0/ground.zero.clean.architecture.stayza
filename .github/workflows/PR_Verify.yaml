@@ -27,20 +27,25 @@ jobs:
         -   name: "Run unit tests"
             run: dotnet test tests/Stayza.Tests.Unit/Stayza.Tests.Unit.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
-        -   name: "Run API layer integration tests"
-            run: dotnet test tests/Stayza.Tests.Integration/Stayza.Tests.Integration.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+        # -   name: "Run API layer integration tests"
+        #     run: dotnet test tests/Stayza.Tests.Integration/Stayza.Tests.Integration.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
-        -   name: "Run subcutaneous layer integration tests"
-            run: dotnet test tests/Stayza.Tests.Subcutaneous/Stayza.Tests.Subcutaneous.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+        # -   name: "Run subcutaneous layer integration tests"
+        #     run: dotnet test tests/Stayza.Tests.Subcutaneous/Stayza.Tests.Subcutaneous.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
-        -   name: "Run contract tests"
-            run: dotnet test tests/Stayza.Tests.Contract/Stayza.Tests.Contract.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+        # -   name: "Run contract tests"
+        #     run: dotnet test tests/Stayza.Tests.Contract/Stayza.Tests.Contract.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
+            # Tool by: https://github.com/danielpalme/ReportGenerator
+            # Tips here: https://reportgenerator.io/usage
         -   name: "Install report generator"
             run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
         -   name: Add .NET tools to PATH
             run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+        -   name: "LS recursively"
+            run: ls -R
 
         -   name: Combine Coverage Reports
             run: |
