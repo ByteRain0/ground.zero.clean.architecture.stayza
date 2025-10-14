@@ -2,11 +2,29 @@ using FluentValidation;
 
 namespace Stayza.Application.Books.Commands;
 
-public record AddBookCommand(
-    string Title,
-    string Author,
-    string ISBN);
+public class AddBookCommand
+{
+    public string Title { get; set; }
 
+    public string Author { get; set; }
+
+    public string ISBN { get; set; }
+    
+    public AddBookCommand()
+    {
+        
+    }
+
+    public AddBookCommand(
+        string Title,
+        string Author,
+        string ISBN)
+    {
+        this.Author = Author;
+        this.Title = Title;
+        this.ISBN = ISBN;
+    }
+}
 
 public class AddBookValidator : AbstractValidator<AddBookCommand>
 {

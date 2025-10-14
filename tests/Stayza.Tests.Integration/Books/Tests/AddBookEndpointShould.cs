@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Bogus;
 using Shouldly;
 using Stayza.Application.Books.Commands;
 using Stayza.Domain.Books;
@@ -62,5 +63,33 @@ public class AddBookEndpointShould : IClassFixture<ApiFactory>
         
         // Assert
         bookResponse.IsSuccessStatusCode.ShouldBeFalse();
+    }
+    
+    [Fact]
+    public async Task Add_new_synthetic_book()
+    {
+        // Arrange
+        using var rootTestActivity = OtelTestFramework.Source.StartActivity();
+        _stayzaWebClient.InjectTraceContext(rootTestActivity);
+        await _stayzaWebClient.AuthenticateTestUser1();
+        
+        var actions = new[] {"Adventures of", "Stories from childhood of", "Bla Bla Bla with "};
+        
+        var bookDataGenerator = new Faker<AddBookCommand>()
+            .RuleFor(x => x.Title, faker => $"{faker.PickRandom(actions)} {faker.Name.FindName()}")
+            .RuleFor(x => x.Author, faker => $"{faker.Name.FullName()}")
+            .RuleFor(x => x.ISBN, faker => faker.Random.String(length: 10));
+        
+        var command = bookDataGenerator.Generate();
+        
+        // Act
+        var bookResponse = await _stayzaWebClient.PostAsJsonAsync("api/v1/books", command);
+        
+        // Assert
+        bookResponse.StatusCode.ShouldBe(HttpStatusCode.Created);
+        var book = await bookResponse.Content.ReadFromJsonAsync<Book>();
+        book!.Author.ShouldBe(command.Author);
+        book.Title.ShouldBe(command.Title);
+        book.ISBN.ShouldBe(command.ISBN);
     }
 }
