@@ -78,7 +78,9 @@ public class AddBookEndpointShould : IClassFixture<ApiFactory>
         var bookDataGenerator = new Faker<AddBookCommand>()
             .RuleFor(x => x.Title, faker => $"{faker.PickRandom(actions)} {faker.Name.FindName()}")
             .RuleFor(x => x.Author, faker => $"{faker.Name.FullName()}")
-            .RuleFor(x => x.ISBN, faker => faker.Random.String(length: 10));
+            .RuleFor(x => x.ISBN, faker => faker.Random.Long(
+                min: 10000000000,
+                max: 9999999999).ToString());
         
         var command = bookDataGenerator.Generate();
         

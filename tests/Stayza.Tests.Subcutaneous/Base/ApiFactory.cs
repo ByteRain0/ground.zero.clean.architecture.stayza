@@ -37,6 +37,7 @@ public class ApiFactory : WebApplicationFactory<IWebMarker>, IAsyncLifetime
     {
         Environment.SetEnvironmentVariable("OpenTelemetrySettings__Enabled", "false");
         Environment.SetEnvironmentVariable("ConnectionStrings__Default", _postgreSqlContainer.GetConnectionString());
+        Environment.SetEnvironmentVariable("ExternalConfigurationOptions__Enabled", "false");
         return base.CreateHost(builder);
     }
 

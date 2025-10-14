@@ -2,8 +2,6 @@ name: "PR Verify"
 on:
     pull_request: 
         branches: [ "main" ]
-    push:
-        branches: [ "main" ]
     
 jobs:
     build:
@@ -28,3 +26,33 @@ jobs:
 
         -   name: "Run unit tests"
             run: dotnet test tests/Stayza.Tests.Unit/Stayza.Tests.Unit.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
+        -   name: "Run API layer integration tests"
+            run: dotnet test tests/Stayza.Tests.Integration/Stayza.Tests.Integration.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
+        -   name: "Run subcutaneous layer integration tests"
+            run: dotnet test tests/Stayza.Tests.Subcutaneous/Stayza.Tests.Subcutaneous.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
+        -   name: "Run contract tests"
+            run: dotnet test tests/Stayza.Tests.Contract/Stayza.Tests.Contract.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
+        -   name: "Install report generator"
+            run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+        -   name: Add .NET tools to PATH
+            run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+        -   name: Combine Coverage Reports
+            run: |
+                mkdir -p coveragereport
+                reportgenerator \
+                "-reports:**/*.cobertura.xml" \
+                "-targetdir:coveragereport" \
+                "-reporttypes:HtmlInline;Cobertura;MarkdownSummaryGithub" \
+                "-verbosity:Info" \
+                "-title:Code Coverage" \
+                "-tag:${{ github.run_number }}_${{ github.run_id }}" \
+                "-toolpath:reportgeneratortool"
+
+        -   name: Print Markdown Summary
+            run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
