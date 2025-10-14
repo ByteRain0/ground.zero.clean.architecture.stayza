@@ -27,5 +27,4 @@ jobs:
             run: dotnet build --no-restore
 
         -   name: "Run unit tests"
-            run: dotnet test tests/Stayza.Tests.Unit/Stayza.Tests.Unit.csproj --configuration Release --verbosity normal --loger trx --collect:"XPlat Code Coverage"
-            
+            run: dotnet test tests/Stayza.Tests.Unit/Stayza.Tests.Unit.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
