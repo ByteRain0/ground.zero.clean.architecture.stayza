@@ -50,6 +50,7 @@ jobs:
         -   name: Determine semantic version
             id: gitversion
             run: |
+                dotnet tool restore
                 echo "Running GitVersion..."
                 dotnet gitversion /output json > gitversion.json
                 echo "Semantic version:"
@@ -59,7 +60,7 @@ jobs:
         -   name: Example usage of semantic version
             run: echo "Current semantic version is ${{ steps.gitversion.outputs.semver }}"
 
-        -   name: Combine Coverage Reports
+        -   name: Combine coverage reports
             run: |
                 mkdir -p coveragereport
                 reportgenerator \
