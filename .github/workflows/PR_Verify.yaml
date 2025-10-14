@@ -47,18 +47,27 @@ jobs:
         -   name: Add .NET tools to PATH
             run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
 
-        -   name: Determine semantic version
-            id: gitversion
-            run: |
-                dotnet tool restore
-                echo "Running GitVersion..."
-                dotnet dotnet-gitversion
-                SEMVER=$(dotnet dotnet-gitversion /showvariable SemVer)
-                echo "Semantic version: $SEMVER"
-                echo "semver=$SEMVER" >> $GITHUB_OUTPUT
+        -   name: Install gitVersion
+            uses: gittools/actions/gitversion/setup@v3.1.11
+            with:
+                versionSpec: '6.0.x'
 
-        -   name: Example usage of semantic version
-            run: echo "Current semantic version is ${{ steps.gitversion.outputs.semver }}"
+        -   name: Determine version
+            id: version_step # step id used as reference for output values
+            uses: gittools/actions/gitversion/execute@v3.1.11
+
+        -   name: Echo version
+            run: echo ${{ steps.version_step.outputs.MajorMinorPatch }}.${{ steps.version_step.outputs.CommitsSinceVersionSource }}
+
+        # Alternative way to determine a semantic version if you run it in GitLab or other platforms.
+        # -   name: Determine semantic version
+        #     id: gitversion
+        #     run: |
+        #         dotnet tool restore
+        #         echo "Running GitVersion..."
+        #         dotnet dotnet-gitversion
+        #         SEMVER=$(dotnet dotnet-gitversion /showvariable SemVer)
+        #         echo "Semantic version: $SEMVER"
 
         -   name: Combine coverage reports
             run: |
