@@ -56,3 +56,10 @@ jobs:
 
         -   name: Print Markdown Summary
             run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+
+        -   name: Upload Test Result Files
+            uses: actions/upload-artifact@v4
+            with:
+                name: test-results
+                path: ${{ github.workspace }}/**/TestResults/**/*
+                retention-days: 2
