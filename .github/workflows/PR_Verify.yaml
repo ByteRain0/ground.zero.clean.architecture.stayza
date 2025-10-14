@@ -35,8 +35,15 @@ jobs:
         # -   name: Run contract tests
         #     run: dotnet test tests/Stayza.Tests.Contract/Stayza.Tests.Contract.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
-        -   name: Install playwright
-            run: dotnet playwright install --with-deps
+
+      # --- PLAYWRIGHT SETUP ---
+        -   name: Install Playwright browsers
+            run: |
+                cd tests/Stayza.Tests.E2E
+                pwsh bin/Debug/net*/playwright.ps1 install --with-deps
+                # Alternatively, if your E2E project targets .NET 8, you can also use:
+                # run: dotnet playwright install --with-deps
+                # This installs the required browsers (Chromium, Firefox, WebKit)
 
         -   name: Run e2e tests
             run: dotnet test tests/Stayza.Tests.EndToEnd/Stayza.Tests.EndToEnd.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
