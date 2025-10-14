@@ -36,7 +36,7 @@ jobs:
         #     run: dotnet test tests/Stayza.Tests.Contract/Stayza.Tests.Contract.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
         -   name: Run e2e tests
-            run: dotnet test tests/Stayza.Tests.E2E/Stayza.Tests.E2E.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+            run: dotnet test tests/Stayza.Tests.EndToEnd/Stayza.Tests.EndToEnd.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
             # Tool by: https://github.com/danielpalme/ReportGenerator
             # Tips here: https://reportgenerator.io/usage
