@@ -38,11 +38,11 @@ jobs:
 
             # Tool by: https://github.com/danielpalme/ReportGenerator
             # Tips here: https://reportgenerator.io/usage
-        -   name: Install report generator
-            run: dotnet tool install --global dotnet-reportgenerator-globaltool
+        # -   name: Install report generator
+        #     run: dotnet tool install --global dotnet-reportgenerator-globaltool
 
-        -   name: Install gitversion
-            run: dotnet tool install --global GitVersion.Tool --version 5.10.1
+        # -   name: Install gitversion
+        #     run: dotnet tool install --global GitVersion.Tool --version 5.10.1
 
         -   name: Add .NET tools to PATH
             run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
