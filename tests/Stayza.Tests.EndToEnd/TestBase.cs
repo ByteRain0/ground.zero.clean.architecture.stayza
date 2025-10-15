@@ -29,7 +29,7 @@ public class TestBase : IAsyncLifetime
         .WaitForHttp("web-app", WebAppUrl)
         .Build();
     
-    public const string WebAppUrl = "https://localhost:6211";
+    public const string WebAppUrl = "http://localhost:6210";
     
     public const string WebApiUrl = "http://localhost:5210";
     
