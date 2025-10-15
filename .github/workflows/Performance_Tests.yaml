@@ -4,7 +4,7 @@ on:
         branches: [ "main" ]
 jobs:
     build:
-        name: E2E tests
+        name: Performance tests
         runs-on: ubuntu-latest
         steps:
         
@@ -30,6 +30,14 @@ jobs:
             env:
                 BASE_API_URL: http://localhost:5000  #example on how to set envs.
                 DOCKER_HOST: unix:///var/run/docker.sock
+
+        -   name: Upload OTel telemetry artifacts
+            if: always()
+            uses: actions/upload-artifact@v4
+            with:
+                name: performance-otel-telemetry-export
+                path: ./otel-data
+                retention-days: 2
 
         -   name: Tear down Docker environment
             if: always()  # ensures cleanup even if tests fail
