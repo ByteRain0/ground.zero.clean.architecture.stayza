@@ -15,9 +15,9 @@ export const options = {
     stages: [
         // Load testing
         // Gradually increase the load to 100 users
-        {duration:"10s", target: 10},
+        {duration:"5s", target: 10},
         // Maintain a high load
-        {duration:"10s", target: 10},
+        {duration:"5s", target: 10},
         // Ramp down really fast
         {duration:"3s", target: 0},
 

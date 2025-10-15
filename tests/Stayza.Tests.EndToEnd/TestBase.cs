@@ -24,7 +24,7 @@ public class TestBase : IAsyncLifetime
         .UseContainer()
         .UseCompose()
         .FromFile(ServicesDockerComposeFilePath)
-        //.FromFile(ObservabilityDockerComposeFilePath)
+        .FromFile(ObservabilityDockerComposeFilePath)
         .RemoveOrphans()
         .WaitForHttp("web-app", WebAppUrl)
         .Build();
