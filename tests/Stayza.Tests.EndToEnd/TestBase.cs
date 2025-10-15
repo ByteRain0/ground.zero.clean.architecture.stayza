@@ -52,7 +52,7 @@ public class TestBase : IAsyncLifetime
         IBrowser browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions()
         {
             SlowMo = 1000, // Slows down Playwright operations by the specified amount of milliseconds. Useful so that you can see what is going on.
-            Headless = false // By default the browser will be headless -- we can't see the window or what's going on, to prevent that we set it to false.
+            Headless = true // By default the browser will be headless -- we can't see the window or what's going on, to prevent that we set it to false.
         });
 
         // Creating a new instance of Browser will allow us to run it in isolation preventing issues related to data sharing like cookies, preferences etc.

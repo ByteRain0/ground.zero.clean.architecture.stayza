@@ -50,8 +50,18 @@ jobs:
                 # run: dotnet playwright install --with-deps
                 # This installs the required browsers (Chromium, Firefox, WebKit)
 
+        -   name: Check Docker version
+            run: |
+                docker version
+                docker compose version
+
+        -   name: Verify Docker permissions
+            run: ls -l /var/run/docker.sock
+    
         -   name: Run e2e tests
             run: dotnet test tests/Stayza.Tests.EndToEnd/Stayza.Tests.EndToEnd.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+            env:
+                DOCKER_HOST: unix:///var/run/docker.sock
 
             # Tool by: https://github.com/danielpalme/ReportGenerator
             # Tips here: https://reportgenerator.io/usage
