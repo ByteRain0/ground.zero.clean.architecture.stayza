@@ -1,5 +1,6 @@
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Services;
+using Ductus.FluentDocker.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Playwright;
 using Npgsql;
@@ -71,6 +72,16 @@ public class TestBase : IAsyncLifetime
     {
         await _browser.DisposeAsync();
         _playwright.Dispose();
+        if(_dockerComposeServices != null)
+        {
+            Console.WriteLine("Container logs");
+            foreach(var container in _dockerComposeServices.Containers)
+            {
+                Console.WriteLine($"Logs for: {container.Name}");
+                var logs = container.Logs();
+                Console.WriteLine(logs);
+            }
+        }
         _dockerComposeServices.Dispose();
     }
 
