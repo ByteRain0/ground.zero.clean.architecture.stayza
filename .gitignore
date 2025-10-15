@@ -16,6 +16,7 @@
 
 # Dotnet tools
 tools/
+otel-data/
 
 # Build results
 [Dd]ebug/
