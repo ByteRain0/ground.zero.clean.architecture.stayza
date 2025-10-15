@@ -35,6 +35,11 @@ jobs:
         # -   name: Run contract tests
         #     run: dotnet test tests/Stayza.Tests.Contract/Stayza.Tests.Contract.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
 
+        -   name: Set up QEMU
+            uses: docker/setup-qemu-action@v3
+
+        -   name: Set up Docker Buildx
+            uses: docker/setup-buildx-action@v3
 
       # --- PLAYWRIGHT SETUP ---
         -   name: Install Playwright browsers
