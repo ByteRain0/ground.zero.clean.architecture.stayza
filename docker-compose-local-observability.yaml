@@ -16,6 +16,7 @@ services:
       - aspire-dashboard
     volumes:
       - ./configurations/otel-collector-config-aspire.yaml:/etc/otelcol-contrib/config.yaml
+      - ./otel-data:/otel-data
     ports:
       - "4317:4317"
       - "4318:4318"

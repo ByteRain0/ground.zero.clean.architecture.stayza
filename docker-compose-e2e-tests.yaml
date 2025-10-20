@@ -51,20 +51,15 @@
       dockerfile: ./src/Notifications.Web/Dockerfile
     ports:
       - "1000:80"
-      - "1001:443"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      ASPNETCORE_URLS: https://+:443;http://+:80
-      ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+      ASPNETCORE_URLS: http://+:80
     healthcheck:
       test: [ "CMD", "curl", "-f", "http://localhost:80/health" ]
       interval: 30s
       timeout: 5s
       retries: 3
       start_period: 10s
-    volumes:
-      - ~/.aspnet/https:/https:ro
       
   migration_service:
     container_name: migration_service
@@ -98,12 +93,9 @@
       dockerfile: ./src/Stayza.Web/Dockerfile
     ports:
       - "5210:80"
-      - "5211:443"
     environment:
-      ASPNETCORE_URLS: https://+:443;http://+:80
+      ASPNETCORE_URLS: http://+:80
       Notifications__BaseUrl: http://notifications_api:80
-      ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
       OpenTelemetrySettings__TracesEndpoint: "http://otel-collector:4317"
       RabbitMQSettings__ConnectionString: "amqp://guest1:guest1@rabbitmq:5672/"
       ExternalConfigurationOptions__Enabled: false
@@ -115,8 +107,6 @@
       timeout: 5s
       retries: 3
       start_period: 10s
-    volumes:
-      - ~/.aspnet/https:/https:ro
       
   stayza_app:
     container_name: stayza_app
@@ -129,15 +119,10 @@
       dockerfile: ./src/Stayza.App/Dockerfile
     ports:
       - "6210:80"
-      - "6211:443"
     environment:
-      ASPNETCORE_URLS: https://+:443;http://+:80
-      ASPNETCORE_Kestrel__Certificates__Default__Password: TEST
-      ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
+      ASPNETCORE_URLS: http://+:80
       OpenTelemetrySettings__TracesEndpoint: "http://otel-collector:4317"
       BackEnd__Url: "http://stayza_api:80"
-    volumes:
-      - ~/.aspnet/https:/https:ro
   
 volumes:
   postgres_data:

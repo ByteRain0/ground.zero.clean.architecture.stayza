@@ -1,0 +1,117 @@
+name: "PR Verify"
+on:
+    pull_request: 
+        branches: [ "main" ]
+    
+jobs:
+    build:
+        name: PR Verify
+        runs-on: ubuntu-latest
+        steps:
+
+        -   name: Checkout code
+            uses: actions/checkout@v4
+            with:
+                fetch-depth: 0
+
+        -   name: Setup dotnet
+            uses: actions/setup-dotnet@v4
+
+        -   name: Restore dependencies
+            run: dotnet restore
+
+        -   name: Build
+            run: dotnet build --no-restore
+
+            # Tool by: https://github.com/danielpalme/ReportGenerator
+            # Tips here: https://reportgenerator.io/usage
+        -   name: Install report generator
+            run: dotnet tool install --global dotnet-reportgenerator-globaltool
+
+            # Tool docs: https://gitversion.net/docs/ 
+        -   name: Install gitversion
+            run: dotnet tool install --global GitVersion.Tool --version 5.10.1
+
+        -   name: Add dotnet tools to PATH
+            run: echo "$HOME/.dotnet/tools" >> $GITHUB_PATH
+
+        -   name: Set up QEMU
+            uses: docker/setup-qemu-action@v3
+
+        -   name: Set up Docker Buildx
+            uses: docker/setup-buildx-action@v3
+
+        -   name: Determine semantic version
+            id: version_step
+            run: |
+                dotnet tool restore
+                echo "Running GitVersion..."
+                dotnet dotnet-gitversion
+                SEMVER=$(dotnet dotnet-gitversion /showvariable SemVer)
+                echo "Semantic version: $SEMVER"
+                # make available to other steps
+
+        -   name: Run unit tests
+            run: dotnet test tests/Stayza.Tests.Unit/Stayza.Tests.Unit.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
+        -   name: Run API layer integration tests
+            run: dotnet test tests/Stayza.Tests.Integration/Stayza.Tests.Integration.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
+        -   name: "Run subcutaneous layer integration tests"
+            run: dotnet test tests/Stayza.Tests.Subcutaneous/Stayza.Tests.Subcutaneous.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
+        -   name: Run contract tests
+            run: dotnet test tests/Stayza.Tests.Contract/Stayza.Tests.Contract.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+
+        -   name: Install Playwright browsers
+            run: |
+                cd tests/Stayza.Tests.EndToEnd
+                pwsh bin/Debug/net*/playwright.ps1 install --with-deps
+                # Alternatively, if your E2E project targets .NET 8, you can also use:
+                # run: dotnet playwright install --with-deps
+                # This installs the required browsers (Chromium, Firefox, WebKit)
+    
+        -   name: Run e2e tests
+            run: dotnet test tests/Stayza.Tests.EndToEnd/Stayza.Tests.EndToEnd.csproj --configuration Release --verbosity normal --logger trx --collect:"XPlat Code Coverage"
+            env:
+                DOCKER_HOST: unix:///var/run/docker.sock
+
+        -   name: Upload OTel telemetry artifacts
+            if: always()
+            uses: actions/upload-artifact@v4
+            with:
+                name: e2e-otel-telemetry-export
+                path: ./otel-data
+                retention-days: 2
+
+        -   name: Combine coverage reports
+            run: |
+                mkdir -p coveragereport
+                reportgenerator \
+                "-reports:**/*.cobertura.xml" \
+                "-targetdir:coveragereport" \
+                "-reporttypes:HtmlInline;Cobertura;MarkdownSummaryGithub" \
+                "-verbosity:Info" \
+                "-title:Code Coverage" \
+                "-tag:${{ github.run_number }}_${{ github.run_id }}" \
+                "-toolpath:reportgeneratortool"
+
+        -   name: Print markdown Summary
+            run: cat coveragereport/SummaryGithub.md >> $GITHUB_STEP_SUMMARY
+
+        -   name: Upload test result files
+            uses: actions/upload-artifact@v4
+            with:
+                name: test-results
+                path: ${{ github.workspace }}/**/TestResults/**/*
+                retention-days: 2
+
+        -   name: Upload generated reports
+            uses: actions/upload-artifact@v4
+            with:
+                name: test-reports
+                path: ${{ github.workspace }}/coveragereport
+                retention-days: 2
+
+
+                

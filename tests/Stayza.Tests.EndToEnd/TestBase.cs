@@ -1,5 +1,6 @@
 using Ductus.FluentDocker.Builders;
 using Ductus.FluentDocker.Services;
+using Ductus.FluentDocker.Services.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Playwright;
 using Npgsql;
@@ -28,7 +29,7 @@ public class TestBase : IAsyncLifetime
         .WaitForHttp("web-app", WebAppUrl)
         .Build();
     
-    public const string WebAppUrl = "https://localhost:6211";
+    public const string WebAppUrl = "http://localhost:6210";
     
     public const string WebApiUrl = "http://localhost:5210";
     
@@ -52,7 +53,7 @@ public class TestBase : IAsyncLifetime
         IBrowser browser = await _playwright.Chromium.LaunchAsync(new BrowserTypeLaunchOptions()
         {
             SlowMo = 1000, // Slows down Playwright operations by the specified amount of milliseconds. Useful so that you can see what is going on.
-            Headless = false // By default the browser will be headless -- we can't see the window or what's going on, to prevent that we set it to false.
+            Headless = true // By default the browser will be headless -- we can't see the window or what's going on, to prevent that we set it to false.
         });
 
         // Creating a new instance of Browser will allow us to run it in isolation preventing issues related to data sharing like cookies, preferences etc.
@@ -71,6 +72,16 @@ public class TestBase : IAsyncLifetime
     {
         await _browser.DisposeAsync();
         _playwright.Dispose();
+        if(_dockerComposeServices != null)
+        {
+            Console.WriteLine("Container logs");
+            foreach(var container in _dockerComposeServices.Containers)
+            {
+                Console.WriteLine($"Logs for: {container.Name}");
+                var logs = container.Logs();
+                Console.WriteLine(logs);
+            }
+        }
         _dockerComposeServices.Dispose();
     }
 

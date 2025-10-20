@@ -1,0 +1,3 @@
+assembly-versioning-format: '{Major}.{Minor}.{Patch}{PreReleaseLabelWithDash}+{env:BUILD_COUNTER ?? 0}'
+assembly-file-versioning-format: '{Major}.{Minor}.{Patch}{PreReleaseLabelWithDash}.{env:BUILD_COUNTER ?? 0}'
+mode: Mainline #Mainline was deprecated in GitVersion 6 and up.
